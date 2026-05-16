@@ -1,4 +1,4 @@
-@import "tokens/colors.css";
+@import "tokens/generated-colors.css";
 @import "tokens/state.css";
 @import "tokens/workspace.css";
 @import "tokens/widget.css";

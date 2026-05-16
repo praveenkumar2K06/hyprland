@@ -8,6 +8,6 @@ function wallpaper
         return 1
     end
 
-    awww img "$img"
+    matugen image "$img" --source-color-index 0
     echo "Wallpaper set: $img"
 end

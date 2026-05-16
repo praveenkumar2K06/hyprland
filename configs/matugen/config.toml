@@ -1,0 +1,22 @@
+[config]
+
+[config.wallpaper]
+set = true
+command = "awww img --transition-type center {{ image }}"
+
+[templates.hyprland]
+input_path = './templates/hyprland-colors.lua'
+output_path = '~/.config/hypr/generated-colors.lua'
+
+[templates.kitty]
+input_path = './templates/kitty-colors.conf'
+output_path = '~/.config/kitty/themes/generated-colors.conf'
+
+[templates.starship]
+input_path = './templates/starship-colors.toml'
+output_path = '~/.config/starship.toml'
+
+[templates.waybar]
+input_path = './templates/matugen-colors.css'
+output_path = '~/.config/waybar/tokens/generated-colors.css'
+post_hook = 'pkill -SIGUSR2 waybar'

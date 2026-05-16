@@ -1,3 +1,6 @@
+local colors = require("generated-colors")
+
+
 -----------------------
 ---- LOOK AND FEEL ----
 -----------------------
@@ -11,8 +14,8 @@ hl.config({
         border_size      = 2,
 
         col              = {
-            active_border   = { colors = { "rgba(33ccffee)", "rgba(00ff99ee)" }, angle = 45 },
-            inactive_border = "rgba(595959aa)",
+            active_border   = { colors = { colors.primary_fixed_dim, colors.tertiary_fixed_dim }, angle = 45 },
+            inactive_border = colors.outline,
         },
 
         resize_on_border = true,

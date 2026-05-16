@@ -1,6 +1,4 @@
-**/matugen-*
-!/configs/matugen/**
-**/btop/themes/matugen.theme
-/configs/hypr/configs/animations.conf
 
-**/*.pyc
+# Ignore matugen generated files
+generated-colors*
+starship.toml
