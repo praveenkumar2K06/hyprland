@@ -1,0 +1,52 @@
+-----------------------
+---- LOOK AND FEEL ----
+-----------------------
+
+
+hl.config({
+    general = {
+        gaps_in          = 5,
+        gaps_out         = 5,
+
+        border_size      = 2,
+
+        col              = {
+            active_border   = { colors = { "rgba(33ccffee)", "rgba(00ff99ee)" }, angle = 45 },
+            inactive_border = "rgba(595959aa)",
+        },
+
+        resize_on_border = true,
+        layout           = "dwindle",
+    },
+
+    decoration = {
+        rounding         = 10,
+        rounding_power   = 2,
+
+        active_opacity   = 1.0,
+        inactive_opacity = 1.0,
+
+        dim_inactive     = true,
+        dim_strength     = 0.2,
+        dim_special      = 0.8,
+
+        shadow           = {
+            enabled      = true,
+            range        = 2,
+            render_power = 1,
+        },
+
+        blur             = {
+            enabled  = true,
+            special  = true,
+            popups   = true,
+            size     = 3,
+            passes   = 1,
+            vibrancy = 0.1696,
+        },
+    },
+
+    animations = {
+        enabled = true,
+    },
+})
