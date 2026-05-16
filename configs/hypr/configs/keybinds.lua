@@ -24,6 +24,7 @@ hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 hl.bind(mainMod .. " + R", function()
     hl.dispatch(hl.dsp.exec_cmd("pkill waybar; waybar"))
+    hl.dispatch(hl.dsp.exec_raw("fish -c wallpaper"))
 end)
 
 -- Lock
