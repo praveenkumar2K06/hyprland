@@ -22,6 +22,10 @@ hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
+hl.bind(mainMod .. " + R", function()
+    hl.dispatch(hl.dsp.exec_cmd("pkill waybar; waybar"))
+end)
+
 -- Lock
 hl.bind(mainMod .. " + L",
     hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
