@@ -64,7 +64,8 @@ hl.window_rule({
     match = { title = "^(Picture-in-Picture)$" },
     float = true,
     pin = true,
-    move = "monitor_w-500 monitor_h-300",
+    size = "500 300",
+    move = "monitor_w-550 monitor_h-350",
     keep_aspect_ratio = true,
     opacity = "0.5 0.8",
 })
