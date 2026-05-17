@@ -5,7 +5,7 @@
 
 -- Toolkit Backend
 hl.env("GDK_BACKEND", "wayland,x11,*")
-hl.env("QT_QPA_PLATFORM", "wayland,xcb")
+hl.env("QT_QPA_PLATFORM", "wayland")
 hl.env("CLUTTER_BACKEND", "wayland,x11,*")
 
 -- XDG Specifications
@@ -30,6 +30,7 @@ hl.env("QT_SCALE_FACTOR", "1")
 -- Cursor
 hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
 hl.env("XCURSOR_SIZE", "24")
+hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
 hl.env("HYPRCURSOR_SIZE", "24")
 
 -- Firefox
