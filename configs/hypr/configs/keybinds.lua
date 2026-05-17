@@ -46,20 +46,17 @@ hl.bind(mainMod .. " + Equal", function() zoomfunction(0.3) end, { repeating = t
 
 -- Special Keys
 
--- TODO: Add media keys
 -- Mic
-hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd(""), { locked = true })
+hl.bind("XF86AudioMicMute", hl.dsp.exec_raw("fish -c micmute"), { locked = true })
 
 -- Brightness
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl s 5%+"), { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl s 5%-"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_raw("fish -c 'brightness up'"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_raw("fish -c 'brightness down'"), { locked = true, repeating = true })
 
 -- Volume
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +5%"),
-    { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ -5%"),
-    { locked = true, repeating = true })
-hl.bind("XF86AudioMute", hl.dsp.exec_cmd("pactl set-sink-mute @DEFAULT_SINK@ toggle"), { locked = true })
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_raw("fish -c 'volume up'"), { locked = true, repeating = true })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_raw("fish -c 'volume down'"), { locked = true, repeating = true })
+hl.bind("XF86AudioMute", hl.dsp.exec_raw("fish -c 'volume mute'"), { locked = true })
 
 -- Screenshot
 hl.bind("Print", hl.dsp.exec_cmd("grimshot save full"), { locked = true })

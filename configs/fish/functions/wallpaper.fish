@@ -8,7 +8,7 @@ function wallpaper
 
     if test -z "$img"
         echo "No wallpapers found in $dir"
-        notify-send -i arch-error-symbolic "Wallpaper" "No wallpapers found in $dir"
+        notify-send -i arch-error-symbolic -a 'Core' "Wallpaper" "No wallpapers found in $dir"
         return 1
     end
 
@@ -16,7 +16,7 @@ function wallpaper
     ffmpeg -y -loglevel error -i "$img" -q:v 2 "$tmp_bg"
     or begin
         echo "Failed to convert wallpaper to jpg for SDDM"
-        notify-send -i arch-error-symbolic "Wallpaper" "Failed to convert image to JPG for SDDM"
+        notify-send -i arch-error-symbolic -a 'Core' "Wallpaper" "Failed to convert image to JPG for SDDM"
         return 1
     end
 
@@ -24,7 +24,7 @@ function wallpaper
     or begin
         rm -f "$tmp_bg"
         echo "Failed to update SDDM wallpaper or theme.conf"
-        notify-send -i arch-error-symbolic "Wallpaper" "Failed to update SDDM wallpaper or theme.conf"
+        notify-send -i arch-error-symbolic -a 'Core' "Wallpaper" "Failed to update SDDM wallpaper or theme.conf"
         return 1
     end
 
@@ -34,10 +34,10 @@ function wallpaper
     matugen image "$img" --source-color-index 0
     or begin
         echo "Matugen failed for $img"
-        notify-send -i arch-error-symbolic "Wallpaper" "Matugen failed for selected image"
+        notify-send -i arch-error-symbolic -a 'Core' "Wallpaper" "Matugen failed for selected image"
         return 1
     end
     
     echo "Wallpaper set: $img"
-    notify-send -i archlinux-logo -a 'Hyprland' 'Wallpaper Changed' 'Config reloaded!'
+    notify-send -i archlinux-logo -a 'Core' 'Wallpaper Changed' 'Config reloaded!'
 end
