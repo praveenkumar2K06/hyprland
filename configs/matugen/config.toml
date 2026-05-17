@@ -1,9 +1,5 @@
 [config]
 
-[config.wallpaper]
-set = true
-command = "awww img --transition-type center {{ image }}"
-
 [templates.dunst]
 input_path = './templates/dunst-colors.conf'
 output_path = '~/.config/dunst/dunstrc'

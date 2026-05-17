@@ -24,7 +24,6 @@ hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 hl.bind(mainMod .. " + R", function()
     hl.dispatch(hl.dsp.exec_raw("fish -c wallpaper"))
-    hl.dispatch(hl.dsp.exec_raw("notify-send -i archlinux-logo -a 'Hyprland' 'Success' 'Config reloaded!'"))
 end)
 
 -- Lock
