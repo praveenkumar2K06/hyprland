@@ -12,7 +12,7 @@
         ""
       ]
     },
-    "on-click": "pavucontrol",
+    "on-click": "pavucontrol-qt",
     "tooltip-format": "Output: {volume}%"
   },
   "pulseaudio#microphone": {

@@ -13,19 +13,9 @@
     "on-click": "code",
     "tooltip": false
   },
-  "custom/obsidian": {
-    "format": "󰹕",
-    "on-click": "obsidian",
-    "tooltip": false
-  },
-  "custom/office": {
-    "format": "󰏆",
-    "on-click": "onlyoffice-desktopeditors",
-    "tooltip": false
-  },
   "custom/files": {
     "format": "",
-    "on-click": "thunar",
+    "on-click": "nautilus",
     "tooltip": false
   },
   "custom/spotify": {
@@ -35,7 +25,7 @@
   },
   "custom/browser": {
     "format": "",
-    "on-click": "firefox",
+    "on-click": "zen-browser",
     "tooltip": false
   }
 }
