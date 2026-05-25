@@ -1,9 +1,9 @@
 [config]
 
-[templates.dunst]
-input_path = './templates/dunst-colors.conf'
-output_path = '~/.config/dunst/dunstrc'
-post_hook = 'dunstctl reload'
+#[templates.dunst]
+#input_path = './templates/dunst-colors.conf'
+#output_path = '~/.config/dunst/dunstrc'
+#post_hook = 'dunstctl reload'
 
 [templates.hyprland]
 input_path = './templates/hyprland-colors.lua'
@@ -13,11 +13,25 @@ output_path = '~/.config/hypr/generated-colors.lua'
 input_path = './templates/kitty-colors.conf'
 output_path = '~/.config/kitty/themes/generated-colors.conf'
 
+[templates.gtk3]
+input_path = './templates/gtk-colors.css'
+output_path = '~/.config/gtk-3.0/colors.css'
+post_hook = 'gsettings set org.gnome.desktop.interface gtk-theme ""; gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3-{{mode}}'
+
+[templates.gtk4]
+input_path = './templates/gtk-colors.css'
+output_path = '~/.config/gtk-4.0/colors.css'
+post_hook = '~/.config/matugen/post-hook-scripts/gtk-themes-reload.sh'
+
+[templates.quickshell]
+input_path = "./templates/qs-colors.qml"
+output_path = "~/.config/quickshell/modules/common/MatugenColors.qml"
+
 [templates.starship]
 input_path = './templates/starship-colors.toml'
 output_path = '~/.config/starship.toml'
 
-[templates.waybar]
-input_path = './templates/matugen-colors.css'
-output_path = '~/.config/waybar/tokens/generated-colors.css'
-post_hook = 'pkill -SIGUSR2 waybar'
+#[templates.waybar]
+#input_path = './templates/matugen-colors.css'
+#output_path = '~/.config/waybar/tokens/generated-colors.css'
+#post_hook = 'pkill -SIGUSR2 waybar'

@@ -65,7 +65,26 @@ hl.window_rule({
     float = true,
     pin = true,
     size = "500 300",
-    move = "monitor_w-550 monitor_h-350",
+    move = "monitor_w-510 monitor_h-310",
     keep_aspect_ratio = true,
-    opacity = "0.5 0.8",
+    opacity = "0.9 0.9",
 })
+
+hl.layer_rule({
+    match        = { namespace = "quickshell" },
+    blur         = true,
+    ignore_alpha = 0.5,
+})
+
+hl.layer_rule({
+    match        = { namespace = "quickshell:bar" },
+    blur         = true,
+    ignore_alpha = 0.5,
+})
+
+hl.layer_rule({ match = { namespace = "quickshell:bar" }, animation = "slide"})
+hl.layer_rule({ match = { namespace = "quickshell:notificationPopup" }, animation = "fadeIn"})
+hl.layer_rule({ match = { namespace = "quickshell:overview" }, animation = "popin 80%"})
+hl.layer_rule({ match = { namespace = "quickshell:screenCorners" }, animation = "popin 120%"})
+hl.layer_rule({ match = { namespace = "quickshell:sidebarRight" }, animation = "slide right" })
+hl.layer_rule({ match = { namespace = "quickshell:wallpaperSelector" }, animation = "slide top"})

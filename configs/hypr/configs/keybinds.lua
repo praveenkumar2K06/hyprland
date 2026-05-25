@@ -19,12 +19,7 @@ local mainMod = "SUPER"
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
-hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
-
-hl.bind(mainMod .. " + R", function()
-    hl.dispatch(hl.dsp.exec_raw("fish -c wallpaper"))
-end)
 
 -- Lock
 hl.bind(mainMod .. " + L",
@@ -54,9 +49,9 @@ hl.bind("XF86MonBrightnessUp", hl.dsp.exec_raw("fish -c 'brightness up'"), { loc
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_raw("fish -c 'brightness down'"), { locked = true, repeating = true })
 
 -- Volume
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_raw("fish -c 'volume up'"), { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_raw("fish -c 'volume down'"), { locked = true, repeating = true })
-hl.bind("XF86AudioMute", hl.dsp.exec_raw("fish -c 'volume mute'"), { locked = true })
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pamixer --increase 5"), { locked = true, repeating = true })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pamixer --decrease 5"), { locked = true, repeating = true })
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd("pamixer --toggle-mute"), { locked = true })
 
 -- Screenshot
 hl.bind("Print", hl.dsp.exec_cmd("grimshot save full"), { locked = true })
@@ -85,3 +80,8 @@ end
 
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Window: Move" })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Window: Resize" })
+
+-- QuickShell
+hl.bind(mainMod .. " + Tab", hl.dsp.global("quickshell:overviewWorkspacesToggle"), { description = "Shell: Toggle overview" })
+hl.bind(mainMod .. " + Space", hl.dsp.global("quickshell:overviewWorkspacesToggle"), { description = "Shell: Toggle overview" })
+hl.bind(mainMod .. " + CTRL + T", hl.dsp.global("quickshell:wallpaperSelectorToggle"),{ description = "Shell: Change wallpaper" })
