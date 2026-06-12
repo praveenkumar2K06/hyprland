@@ -268,7 +268,7 @@ Item { // Bar content region
                         }
                     }
                     MaterialSymbol {
-                        text: Network.materialSymbol
+                        text: NetworkV2.materialSymbol
                         iconSize: Appearance.font.pixelSize.larger
                         color: rightSidebarButton.colText
                     }

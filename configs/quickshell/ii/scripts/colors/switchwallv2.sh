@@ -73,23 +73,16 @@ set_gtk_theme() {
 update_sddm_background() {
     local wall="$1"
 
+    local user_bg="$HOME/.local/share/wallpapers/sddm-background.jpg"
     local sddm_bg="/usr/share/sddm/themes/pixie/assets/background.jpg"
     local sddm_theme="/usr/share/sddm/themes/pixie/theme.conf"
 
-    local tmp_bg
-    tmp_bg="$(mktemp --suffix=.jpg)"
-
-    trap 'rm -f "$tmp_bg"' RETURN
+    mkdir -p "$(dirname "$user_bg")"
 
     ffmpeg -y -loglevel error \
         -i "$wall" \
         -q:v 2 \
-        "$tmp_bg"
-
-    pkexec bash -c '
-        install -Dm644 "$1" "$2"
-        sed -i "s|^background=.*|background=assets/background.jpg|" "$3"
-    ' _ "$tmp_bg" "$sddm_bg" "$sddm_theme"
+        "$user_bg"
 }
 
 apply_wallpaper() {

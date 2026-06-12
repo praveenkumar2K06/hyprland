@@ -15,10 +15,10 @@ WindowDialog {
         text: "Connect to Wi-Fi"
     }
     WindowDialogSeparator {
-        visible: !Network.wifiScanning
+        visible: !NetworkV2.wifiScanning
     }
     StyledIndeterminateProgressBar {
-        visible: Network.wifiScanning
+        visible: NetworkV2.wifiScanning
         Layout.fillWidth: true
         Layout.topMargin: -8
         Layout.bottomMargin: -8

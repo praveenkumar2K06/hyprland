@@ -15,7 +15,7 @@ MouseArea {
 
     // throttle
     property bool wheelReady: true
-    property int throttleInterval: 40
+    property int throttleInterval: 80
 
     acceptedButtons: Qt.LeftButton
     hoverEnabled: true
