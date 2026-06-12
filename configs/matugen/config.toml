@@ -9,6 +9,10 @@
 input_path = './templates/hyprland-colors.lua'
 output_path = '~/.config/hypr/generated-colors.lua'
 
+[templates.hyprlock]
+input_path = './templates/hyprlock-colors.conf'
+output_path = '~/.config/hypr/generated-colors.conf'
+
 [templates.kitty]
 input_path = './templates/kitty-colors.conf'
 output_path = '~/.config/kitty/themes/generated-colors.conf'

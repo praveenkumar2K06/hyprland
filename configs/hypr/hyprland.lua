@@ -9,6 +9,3 @@ require("configs.monitors")
 require("configs.permissions")
 require("configs.settings")
 require("configs.workspace")
-
--- HyprMod managed settings
-require("hyprland-gui")

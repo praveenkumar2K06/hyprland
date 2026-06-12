@@ -22,8 +22,7 @@ hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 -- Lock
-hl.bind(mainMod .. " + L",
-    hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
 
 -- Zoom
 local function zoomfunction(value)
@@ -82,6 +81,10 @@ hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true, descrip
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Window: Resize" })
 
 -- QuickShell
-hl.bind(mainMod .. " + Tab", hl.dsp.global("quickshell:overviewWorkspacesToggle"), { description = "Shell: Toggle overview" })
-hl.bind(mainMod .. " + Space", hl.dsp.global("quickshell:overviewWorkspacesToggle"), { description = "Shell: Toggle overview" })
-hl.bind(mainMod .. " + CTRL + T", hl.dsp.global("quickshell:wallpaperSelectorToggle"),{ description = "Shell: Change wallpaper" })
+hl.bind(mainMod .. " + Tab", hl.dsp.global("quickshell:overviewWorkspacesToggle"),
+    { description = "Shell: Toggle overview" })
+hl.bind(mainMod .. " + Space", hl.dsp.global("quickshell:overviewWorkspacesToggle"),
+{ description = "Shell: Toggle overview" })
+hl.bind(mainMod .. " + CTRL + T", hl.dsp.global("quickshell:wallpaperSelectorToggle"),
+    { description = "Shell: Change wallpaper" })
+hl.bind("CTRL + ALT + Delete", hl.dsp.global("quickshell:sessionToggle"), { description = "Shell: Toggle session menu" })
