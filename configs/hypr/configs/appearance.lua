@@ -19,7 +19,7 @@ hl.config({
         },
 
         resize_on_border = true,
-        layout           = "dwindle",
+        layout           = "scrolling",
     },
 
     decoration = {

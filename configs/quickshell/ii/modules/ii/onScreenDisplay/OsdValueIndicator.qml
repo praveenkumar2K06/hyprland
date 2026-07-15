@@ -14,7 +14,7 @@ Item {
     property alias from: valueProgressBar.from
     property alias to: valueProgressBar.to
 
-    property real valueIndicatorVerticalPadding: 9
+    property real valueIndicatorVerticalPadding: 0
     property real valueIndicatorLeftPadding: 10
     property real valueIndicatorRightPadding: 20 // An icon is circle ish, a column isn't, hence the extra padding
 
@@ -28,7 +28,6 @@ Item {
         id: valueIndicator
         anchors {
             fill: parent
-            margins: Appearance.sizes.elevationMargin
         }
         radius: Appearance.rounding.full
         color: Appearance.colors.colLayer0
@@ -38,13 +37,10 @@ Item {
 
         RowLayout { // Icon on the left, stuff on the right
             id: valueRow
-            Layout.margins: 10
             anchors.fill: parent
-            spacing: 10
 
             Item {
                 implicitWidth: 30
-                implicitHeight: 30
                 Layout.alignment: Qt.AlignVCenter
                 Layout.leftMargin: valueIndicatorLeftPadding
                 Layout.topMargin: valueIndicatorVerticalPadding
@@ -74,7 +70,7 @@ Item {
             ColumnLayout { // Stuff
                 Layout.alignment: Qt.AlignVCenter
                 Layout.rightMargin: valueIndicatorRightPadding
-                spacing: 5
+                // spacing: 5
 
                 RowLayout { // Name fill left, value on the right end
                     Layout.leftMargin: valueProgressBar.height / 2 // Align text with progressbar radius curve's left end
@@ -99,6 +95,7 @@ Item {
                     id: valueProgressBar
                     Layout.fillWidth: true
                     value: root.value
+                    wavy: true
                 }
             }
         }
