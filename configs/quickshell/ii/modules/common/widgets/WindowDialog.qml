@@ -26,11 +26,10 @@ Rectangle {
     Behavior on color {
         animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)
     }
-    visible: dialogBackground.implicitHeight > 0
+    visible: dialogBackground.height > 0
 
     onShowChanged: {
         dialogBackgroundHeightAnimation.easing.bezierCurve = (show ? Appearance.animationCurves.emphasizedDecel : Appearance.animationCurves.emphasizedAccel)
-        dialogBackground.implicitHeight = show ? backgroundHeight : 0
     }
 
     radius: Appearance.rounding.screenRounding - Appearance.sizes.hyprlandGapsOut + 1
@@ -52,7 +51,9 @@ Rectangle {
         y: root.show ? targetY : (targetY - root.backgroundAnimationMovementDistance)
         implicitWidth: root.backgroundWidth
         implicitHeight: contentColumn.implicitHeight + dialogBackground.radius * 2
-        Behavior on implicitHeight {
+        height: root.show ? root.backgroundHeight : 0
+        clip: true
+        Behavior on height {
             NumberAnimation {
                 id: dialogBackgroundHeightAnimation
                 duration: Appearance.animation.elementMoveFast.duration
