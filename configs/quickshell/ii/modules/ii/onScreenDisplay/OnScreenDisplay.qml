@@ -17,10 +17,10 @@ Scope {
 
     property string currentIndicator: "volume"
     property var indicators: [
-        // {
-        //     id: "volume",
-        //     sourceUrl: "indicators/VolumeIndicator.qml"
-        // },
+        {
+            id: "volume",
+            sourceUrl: "indicators/VolumeIndicator.qml"
+        },
         {
             id: "brightness",
             sourceUrl: "indicators/BrightnessIndicator.qml"
