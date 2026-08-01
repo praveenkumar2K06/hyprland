@@ -196,7 +196,8 @@ WindowDialog {
             Layout.fillWidth: true
         }
 
-        DialogButton {
+        MaterialButton {
+            type: MaterialButton.ButtonType.Text
             buttonText: "Done"
             onClicked: root.dismiss()
         }

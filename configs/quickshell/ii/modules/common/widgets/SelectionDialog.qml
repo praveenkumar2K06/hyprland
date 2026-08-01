@@ -111,11 +111,13 @@ Item {
                 Layout.rightMargin: dialogPadding
                 Layout.alignment: Qt.AlignRight
 
-                DialogButton {
+                MaterialButton {
+                    type: MaterialButton.ButtonType.Text
                     buttonText: "Cancel"
                     onClicked: root.canceled()
                 }
-                DialogButton {
+                MaterialButton {
+                    type: MaterialButton.ButtonType.Text
                     buttonText: "OK"
                     onClicked: root.selected(
                         root.selectedId === -1 ? null :

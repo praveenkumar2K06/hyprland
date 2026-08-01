@@ -92,12 +92,14 @@ Item {
             Item {
                 Layout.fillWidth: true
             }
-            DialogButton {
+            MaterialButton {
+                type: MaterialButton.ButtonType.Text
                 buttonText: "Cancel"
                 onClicked: PolkitService.cancel();
             }
-            DialogButton {
+            MaterialButton {
                 enabled: PolkitService.interactionAvailable
+                type: MaterialButton.ButtonType.Filled
                 buttonText: "OK"
                 onClicked: root.submit();
             }

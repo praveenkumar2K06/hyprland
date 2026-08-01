@@ -57,7 +57,8 @@ WindowDialog {
     }
     WindowDialogSeparator {}
     WindowDialogButtonRow {
-        DialogButton {
+        MaterialButton {
+            type: MaterialButton.ButtonType.Text
             buttonText: "Details"
             onClicked: {
                 Quickshell.execDetached(["bash", "-c", `${Config.options.apps.bluetooth}`]);
@@ -69,7 +70,8 @@ WindowDialog {
             Layout.fillWidth: true
         }
 
-        DialogButton {
+        MaterialButton {
+            type: MaterialButton.ButtonType.Text
             buttonText: "Done"
             onClicked: root.dismiss()
         }

@@ -99,7 +99,8 @@ DialogListItem {
                     }
                 }
             }
-            ActionButton {
+            MaterialButton {
+                type: MaterialButton.ButtonType.Filled
                 buttonText: root.device?.connected ? "Disconnect" : "Connect"
 
                 onClicked: {

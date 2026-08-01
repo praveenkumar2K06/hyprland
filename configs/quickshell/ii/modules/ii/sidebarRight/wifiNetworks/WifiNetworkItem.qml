@@ -76,14 +76,16 @@ DialogListItem {
                     Layout.fillWidth: true
                 }
 
-                DialogButton {
+                MaterialButton {
+                    type: MaterialButton.ButtonType.Text
                     buttonText: "Cancel"
                     onClicked: {
                         root.wifiNetwork.askingPassword = false;
                     }
                 }
 
-                DialogButton {
+                MaterialButton {
+                    type: MaterialButton.ButtonType.Text
                     buttonText: "Connect"
                     onClicked: {
                         Network.changePassword(root.wifiNetwork, passwordField.text);

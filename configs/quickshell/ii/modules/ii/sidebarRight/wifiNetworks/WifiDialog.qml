@@ -47,7 +47,8 @@ WindowDialog {
     }
     WindowDialogSeparator {}
     WindowDialogButtonRow {
-        DialogButton {
+        MaterialButton {
+            type: MaterialButton.ButtonType.Text
             buttonText: "Details"
             onClicked: {
                 Quickshell.execDetached(["bash", "-c", `${Network.ethernet ? Config.options.apps.networkEthernet : Config.options.apps.network}`]);
@@ -59,7 +60,8 @@ WindowDialog {
             Layout.fillWidth: true
         }
 
-        DialogButton {
+        MaterialButton {
+            type: MaterialButton.ButtonType.Text
             buttonText: "Done"
             onClicked: root.dismiss()
         }
