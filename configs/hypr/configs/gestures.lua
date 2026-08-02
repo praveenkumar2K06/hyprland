@@ -22,3 +22,15 @@ hl.gesture({
     direction = "horizontal",
     action    = "workspace"
 })
+
+hl.gesture({
+    fingers   = 4,
+    direction = "up",
+    action    = "float"
+})
+
+hl.gesture({
+    fingers   = 4,
+    direction = "down",
+    action    = "fullscreen"
+})

@@ -44,8 +44,8 @@ hl.bind(mainMod .. " + Equal", function() zoomfunction(0.3) end, { repeating = t
 hl.bind("XF86AudioMicMute", hl.dsp.exec_raw("fish -c micmute"), { locked = true })
 
 -- Brightness
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_raw("fish -c 'brightness up'"), { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_raw("fish -c 'brightness down'"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessUp", hl.dsp.global("quickshell:brightnessIncrease"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.global("quickshell:brightnessDecrease"), { locked = true, repeating = true })
 
 -- Volume
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pamixer --increase 5"), { locked = true, repeating = true })
@@ -53,8 +53,11 @@ hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pamixer --decrease 5"), { locke
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd("pamixer --toggle-mute"), { locked = true })
 
 -- Screenshot
-hl.bind("Print", hl.dsp.exec_cmd("grimshot save full"), { locked = true })
-hl.bind("SUPER + Print", hl.dsp.exec_cmd("grimshot save area"), { locked = true })
+-- hl.bind("Print", hl.dsp.exec_cmd("grimshot save full"), { locked = true })
+
+hl.bind("Print", hl.dsp.exec_cmd('grim ~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png'))
+hl.bind("SHIFT + Print", hl.dsp.exec_cmd('grim -g "$(slurp)" ~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png'))
+hl.bind(mainMod .. " + SHIFT + Print", hl.dsp.exec_cmd('grim -g "$(slurp -d)" - | wl-copy'))
 
 -- Special
 hl.bind(mainMod .. " + ALT + S",
