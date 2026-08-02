@@ -8,9 +8,11 @@ QuickToggleModel {
     name: "Internet"
     statusText: NetworkV2.networkName
     tooltipText: "%1 | Right-click to configure".arg(NetworkV2.networkName)
-    icon: NetworkV2.materialSymbol
+    icon: NetworkV2.icon
 
     toggled: NetworkV2.wifiEnabled
-    mainAction: () => Network.toggleWifi()
+    mainAction: () => {
+        NetworkV2.toggleWifi();
+    }
     hasMenu: true
 }

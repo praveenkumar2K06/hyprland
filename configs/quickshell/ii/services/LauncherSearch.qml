@@ -100,7 +100,7 @@ Singleton {
     property string mathResult: ""
     property bool clipboardWorkSafetyActive: {
         const enabled = Config.options.workSafety.enable.clipboard;
-        const sensitiveNetwork = (StringUtils.stringListContainsSubstring(Network.networkName.toLowerCase(), Config.options.workSafety.triggerCondition.networkNameKeywords));
+        const sensitiveNetwork = (StringUtils.stringListContainsSubstring(NetworkV2.networkName.toLowerCase(), Config.options.workSafety.triggerCondition.networkNameKeywords));
         return enabled && sensitiveNetwork;
     }
 

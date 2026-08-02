@@ -3,18 +3,48 @@ import qs.modules.common
 import qs.modules.common.widgets
 import qs.modules.common.widgets.expressive
 import qs.services
-import qs.services.network
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Networking
 
 DialogListItem {
     id: root
-    required property WifiAccessPoint wifiNetwork
-    enabled: !(Network.wifiConnectTarget === root.wifiNetwork && !wifiNetwork?.active)
+    required property WifiNetwork wifiNetwork
+    property bool requiresPassword: root.wifiNetwork?.security !== WifiSecurityType.Open && root.wifiNetwork?.security !== WifiSecurityType.Unknown && root.wifiNetwork?.security !== WifiSecurityType.Owe
+    property bool askPassword: false
+    property bool requiresPublicPortal: Networking.connectivity === NetworkConnectivity.Portal
+    property bool expanded: false
 
-    active: (wifiNetwork?.askingPassword || wifiNetwork?.active) ?? false
     onClicked: {
-        Network.connectToWifiNetwork(wifiNetwork);
+        if (wifiNetwork?.connected) {
+            expanded = !expanded;
+            return;
+        }
+        if(wifiNetwork?.known) {
+            wifiNetwork.connect();
+        } else {
+            askPassword = true;
+        }
+    }
+
+    Connections {
+        target: wifiNetwork
+
+        function onConnectionFailed(reason) {
+            if(reason === ConnectionFailReason.NoSecrets) {
+                askPassword = true;
+            }
+        }
+    }
+
+    Connections {
+        target: Network
+
+        function onNetworkChanged() {
+            if (NetworkV2.networkName !== root.wifiNetwork?.name) {
+                root.expanded = false;
+            }
+        }
     }
 
     buttonRadius: Appearance.rounding.normal
@@ -34,29 +64,53 @@ DialogListItem {
             spacing: 10
             MaterialSymbol {
                 iconSize: Appearance.font.pixelSize.larger
-                property int strength: root.wifiNetwork?.strength ?? 0
-                text: strength > 80 ? "signal_wifi_4_bar" : strength > 60 ? "network_wifi_3_bar" : strength > 40 ? "network_wifi_2_bar" : strength > 20 ? "network_wifi_1_bar" : "signal_wifi_0_bar"
+                property real strength: root.wifiNetwork?.signalStrength ?? 0
+                text: NetworkV2.networkIcon(root.wifiNetwork)
                 color: Appearance.colors.colOnSurfaceVariant
             }
             StyledText {
                 Layout.fillWidth: true
                 color: Appearance.colors.colOnSurfaceVariant
                 elide: Text.ElideRight
-                text: root.wifiNetwork?.ssid ?? "Unknown"
+                text: root.wifiNetwork?.name ?? "Unknown Network"
                 textFormat: Text.PlainText
             }
+
             MaterialSymbol {
-                visible: (root.wifiNetwork?.isSecure || root.wifiNetwork?.active) ?? false
-                text: root.wifiNetwork?.active ? "check" : Network.wifiConnectTarget === root.wifiNetwork ? "settings_ethernet" : "lock"
+                visible: root.requiresPassword
+                text: NetworkV2.networkName === root.wifiNetwork?.name ? "settings_ethernet" : "lock"
                 iconSize: Appearance.font.pixelSize.larger
                 color: Appearance.colors.colOnSurfaceVariant
+            }
+        }
+
+        RowLayout {
+            visible: root.expanded
+            Layout.topMargin: 8
+            Item {
+                Layout.fillWidth: true
+            }
+            MaterialButtonE {
+                type: MaterialButtonE.ButtonType.Error
+                buttonText: "Forget"
+                onClicked: {
+                    wifiNetwork.forget();
+                }
+            }
+            MaterialButtonE {
+                type: MaterialButtonE.ButtonType.Filled
+                buttonText: "Disconnect"
+
+                onClicked: {
+                    wifiNetwork.disconnect();
+                }
             }
         }
 
         ColumnLayout { // Password
             id: passwordPrompt
             Layout.topMargin: 8
-            visible: root.wifiNetwork?.askingPassword ?? false
+            visible: root.askPassword
 
             MaterialTextField {
                 id: passwordField
@@ -68,7 +122,8 @@ DialogListItem {
                 inputMethodHints: Qt.ImhSensitiveData
 
                 onAccepted: {
-                    Network.changePassword(root.wifiNetwork, passwordField.text);
+                    root.wifiNetwork.connectWithPsk(passwordField.text);
+                    root.askPassword = false;
                 }
             }
 
@@ -83,7 +138,7 @@ DialogListItem {
                     type: MaterialButtonE.ButtonType.Text
                     buttonText: "Cancel"
                     onClicked: {
-                        root.wifiNetwork.askingPassword = false;
+                        root.wifiNetwork.askPassword = false;
                     }
                 }
 
@@ -91,7 +146,8 @@ DialogListItem {
                     type: MaterialButtonE.ButtonType.Text
                     buttonText: "Connect"
                     onClicked: {
-                        Network.changePassword(root.wifiNetwork, passwordField.text);
+                        root.wifiNetwork.connectWithPsk(passwordField.text);
+                        root.askPassword = false;
                     }
                 }
             }
@@ -100,7 +156,7 @@ DialogListItem {
         ColumnLayout { // Public wifi login page
             id: publicWifiPortal
             Layout.topMargin: 8
-            visible: (root.wifiNetwork?.active && (root.wifiNetwork?.security ?? "").trim().length === 0) ?? false
+            visible: root.wifiNetwork?.connected && root.requiresPublicPortal
 
             RowLayout {
                 MaterialButtonE {
@@ -108,7 +164,7 @@ DialogListItem {
                     Layout.fillWidth: true
                     buttonText: "Open network portal"
                     onClicked: {
-                        Network.openPublicWifiPortal()
+                        NetworkV2.openPublicWifiPortal()
                         GlobalStates.sidebarRightOpen = false
                     }
                 }

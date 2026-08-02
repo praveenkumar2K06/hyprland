@@ -199,12 +199,12 @@ Item { // Bar content region
         BarGroup {
             id: rightSectionRowLayout
             anchors {
-            top: parent.top
-            bottom: parent.bottom
-            left: middleSection.right
-            right: parent.right
-            rightMargin: 5
-        }
+                top: parent.top
+                bottom: parent.bottom
+                left: middleSection.right
+                right: parent.right
+                rightMargin: 5
+            }
 
             // spacing: 5
             layoutDirection: Qt.RightToLeft
@@ -287,7 +287,7 @@ Item { // Bar content region
                         }
                     }
                     MaterialSymbol {
-                        text: NetworkV2.materialSymbol
+                        text: NetworkV2.icon
                         iconSize: Appearance.font.pixelSize.larger
                         color: rightSidebarButton.colText
                     }

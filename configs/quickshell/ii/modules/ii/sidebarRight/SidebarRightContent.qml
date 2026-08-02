@@ -141,9 +141,12 @@ Item {
         shownPropertyString: "showWifiDialog"
         dialog: WifiDialog {}
         onShownChanged: {
-            if (!shown) return;
-            Network.enableWifi();
-            Network.rescanWifi();
+            if (!shown) {
+                NetworkV2.scanning = false;
+            } else {
+                NetworkV2.enableWifi();
+                NetworkV2.scanning = true;
+            };
         }
     }
 

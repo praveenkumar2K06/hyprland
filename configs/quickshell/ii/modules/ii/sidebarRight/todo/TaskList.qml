@@ -20,7 +20,6 @@ Item {
         id: listView
         anchors.fill: parent
         spacing: root.todoListItemSpacing
-        animateAppearance: false
         model: ScriptModel {
             values: root.taskList
         }
