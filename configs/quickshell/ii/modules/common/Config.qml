@@ -81,10 +81,6 @@ Singleton {
 
             property string panelFamily: "ii" // "ii", "waffle"
 
-            property JsonObject extensions: JsonObject {
-                property bool enable: true
-            }
-
             property JsonObject appearance: JsonObject {
                 property bool extraBackgroundTint: true
                 property int fakeScreenRounding: 2 // 0: None | 1: Always | 2: When not fullscreen | 3: Wrapped
@@ -112,7 +108,6 @@ Singleton {
                     property string type: "auto" // Allowed: auto, scheme-content, scheme-expressive, scheme-fidelity, scheme-fruit-salad, scheme-monochrome, scheme-neutral, scheme-rainbow, scheme-tonal-spot
                     property string accentColor: ""
                 }
-                property list<string> customColorSchemes: []
             }
 
             property JsonObject audio: JsonObject {
@@ -138,8 +133,6 @@ Singleton {
 
             property JsonObject background: JsonObject {
                 property string wallpaperPath: ""
-                property string thumbnailPath: ""
-                property bool hideWhenFullscreen: true
             }
 
             property JsonObject bar: JsonObject {
@@ -236,7 +229,7 @@ Singleton {
                     ]
                     property list<var> center: [
                         {
-                            id: "music_player",
+                            id: "music_player"
                         },
                         {
                             id: "workspaces",
@@ -252,6 +245,9 @@ Singleton {
                         },
                         {
                             id: "record_indicator"
+                        },
+                        {
+                            id: "weather"
                         },
                         {
                             id: "clock"
@@ -300,6 +296,10 @@ Singleton {
                 property bool autoKillTrays: false
             }
 
+            property JsonObject hyprland: JsonObject {
+                property string defaultHyprlandLayout: "dwindle" // Options: dwindle, monocle, master // It's best to not use scrolling
+            }
+
             property JsonObject interactions: JsonObject {
                 property JsonObject scrolling: JsonObject {
                     property bool fasterTouchpadScroll: false // Enable faster scrolling with touchpad
@@ -322,7 +322,7 @@ Singleton {
             }
 
             property JsonObject launcher: JsonObject {
-                property list<string> pinnedApps: [ "org.kde.dolphin", "kitty", "cmake-gui"]
+                property list<string> pinnedApps: ["org.kde.dolphin", "kitty", "cmake-gui"]
             }
 
             property JsonObject light: JsonObject {
@@ -359,7 +359,7 @@ Singleton {
             }
 
             property JsonObject osd: JsonObject {
-                property int timeout: 1000
+                property int timeout: 2500
             }
 
             property JsonObject overview: JsonObject {
@@ -414,15 +414,11 @@ Singleton {
                     property string shellCommand: "$"
                     property string webSearch: "?"
                 }
-                property JsonObject imageSearch: JsonObject {
-                    property string imageSearchEngineBaseUrl: "https://lens.google.com/uploadbyurl?url="
-                    property bool useCircleSelection: false
-                }
             }
 
             property JsonObject sidebar: JsonObject {
                 property string position: "default"
-                property bool keepRightSidebarLoaded: true
+                property bool keepRightSidebarLoaded: false
                 property JsonObject cornerOpen: JsonObject {
                     property bool enable: false
                     property bool bottom: false
@@ -440,12 +436,30 @@ Singleton {
                     property JsonObject android: JsonObject {
                         property int columns: 5
                         property list<var> toggles: [
-                            { "size": 2, "type": "network" },
-                            { "size": 2, "type": "bluetooth"  },
-                            { "size": 1, "type": "idleInhibitor" },
-                            { "size": 1, "type": "mic" },
-                            { "size": 2, "type": "audio" },
-                            { "size": 2, "type": "nightLight" }
+                            {
+                                "size": 2,
+                                "type": "network"
+                            },
+                            {
+                                "size": 1,
+                                "type": "idleInhibitor"
+                            },
+                            {
+                                "size": 2,
+                                "type": "darkMode"
+                            },
+                            {
+                                "size": 1,
+                                "type": "mic"
+                            },
+                            {
+                                "size": 2,
+                                "type": "audio"
+                            },
+                            {
+                                "size": 2,
+                                "type": "nightLight"
+                            }
                         ]
                     }
                 }

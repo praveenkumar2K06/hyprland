@@ -35,7 +35,6 @@ RowLayout {
     MaterialShapeWrappedMaterialSymbol {
         id: searchIcon
         Layout.alignment: Qt.AlignVCenter
-        Layout.rightMargin: 4
         iconSize: Appearance.font.pixelSize.huge
         shape: switch(root.searchPrefixType) {
             case SearchBar.SearchPrefixType.Action: return MaterialShape.Shape.Pill;
@@ -63,7 +62,6 @@ RowLayout {
         id: searchInput
         Layout.topMargin: 4
         Layout.bottomMargin: 4
-        Layout.rightMargin: 4
         implicitHeight: 40
         focus: GlobalStates.overviewOpen
         font.pixelSize: Appearance.font.pixelSize.small

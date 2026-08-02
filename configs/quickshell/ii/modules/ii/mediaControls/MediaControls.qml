@@ -83,18 +83,24 @@ Scope {
         sourceComponent: PanelWindow {
             id: panelWindow
             visible: true
-
             exclusionMode: ExclusionMode.Ignore
             exclusiveZone: 0
             implicitWidth: root.widgetWidth
             implicitHeight: playerColumnLayout.implicitHeight
             color: "transparent"
             WlrLayershell.namespace: "quickshell:mediaControls"
-
+            
+            readonly property var rect: Persistent.states.media.popupRect
+            readonly property real barThickness: {
+                if (Config.options.bar.vertical) {
+                    return Config.options.bar.sizes.width || 40;
+                } else {
+                    return Config.options.bar.sizes.height || 40;
+                }
+            }
             anchors {
-                top: !Config.options.bar.bottom || Config.options.bar.vertical
-                bottom: Config.options.bar.bottom && !Config.options.bar.vertical
-                left: !(Config.options.bar.vertical && Config.options.bar.bottom)
+                top: true
+                left: !Config.options.bar.vertical || !Config.options.bar.bottom
                 right: Config.options.bar.vertical && Config.options.bar.bottom
             }
             margins {

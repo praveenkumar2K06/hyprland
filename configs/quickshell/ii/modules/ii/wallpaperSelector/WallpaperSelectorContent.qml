@@ -3,6 +3,7 @@ import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
 import qs.modules.common.widgets.expressive
+import qs.modules.common.widgets.settings
 import qs.modules.common.functions
 import QtQuick
 import QtQuick.Controls
@@ -10,23 +11,27 @@ import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import Quickshell
 import Quickshell.Io
+import Quickshell.Hyprland
 
 MouseArea {
-    id: root
+    id: wallpaperSelectorContent
     property int columns: 4
     property real previewCellAspectRatio: 4 / 3
     property bool useDarkMode: Appearance.m3colors.darkmode
+
+    property string filterText: extraOptions.text
 
     function updateThumbnails() {
         const totalImageMargin = (Appearance.sizes.wallpaperSelectorItemMargins + Appearance.sizes.wallpaperSelectorItemPadding) * 2;
         const thumbnailSizeName = Images.thumbnailSizeNameForDimensions(grid.cellWidth - totalImageMargin, grid.cellHeight - totalImageMargin);
         Wallpapers.generateThumbnail(thumbnailSizeName);
+        loadTimer.restart()
     }
 
     Connections {
         target: Wallpapers
         function onDirectoryChanged() {
-            root.updateThumbnails();
+            wallpaperSelectorContent.updateThumbnails()
         }
     }
 
@@ -43,8 +48,8 @@ MouseArea {
 
     function selectWallpaperPath(filePath) {
         if (filePath && filePath.length > 0) {
-            Wallpapers.select(filePath, root.useDarkMode);
-            filterField.text = "";
+            Wallpapers.select(filePath, wallpaperSelectorContent.useDarkMode);
+            filterText = "";
         }
     }
 
@@ -62,7 +67,7 @@ MouseArea {
             GlobalStates.wallpaperSelectorOpen = false;
             event.accepted = true;
         } else if ((event.modifiers & Qt.ControlModifier) && event.key === Qt.Key_V) { // Intercept Ctrl+V to handle "paste to go to" in pickers
-            root.handleFilePasting(event);
+            wallpaperSelectorContent.handleFilePasting(event);
         } else if (event.modifiers & Qt.AltModifier && event.key === Qt.Key_Up) {
             Wallpapers.navigateUp();
             event.accepted = true;
@@ -88,8 +93,8 @@ MouseArea {
             grid.activateCurrent();
             event.accepted = true;
         } else if (event.key === Qt.Key_Backspace) {
-            if (filterField.text.length > 0) {
-                filterField.text = filterField.text.substring(0, filterField.text.length - 1);
+            if (filterText.length > 0) {
+                filterText = filterText.substring(0, filterText.length - 1);
             }
             filterField.forceActiveFocus();
             event.accepted = true;
@@ -101,8 +106,8 @@ MouseArea {
             event.accepted = true;
         } else {
             if (event.text.length > 0) {
-                filterField.text += event.text;
-                filterField.cursorPosition = filterField.text.length;
+                filterText += event.text;
+                filterField.cursorPosition = filterText.length;
                 filterField.forceActiveFocus();
             }
             event.accepted = true;
@@ -158,62 +163,77 @@ MouseArea {
                         }
                         text: "Pick a wallpaper"
                     }
-                    ListView {
-                        // Quick dirs
+                    Item {
+                        id: quickDirsContainer
                         Layout.fillHeight: true
-                        Layout.margins: 4
-                        implicitWidth: 140
-                        clip: true
-                        model: [
-                            {
-                                icon: "home",
-                                name: "Home",
-                                path: Directories.home
-                            },
-                            {
-                                icon: "docs",
-                                name: "Documents",
-                                path: Directories.documents
-                            },
-                            {
-                                icon: "download",
-                                name: "Downloads",
-                                path: Directories.downloads
-                            },
-                            {
-                                icon: "image",
-                                name: "Pictures",
-                                path: Directories.pictures
-                            },
-                            {
-                                icon: "movie",
-                                name: "Videos",
-                                path: Directories.videos
-                            },
-                            {
-                                icon: "",
-                                name: "---",
-                                path: "INTENTIONALLY_INVALID_DIR"
-                            },
-                            {
-                                icon: "wallpaper",
-                                name: "Wallpapers",
-                                path: `${Directories.pictures}/wallpapers`
-                            },
-                        ]
-                        delegate: MaterialButtonE {
-                            id: quickDirButton
-                            required property var modelData
-                            anchors {
-                                left: parent.left
-                                right: parent.right
+                        Layout.fillWidth: true
+                        implicitWidth: 160
+
+                        Flickable {
+                            id: sideBarFlickable
+                            anchors.fill: parent
+                            contentHeight: sideBarRail.implicitHeight
+                            clip: true
+                            interactive: contentHeight > height
+                            
+                            ScrollBar.vertical: StyledScrollBar { 
+                                visible: sideBarFlickable.interactive
                             }
-                            onClicked: Wallpapers.setDirectory(quickDirButton.modelData.path)
-                            buttonText: quickDirButton.modelData.name
-                            iconSize: Appearance.font.pixelSize.larger
-                            materialIcon: quickDirButton.modelData.icon
-                            type: Wallpapers.directory === Qt.resolvedUrl(modelData.path) ? MaterialButtonE.ButtonType.Tonal : MaterialButtonE.ButtonType.Text
-                            iconFilled: Wallpapers.directory === Qt.resolvedUrl(modelData.path) ? 1 : 0
+
+                            NavigationRailTabArray {
+                                id: sideBarRail
+                                anchors.top: parent.top
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.leftMargin: 10
+                                anchors.rightMargin: 10
+                                Layout.topMargin: 0
+                                expanded: true
+                                currentIndex: {
+                                    const model = sideBarRepeater.model;
+                                    for (let i = 0; i < model.length; i++) {
+                                        let item = model[i];
+                                        let isToggled = false;
+                                        isToggled = Wallpapers.directory === Qt.resolvedUrl(item.path);
+                                        
+                                        if (isToggled) return i;
+                                    }
+                                    return -1;
+                                }
+
+                                Repeater {
+                                    id: sideBarRepeater
+                                    model: [
+                                        { icon: "home", name: "Home", path: Directories.home }, 
+                                        { icon: "docs", name: "Documents", path: Directories.documents }, 
+                                        { icon: "download", name: "Downloads", path: Directories.downloads }, 
+                                        { icon: "image", name: "Pictures", path: Directories.pictures }, 
+                                        { icon: "movie", name: "Videos", path: Directories.videos },
+                                        { icon: "", name: "---", path: "INTENTIONALLY_INVALID_DIR" }, 
+                                        ...Config.options.wallpaperSelector.directories,
+                                    ]
+                                    delegate: NavigationRailButton {
+                                        id: quickDirButton
+                                        required property var modelData
+                                        required property int index
+                                        
+                                        baseSize: 40
+                                        baseHighlightHeight: 32
+                                        iconSize: 18
+                                        
+                                        buttonIcon: modelData.icon
+                                        buttonText: modelData.name
+                                        expanded: true
+                                        toggled: sideBarRail.currentIndex === index
+                                        showToggledHighlight: false
+                                        
+                                        onClicked: {
+                                            Wallpapers.setDirectory(quickDirButton.modelData.path)
+                                        }
+                                        enabled: modelData.icon.length > 0
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -261,15 +281,15 @@ MouseArea {
 
                     GridView {
                         id: grid
-                        visible: Wallpapers.folderModel.count > 0
+                        visible: count > 0
 
-                        readonly property int columns: root.columns
+                        readonly property int columns: wallpaperSelectorContent.columns
                         readonly property int rows: Math.max(1, Math.ceil(count / columns))
                         property int currentIndex: 0
 
                         anchors.fill: parent
-                        cellWidth: width / root.columns
-                        cellHeight: cellWidth / root.previewCellAspectRatio
+                        cellWidth: width / wallpaperSelectorContent.columns
+                        cellHeight: cellWidth / wallpaperSelectorContent.previewCellAspectRatio
                         interactive: true
                         clip: true
                         keyNavigationWraps: true
@@ -278,7 +298,8 @@ MouseArea {
                         ScrollBar.vertical: StyledScrollBar {}
 
                         Component.onCompleted: {
-                            root.updateThumbnails();
+                            Qt.callLater(() => loadTimer.start())
+                            wallpaperSelectorContent.updateThumbnails()
                         }
 
                         function moveSelection(delta) {
@@ -287,11 +308,24 @@ MouseArea {
                         }
 
                         function activateCurrent() {
-                            const filePath = grid.model.get(currentIndex, "filePath");
-                            root.selectWallpaperPath(filePath);
+                            const item = grid.model.get(currentIndex)
+                            wallpaperSelectorContent.selectWallpaperPath(item.actualPath || item.filePath);
                         }
 
-                        model: Wallpapers.folderModel
+                        property int loadedCount: 0
+
+                        Timer {
+                            id: loadTimer
+                            interval: 16
+                            repeat: true
+                            running: false
+                            onTriggered: {
+                                grid.loadedCount += 1
+                                if (grid.loadedCount >= grid.count) loadTimer.stop()
+                            }
+                        }
+
+                        model: wallpaperSelectorContent.activeColorFilter ? colorFilteredModel : Wallpapers.folderModel
                         onModelChanged: currentIndex = 0
                         delegate: WallpaperDirectoryItem {
                             required property var modelData
@@ -301,13 +335,12 @@ MouseArea {
                             height: grid.cellHeight
                             colBackground: (index === grid?.currentIndex || containsMouse) ? Appearance.colors.colPrimary : (fileModelData.filePath === Config.options.background.wallpaperPath) ? Appearance.colors.colSecondaryContainer : ColorUtils.transparentize(Appearance.colors.colPrimaryContainer)
                             colText: (index === grid.currentIndex || containsMouse) ? Appearance.colors.colOnPrimary : (fileModelData.filePath === Config.options.background.wallpaperPath) ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnLayer0
-
+                            shouldLoad: index < grid.loadedCount
                             onEntered: {
                                 grid.currentIndex = index;
                             }
-
                             onActivated: {
-                                root.selectWallpaperPath(fileModelData.filePath);
+                                wallpaperSelectorContent.selectWallpaperPath(fileModelData.actualPath || fileModelData.filePath);
                             }
                         }
 
@@ -334,11 +367,11 @@ MouseArea {
                             IconToolbarButton {
                                 implicitWidth: height
                                 onClicked: {
-                                    Wallpapers.openFallbackPicker(root.useDarkMode);
+                                    Wallpapers.openFallbackPicker(wallpaperSelectorContent.useDarkMode);
                                     GlobalStates.wallpaperSelectorOpen = false;
                                 }
                                 altAction: () => {
-                                    Wallpapers.openFallbackPicker(root.useDarkMode);
+                                    Wallpapers.openFallbackPicker(wallpaperSelectorContent.useDarkMode);
                                     GlobalStates.wallpaperSelectorOpen = false;
                                     Config.options.wallpaperSelector.useSystemFileDialog = true;
                                 }
@@ -361,8 +394,8 @@ MouseArea {
 
                             IconToolbarButton {
                                 implicitWidth: height
-                                onClicked: root.useDarkMode = !root.useDarkMode
-                                text: root.useDarkMode ? "dark_mode" : "light_mode"
+                                onClicked: wallpaperSelectorContent.useDarkMode = !wallpaperSelectorContent.useDarkMode
+                                text: wallpaperSelectorContent.useDarkMode ? "dark_mode" : "light_mode"
                                 StyledToolTip {
                                     text: "Click to toggle light/dark mode\n(applied when wallpaper is chosen)"
                                 }
@@ -383,7 +416,7 @@ MouseArea {
 
                                 Keys.onPressed: event => {
                                     if ((event.modifiers & Qt.ControlModifier) && event.key === Qt.Key_V) { // Intercept Ctrl+V to handle "paste to go to" in pickers
-                                        root.handleFilePasting(event);
+                                        wallpaperSelectorContent.handleFilePasting(event);
                                         return;
                                     } else if (text.length !== 0) {
                                         // No filtering, just navigate grid
@@ -420,7 +453,7 @@ MouseArea {
         target: GlobalStates
         function onWallpaperSelectorOpenChanged() {
             if (GlobalStates.wallpaperSelectorOpen && monitorIsFocused) {
-                filterField.forceActiveFocus();
+                    filterField.forceActiveFocus();
             }
         }
     }

@@ -225,27 +225,5 @@ ContentPage {
                 ]
             }
         }
-    }
-  
-    ContentSection {  
-        icon: "work_alert"  
-        title: "Work safety"  
-  
-        ConfigSwitch {  
-            buttonIcon: "assignment"  
-            text: "Hide clipboard images copied from sussy sources"  
-            checked: Config.options.workSafety.enable.clipboard  
-            onCheckedChanged: {  
-                Config.options.workSafety.enable.clipboard = checked;  
-            }  
-        }  
-        ConfigSwitch {  
-            buttonIcon: "wallpaper"  
-            text: "Hide sussy/anime wallpapers"  
-            checked: Config.options.workSafety.enable.wallpaper  
-            onCheckedChanged: {  
-                Config.options.workSafety.enable.wallpaper = checked;  
-            }  
-        }  
     }  
 }

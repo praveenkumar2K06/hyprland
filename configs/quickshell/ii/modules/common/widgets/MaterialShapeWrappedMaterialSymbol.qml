@@ -10,7 +10,7 @@ MaterialShape {
     property alias colSymbol: symbol.color
     property alias fill: symbol.fill
     property alias animateChange: symbol.animateChange
-    property real padding: 8
+    property real padding: 4
 
     property bool rotateIconWithShape: false
 

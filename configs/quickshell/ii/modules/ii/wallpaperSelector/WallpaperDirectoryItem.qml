@@ -1,3 +1,4 @@
+import qs
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
@@ -10,7 +11,14 @@ MouseArea {
     id: root
     required property var fileModelData
     property bool isDirectory: fileModelData.fileIsDir
-    property bool useThumbnail: Images.isValidImageByName(fileModelData.fileName)
+
+    property bool shouldLoad: true
+
+    property bool isVideo: {
+        const path = fileModelData.fileName.toLowerCase();
+        return path.endsWith('.mp4') || path.endsWith('.webm') || path.endsWith('.mkv') || path.endsWith('.avi') || path.endsWith('.mov') || path.endsWith('.m4v') || path.endsWith('.ogv');
+    }
+    property bool useThumbnail: (Images.isValidImageByName(fileModelData.fileName) || root.isVideo)
 
     property alias colBackground: background.color
     property alias colText: wallpaperItemName.color
@@ -20,10 +28,15 @@ MouseArea {
     margins: Appearance.sizes.wallpaperSelectorItemMargins
     padding: Appearance.sizes.wallpaperSelectorItemPadding
 
-    signal activated()
+    signal activated
 
     hoverEnabled: true
-    onClicked: root.activated()
+    acceptedButtons: Qt.LeftButton | Qt.RightButton
+    onClicked: (event) => {
+        if (event.button === Qt.LeftButton) {
+            root.activated()
+        }
+    }
 
     Rectangle {
         id: background
@@ -45,7 +58,7 @@ MouseArea {
 
                 Loader {
                     id: thumbnailShadowLoader
-                    active: thumbnailImageLoader.active && thumbnailImageLoader.item.status === Image.Ready
+                    active: thumbnailImageLoader.active && thumbnailImageLoader.item.status === Image.Ready && root.shouldLoad
                     anchors.fill: thumbnailImageLoader
                     sourceComponent: StyledRectangularShadow {
                         target: thumbnailImageLoader
@@ -57,7 +70,7 @@ MouseArea {
                 Loader {
                     id: thumbnailImageLoader
                     anchors.fill: parent
-                    active: root.useThumbnail
+                    active: root.useThumbnail && root.shouldLoad
                     sourceComponent: ThumbnailImage {
                         id: thumbnailImage
                         generateThumbnail: false
@@ -95,8 +108,22 @@ MouseArea {
                 }
 
                 Loader {
+                    id: videoIconLoader
+                    active: root.isVideo && root.useThumbnail && root.shouldLoad
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.margins: 8
+                    sourceComponent: MaterialSymbol {
+                        text: "video_library"
+                        color: Appearance.colors.colPrimary
+                        font.pixelSize: Appearance.font.pixelSize.large
+                        fill: 1
+                    }
+                }
+
+                Loader {
                     id: iconLoader
-                    active: !root.useThumbnail
+                    active: !root.useThumbnail && root.shouldLoad
                     anchors.fill: parent
                     sourceComponent: DirectoryIcon {
                         fileModelData: root.fileModelData

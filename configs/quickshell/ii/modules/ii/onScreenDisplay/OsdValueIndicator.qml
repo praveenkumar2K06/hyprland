@@ -9,6 +9,7 @@ Item {
     required property real value
     required property string icon
     required property string name
+    property var shape
     property bool rotateIcon: false
     property bool scaleIcon: false
     property alias from: valueProgressBar.from
@@ -28,43 +29,35 @@ Item {
         id: valueIndicator
         anchors {
             fill: parent
+            margins: Appearance.sizes.elevationMargin
         }
         radius: Appearance.rounding.full
-        color: Appearance.colors.colLayer0
+        color: Appearance.m3colors.m3surfaceContainer
 
         implicitWidth: valueRow.implicitWidth
         implicitHeight: valueRow.implicitHeight
 
         RowLayout { // Icon on the left, stuff on the right
             id: valueRow
+            Layout.margins: 10
             anchors.fill: parent
+            spacing: 5
 
             Item {
                 implicitWidth: 30
+                implicitHeight: 35
                 Layout.alignment: Qt.AlignVCenter
                 Layout.leftMargin: valueIndicatorLeftPadding
                 Layout.topMargin: valueIndicatorVerticalPadding
                 Layout.bottomMargin: valueIndicatorVerticalPadding
 
-                MaterialSymbol { // Icon
-                    anchors {
-                        centerIn: parent
-                        alignWhenCentered: !root.rotateIcon
-                    }
-                    color: Appearance.colors.colOnLayer0
-                    renderType: Text.QtRendering
-
+                MaterialShapeWrappedMaterialSymbol {
+                    rotation: root.value * 360
+                    anchors.centerIn: parent
+                    iconSize: Appearance.font.pixelSize.huge
+                    shape: root.shape
                     text: root.icon
-                    iconSize: 20 + 10 * (root.scaleIcon ? value : 1)
-                    rotation: 180 * (root.rotateIcon ? value : 0)
-
-                    Behavior on iconSize {
-                        animation: Appearance.animation.elementMoveEnter.numberAnimation.createObject(this)
-                    }
-                    Behavior on rotation {
-                        animation: Appearance.animation.elementMoveEnter.numberAnimation.createObject(this)
-                    }
-                
+                    rotateIconWithShape: root.rotateIcon
                 }
             }
             ColumnLayout { // Stuff
@@ -87,6 +80,8 @@ Item {
                         color: Appearance.colors.colOnLayer0
                         font.pixelSize: Appearance.font.pixelSize.small
                         Layout.fillWidth: false
+                        Layout.preferredWidth: 30
+                        horizontalAlignment: Text.AlignRight
                         text: Math.round(root.value * 100)
                     }
                 }

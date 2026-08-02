@@ -13,13 +13,13 @@ Singleton {
     property QtObject rounding
     property QtObject font
     property QtObject sizes
-    property string syntaxHighlightingTheme
 
     // Transparency. The quadratic functions were derived from analysis of hand-picked transparency values.
     ColorQuantizer {
         id: wallColorQuant
         property string wallpaperPath: Config.options.background.wallpaperPath
-        source: Qt.resolvedUrl(Config.options.background.wallpaperPath)
+        property bool wallpaperIsVideo: wallpaperPath.endsWith(".mp4") || wallpaperPath.endsWith(".webm") || wallpaperPath.endsWith(".mkv") || wallpaperPath.endsWith(".avi") || wallpaperPath.endsWith(".mov")
+        source: Qt.resolvedUrl(wallpaperIsVideo ? Config.options.background.thumbnailPath : Config.options.background.wallpaperPath)
         depth: 0 // 2^0 = 1 color
         rescaleSize: 10
     }
@@ -212,16 +212,16 @@ Singleton {
     }
 
     rounding: QtObject {
-        property int unsharpen: 2
-        property int unsharpenmore: 6
-        property int verysmall: 8
-        property int small: 12
-        property int normal: 17
-        property int large: 23
-        property int verylarge: 30
-        property int full: 9999
+        property int unsharpen: Config.options.appearance.sharpMode ? 0 : 2
+        property int unsharpenmore: Config.options.appearance.sharpMode ? 0 : 6
+        property int verysmall: Config.options.appearance.sharpMode ? 0 : 8
+        property int small: Config.options.appearance.sharpMode ? 0 : 12
+        property int normal: Config.options.appearance.sharpMode ? 0 : 17
+        property int large: Config.options.appearance.sharpMode ? 0 : 23
+        property int verylarge: Config.options.appearance.sharpMode ? 0 : 30
+        property int full: Config.options.appearance.sharpMode ? 0 : 9999
         property int screenRounding: large
-        property int windowRounding: 18
+        property int windowRounding: Config.options.appearance.sharpMode ? 0 : 18
     }
 
     font: QtObject {
@@ -344,21 +344,17 @@ Singleton {
             property int type: Easing.BezierSpline
             property list<real> bezierCurve: animationCurves.expressiveEffects
             property int velocity: 850
-            property Component colorAnimation: Component { 
-                ColorAnimation {
-                    duration: root.animation.elementMoveSlow.duration
-                    easing.type: root.animation.elementMoveSlow.type
-                    easing.bezierCurve: root.animation.elementMoveSlow.bezierCurve
-                }
-            }
-            property Component numberAnimation: Component { 
-                NumberAnimation {
-                    alwaysRunToEnd: true
-                    duration: root.animation.elementMoveSlow.duration
-                    easing.type: root.animation.elementMoveSlow.type
-                    easing.bezierCurve: root.animation.elementMoveSlow.bezierCurve
-                }
-            }
+            property Component colorAnimation: Component { ColorAnimation {
+                duration: root.animation.elementMoveSlow.duration
+                easing.type: root.animation.elementMoveSlow.type
+                easing.bezierCurve: root.animation.elementMoveSlow.bezierCurve
+            }}
+            property Component numberAnimation: Component { NumberAnimation {
+                alwaysRunToEnd: true
+                duration: root.animation.elementMoveSlow.duration
+                easing.type: root.animation.elementMoveSlow.type
+                easing.bezierCurve: root.animation.elementMoveSlow.bezierCurve
+            }}
         }
 
         property QtObject elementMoveFast: QtObject {
@@ -420,7 +416,7 @@ Singleton {
     }
 
     sizes: QtObject {
-        property real baseBarHeight: 40
+        property real baseBarHeight: Config.options.bar.sizes.height
         property real barHeight: Config.options.bar.cornerStyle === 1 ? 
             (baseBarHeight + root.sizes.hyprlandGapsOut * 2) : baseBarHeight
         property real barCenterSideModuleWidth: Config.options?.bar.verbose ? 360 : 140
@@ -435,12 +431,11 @@ Singleton {
         property real mediaControlsWidth: 440
         property real mediaControlsHeight: 160
         property real notificationPopupWidth: 410
-        property real osdWidth: 180
+        property real osdWidth: 200
         property real searchWidthCollapsed: 210
         property real searchWidth: 360
         property real sidebarWidth: 460
-        property real sidebarWidthExtended: 750
-        property real baseVerticalBarWidth: 46
+        property real baseVerticalBarWidth: Config.options.bar.sizes.width
         property real verticalBarWidth: Config.options.bar.cornerStyle === 1 ? 
             (baseVerticalBarWidth + root.sizes.hyprlandGapsOut * 2) : baseVerticalBarWidth
         property real wallpaperSelectorWidth: 1200
@@ -448,6 +443,4 @@ Singleton {
         property real wallpaperSelectorItemMargins: 8
         property real wallpaperSelectorItemPadding: 6
     }
-
-    syntaxHighlightingTheme: root.m3colors.darkmode ? "Monokai" : "ayu Light"
 }

@@ -55,11 +55,6 @@ ApplicationWindow {
             icon: "api",
             component: "modules/settings/ServicesConfig.qml"
         },
-        // {
-        //     name: "Extensions",
-        //     icon: "extension",
-        //     component: "modules/settings/ExtensionsConfig.qml"
-        // },
         {
             name: "Advanced",
             icon: "construction",

@@ -26,6 +26,10 @@ Scope {
             sourceUrl: "indicators/BrightnessIndicator.qml"
         },
         {
+            id: "playerVolume",
+            sourceUrl: "indicators/PlayerVolumeIndicator.qml"
+        },
+        {
             id: "gamma",
             sourceUrl: "indicators/GammaIndicator.qml"
         },
@@ -89,6 +93,17 @@ Scope {
             root.protectionMessage = reason;
             root.currentIndicator = "volume";
             root.triggerOsd();
+        }
+    }
+
+    Connections {
+        // Listen to MPRIS/MPD media player volume changes
+        target: MprisController.activePlayer ?? null
+        function onVolumeChanged() {
+            if (MprisController.canChangeVolume) {
+                root.currentIndicator = "playerVolume";
+                root.triggerOsd();
+            }
         }
     }
 
