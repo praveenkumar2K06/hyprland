@@ -15,6 +15,8 @@ DialogListItem {
     onClicked: expanded = !expanded
     altAction: () => expanded = !expanded
 
+    buttonRadius: Appearance.rounding.normal
+
     contentItem: ColumnLayout {
         anchors {
             fill: parent

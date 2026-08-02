@@ -34,14 +34,14 @@ WindowDialog {
     StyledListView {
         Layout.fillHeight: true
         Layout.fillWidth: true
-        Layout.topMargin: -15
-        Layout.bottomMargin: -16
-        Layout.leftMargin: -Appearance.rounding.large
-        Layout.rightMargin: -Appearance.rounding.large
+        Layout.topMargin: -10
+        Layout.bottomMargin: -10
+        Layout.leftMargin: -Appearance.rounding.normal
+        Layout.rightMargin: -Appearance.rounding.normal
 
         clip: true
-        spacing: 0
-        animateAppearance: false
+        spacing: 5
+        animateAppearance: true
 
         model: ScriptModel {
             values: BluetoothStatus.friendlyDeviceList

@@ -17,6 +17,8 @@ DialogListItem {
         Network.connectToWifiNetwork(wifiNetwork);
     }
 
+    buttonRadius: Appearance.rounding.normal
+
     contentItem: ColumnLayout {
         anchors {
             fill: parent
