@@ -1,5 +1,6 @@
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.expressive
 import qs.services
 import QtQuick
 import QtQuick.Layouts
@@ -111,13 +112,13 @@ Item {
                 Layout.rightMargin: dialogPadding
                 Layout.alignment: Qt.AlignRight
 
-                MaterialButton {
-                    type: MaterialButton.ButtonType.Text
+                MaterialButtonE {
+                    type: MaterialButtonE.ButtonType.Text
                     buttonText: "Cancel"
                     onClicked: root.canceled()
                 }
-                MaterialButton {
-                    type: MaterialButton.ButtonType.Text
+                MaterialButtonE {
+                    type: MaterialButtonE.ButtonType.Text
                     buttonText: "OK"
                     onClicked: root.selected(
                         root.selectedId === -1 ? null :

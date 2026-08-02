@@ -1,6 +1,7 @@
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.expressive
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -203,13 +204,13 @@ Item {
                     Layout.alignment: Qt.AlignRight
                     spacing: 5
 
-                    MaterialButton {
-                        type: MaterialButton.ButtonType.Text
+                    MaterialButtonE {
+                        type: MaterialButtonE.ButtonType.Text
                         buttonText: "Cancel"
                         onClicked: root.showAddDialog = false
                     }
-                    MaterialButton {
-                        type: MaterialButton.ButtonType.Text
+                    MaterialButtonE {
+                        type: MaterialButtonE.ButtonType.Text
                         buttonText: "Add"
                         enabled: todoInput.text.length > 0
                         onClicked: dialog.addTask()

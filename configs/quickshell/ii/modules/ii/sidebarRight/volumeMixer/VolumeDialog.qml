@@ -3,6 +3,7 @@ import qs
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.expressive
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -28,8 +29,8 @@ WindowDialog {
     }
 
     WindowDialogButtonRow {
-        MaterialButton {
-            type: MaterialButton.ButtonType.Text
+        MaterialButtonE {
+            type: MaterialButtonE.ButtonType.Text
             buttonText: "Details"
             onClicked: {
                 Quickshell.execDetached(["bash", "-c", `${Config.options.apps.volumeMixer}`]);
@@ -41,8 +42,8 @@ WindowDialog {
             Layout.fillWidth: true
         }
 
-        MaterialButton {
-            type: MaterialButton.ButtonType.Text
+        MaterialButtonE {
+            type: MaterialButtonE.ButtonType.Text
             buttonText: "Done"
             onClicked: root.dismiss()
         }

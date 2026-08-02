@@ -1,6 +1,7 @@
 import qs.modules.common
 import qs.modules.common.functions
 import qs.modules.common.widgets
+import qs.modules.common.widgets.expressive
 import qs.services
 import QtQuick
 import QtQuick.Layouts
@@ -13,13 +14,6 @@ DialogListItem {
 
     onClicked: expanded = !expanded
     altAction: () => expanded = !expanded
-    
-    component ActionButton: DialogButton {
-        colBackground: Appearance.colors.colPrimary
-        colBackgroundHover: Appearance.colors.colPrimaryHover
-        colRipple: Appearance.colors.colPrimaryActive
-        colText: Appearance.colors.colOnPrimary
-    }
 
     contentItem: ColumnLayout {
         anchors {
@@ -83,12 +77,9 @@ DialogListItem {
             Item {
                 Layout.fillWidth: true
             }
-            ActionButton {
+            MaterialButtonE {
                 readonly property bool p: root.device?.paired ?? false
-                colBackground: p ? Appearance.colors.colError : ColorUtils.transparentize(Appearance.colors.colLayer3, 1)
-                colBackgroundHover: p ? Appearance.colors.colErrorHover : ColorUtils.transparentize(Appearance.colors.colLayer3, 1)
-                colRipple: p ? Appearance.colors.colErrorActive : Appearance.colors.colLayer3Hover
-                colText: p ? Appearance.colors.colOnError : Appearance.colors.colPrimary
+                type: p ? MaterialButtonE.ButtonType.Error : MaterialButtonE.ButtonType.Text
 
                 buttonText: p ? "Forget" : "Always connect"
                 onClicked: {
@@ -99,8 +90,8 @@ DialogListItem {
                     }
                 }
             }
-            MaterialButton {
-                type: MaterialButton.ButtonType.Filled
+            MaterialButtonE {
+                type: MaterialButtonE.ButtonType.Filled
                 buttonText: root.device?.connected ? "Disconnect" : "Connect"
 
                 onClicked: {

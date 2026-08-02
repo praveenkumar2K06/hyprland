@@ -2,6 +2,7 @@ import qs
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.expressive
 import qs.modules.common.functions
 import QtQuick
 import QtQuick.Controls
@@ -196,8 +197,8 @@ WindowDialog {
             Layout.fillWidth: true
         }
 
-        MaterialButton {
-            type: MaterialButton.ButtonType.Text
+        MaterialButtonE {
+            type: MaterialButtonE.ButtonType.Text
             buttonText: "Done"
             onClicked: root.dismiss()
         }

@@ -5,6 +5,7 @@ import Quickshell.Widgets
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.expressive
 
 Item {
     id: root
@@ -88,18 +89,17 @@ Item {
         }
 
         WindowDialogButtonRow {
-            Layout.bottomMargin: 10 // I honestly don't know why this is necessary
             Item {
                 Layout.fillWidth: true
             }
-            MaterialButton {
-                type: MaterialButton.ButtonType.Text
+            MaterialButtonE {
+                type: MaterialButtonE.ButtonType.Text
                 buttonText: "Cancel"
                 onClicked: PolkitService.cancel();
             }
-            MaterialButton {
+            MaterialButtonE {
                 enabled: PolkitService.interactionAvailable
-                type: MaterialButton.ButtonType.Filled
+                type: MaterialButtonE.ButtonType.Filled
                 buttonText: "OK"
                 onClicked: root.submit();
             }

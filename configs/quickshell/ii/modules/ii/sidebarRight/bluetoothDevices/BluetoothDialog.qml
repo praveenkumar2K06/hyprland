@@ -2,11 +2,11 @@ import qs
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.expressive
 import qs.modules.common.functions
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Qt5Compat.GraphicalEffects
 import Quickshell.Io
 import Quickshell.Bluetooth
 import Quickshell
@@ -57,8 +57,8 @@ WindowDialog {
     }
     WindowDialogSeparator {}
     WindowDialogButtonRow {
-        MaterialButton {
-            type: MaterialButton.ButtonType.Text
+        MaterialButtonE {
+            type: MaterialButtonE.ButtonType.Text
             buttonText: "Details"
             onClicked: {
                 Quickshell.execDetached(["bash", "-c", `${Config.options.apps.bluetooth}`]);
@@ -70,8 +70,8 @@ WindowDialog {
             Layout.fillWidth: true
         }
 
-        MaterialButton {
-            type: MaterialButton.ButtonType.Text
+        MaterialButtonE {
+            type: MaterialButtonE.ButtonType.Text
             buttonText: "Done"
             onClicked: root.dismiss()
         }

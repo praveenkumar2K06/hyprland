@@ -3,6 +3,7 @@ import qs.services
 import qs.services.network
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.expressive
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -47,8 +48,8 @@ WindowDialog {
     }
     WindowDialogSeparator {}
     WindowDialogButtonRow {
-        MaterialButton {
-            type: MaterialButton.ButtonType.Text
+        MaterialButtonE {
+            type: MaterialButtonE.ButtonType.Text
             buttonText: "Details"
             onClicked: {
                 Quickshell.execDetached(["bash", "-c", `${Network.ethernet ? Config.options.apps.networkEthernet : Config.options.apps.network}`]);
@@ -60,8 +61,8 @@ WindowDialog {
             Layout.fillWidth: true
         }
 
-        MaterialButton {
-            type: MaterialButton.ButtonType.Text
+        MaterialButtonE {
+            type: MaterialButtonE.ButtonType.Filled
             buttonText: "Done"
             onClicked: root.dismiss()
         }

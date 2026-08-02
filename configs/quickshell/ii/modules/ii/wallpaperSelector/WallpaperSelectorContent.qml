@@ -2,6 +2,7 @@ import qs
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.expressive
 import qs.modules.common.functions
 import QtQuick
 import QtQuick.Controls
@@ -197,10 +198,10 @@ MouseArea {
                             {
                                 icon: "wallpaper",
                                 name: "Wallpapers",
-                                path: `${Directories.pictures}/Wallpapers`
+                                path: `${Directories.pictures}/wallpapers`
                             },
                         ]
-                        delegate: RippleButton {
+                        delegate: MaterialButtonE {
                             id: quickDirButton
                             required property var modelData
                             anchors {
@@ -208,28 +209,11 @@ MouseArea {
                                 right: parent.right
                             }
                             onClicked: Wallpapers.setDirectory(quickDirButton.modelData.path)
-                            enabled: modelData.icon.length > 0
-                            toggled: Wallpapers.directory === Qt.resolvedUrl(modelData.path)
-                            colBackgroundToggled: Appearance.colors.colSecondaryContainer
-                            colBackgroundToggledHover: Appearance.colors.colSecondaryContainerHover
-                            colRippleToggled: Appearance.colors.colSecondaryContainerActive
-                            buttonRadius: height / 2
-                            implicitHeight: 38
-
-                            contentItem: RowLayout {
-                                MaterialSymbol {
-                                    color: quickDirButton.toggled ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnLayer1
-                                    iconSize: Appearance.font.pixelSize.larger
-                                    text: quickDirButton.modelData.icon
-                                    fill: quickDirButton.toggled ? 1 : 0
-                                }
-                                StyledText {
-                                    Layout.fillWidth: true
-                                    horizontalAlignment: Text.AlignLeft
-                                    color: quickDirButton.toggled ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnLayer1
-                                    text: quickDirButton.modelData.name
-                                }
-                            }
+                            buttonText: quickDirButton.modelData.name
+                            iconSize: Appearance.font.pixelSize.larger
+                            materialIcon: quickDirButton.modelData.icon
+                            type: Wallpapers.directory === Qt.resolvedUrl(modelData.path) ? MaterialButtonE.ButtonType.Tonal : MaterialButtonE.ButtonType.Text
+                            iconFilled: Wallpapers.directory === Qt.resolvedUrl(modelData.path) ? 1 : 0
                         }
                     }
                 }

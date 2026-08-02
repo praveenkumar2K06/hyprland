@@ -1,6 +1,7 @@
 import qs
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.expressive
 import qs.services
 import qs.services.network
 import QtQuick
@@ -76,16 +77,16 @@ DialogListItem {
                     Layout.fillWidth: true
                 }
 
-                MaterialButton {
-                    type: MaterialButton.ButtonType.Text
+                MaterialButtonE {
+                    type: MaterialButtonE.ButtonType.Text
                     buttonText: "Cancel"
                     onClicked: {
                         root.wifiNetwork.askingPassword = false;
                     }
                 }
 
-                MaterialButton {
-                    type: MaterialButton.ButtonType.Text
+                MaterialButtonE {
+                    type: MaterialButtonE.ButtonType.Text
                     buttonText: "Connect"
                     onClicked: {
                         Network.changePassword(root.wifiNetwork, passwordField.text);
@@ -100,12 +101,10 @@ DialogListItem {
             visible: (root.wifiNetwork?.active && (root.wifiNetwork?.security ?? "").trim().length === 0) ?? false
 
             RowLayout {
-                DialogButton {
+                MaterialButtonE {
+                    type: MaterialButtonE.ButtonType.Filled
                     Layout.fillWidth: true
                     buttonText: "Open network portal"
-                    colBackground: Appearance.colors.colLayer4
-                    colBackgroundHover: Appearance.colors.colLayer4Hover
-                    colRipple: Appearance.colors.colLayer4Active
                     onClicked: {
                         Network.openPublicWifiPortal()
                         GlobalStates.sidebarRightOpen = false

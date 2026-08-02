@@ -32,7 +32,7 @@ RippleButton {
             Appearance.colors.colOnPrimary) :
         Appearance.m3colors.m3outline
 
-    implicitHeight: 36
+    implicitHeight: 40
     horizontalPadding: 20
     buttonRadius: Appearance.rounding.full
 
