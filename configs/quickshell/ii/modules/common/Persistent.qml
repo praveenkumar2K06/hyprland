@@ -65,69 +65,29 @@ Singleton {
                 }
             }
 
-            property JsonObject idle: JsonObject {
-                property bool inhibit: false
+            property JsonObject hyprland: JsonObject {
+                property string layout: "dwindle"
             }
 
-            property JsonObject overlay: JsonObject {
-                property list<string> open: ["crosshair", "recorder", "volumeMixer", "resources"]
-                property JsonObject crosshair: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: true
-                    property real x: 827
-                    property real y: 441
-                    property real width: 250
-                    property real height: 100
-                }
-                property JsonObject floatingImage: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: false
-                    property real x: 1650
-                    property real y: 390
-                    property real width: 0
-                    property real height: 0
-                }
-                property JsonObject fpsLimiter: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: false
-                    property real x: 1570
-                    property real y: 615
-                    property real width: 280
-                    property real height: 80
-                }
-                property JsonObject recorder: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: false
-                    property real x: 80
-                    property real y: 80
-                    property real width: 350
-                    property real height: 130
-                }
-                property JsonObject resources: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: true
-                    property real x: 1500
-                    property real y: 770
-                    property real width: 350
-                    property real height: 200
-                    property int tabIndex: 0
-                }
-                property JsonObject volumeMixer: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: false
-                    property real x: 80
-                    property real y: 280
-                    property real width: 350
-                    property real height: 600
-                    property int tabIndex: 0
-                }
-                property JsonObject notes: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: true
-                    property real x: 1400
-                    property real y: 42
-                    property real width: 460
-                    property real height: 330
+            property JsonObject idle: JsonObject {
+                property bool inhibit: false
+                property string sessionId: ""
+            }
+
+            property JsonObject screenRecord: JsonObject {
+                property bool active: false
+                property int seconds: 0
+            }
+
+            property JsonObject settings: JsonObject {
+                property JsonObject fonts: JsonObject {
+                    property string main: "Google Sans Flex"
+                    property string numbers: "Google Sans Flex"
+                    property string title: "Google Sans Flex"
+                    property string iconNerd: "JetBrains Mono NF"
+                    property string monospace: "JetBrains Mono NF"
+                    property string reading: "Readex Pro"
+                    property string expressive: "Space Grotesk" 
                 }
             }
 

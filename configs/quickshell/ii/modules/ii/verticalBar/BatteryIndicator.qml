@@ -3,7 +3,7 @@ import qs.modules.common.widgets
 import qs.services
 import QtQuick
 import QtQuick.Layouts
-import qs.modules.ii.bar.mid as Bar
+import qs.modules.ii.bar.battery as Bar
 
 MouseArea {
     id: root
@@ -13,6 +13,7 @@ MouseArea {
     readonly property real percentage: Battery.percentage
     readonly property bool isLow: percentage <= Config.options.battery.low / 100
 
+    implicitWidth: batteryProgress.implicitWidth
     implicitHeight: batteryProgress.implicitHeight
     hoverEnabled: !Config.options.bar.tooltips.clickToShow
 

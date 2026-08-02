@@ -1,21 +1,21 @@
 import qs.services
 import qs.modules.common
+import qs.modules.ii.bar.system_monitor as Bar
+
 import QtQuick
 import QtQuick.Layouts
-import qs.modules.ii.bar as Bar
-import qs.modules.ii.bar.mid as BarMid
 
 MouseArea {
     id: root
     property bool alwaysShowAllResources: false
-    implicitHeight: columnLayout.implicitHeight
+    implicitHeight: columnLayout.implicitHeight + 15
     implicitWidth: columnLayout.implicitWidth
     hoverEnabled: !Config.options.bar.tooltips.clickToShow
 
     ColumnLayout {
         id: columnLayout
         spacing: 10
-        anchors.fill: parent
+        anchors.centerIn: parent
 
         Resource {
             Layout.alignment: Qt.AlignHCenter
@@ -40,7 +40,7 @@ MouseArea {
 
     }
 
-    BarMid.ResourcesPopup {
+    Bar.ResourcesPopup {
         hoverTarget: root
     }
 }

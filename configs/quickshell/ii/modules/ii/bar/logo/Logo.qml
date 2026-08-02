@@ -5,7 +5,7 @@ import qs.modules.common
 import qs.modules.common.widgets
 
 RippleButton {
-    id: root
+    id: leftSidebarButton
 
     property bool showPing: false
 
@@ -15,6 +15,9 @@ RippleButton {
     buttonRadius: Appearance.rounding.full
     colBackgroundHover: Appearance.colors.colLayer1Hover
     colRipple: Appearance.colors.colLayer1Active
+    colBackgroundToggled: Appearance.colors.colSecondaryContainer
+    colBackgroundToggledHover: Appearance.colors.colSecondaryContainerHover
+    colRippleToggled: Appearance.colors.colSecondaryContainerActive
 
     CustomIcon {
         id: distroIcon
@@ -26,7 +29,7 @@ RippleButton {
         color: Appearance.colors.colOnLayer0
 
         Rectangle {
-            opacity: root.showPing ? 1 : 0
+            opacity: leftSidebarButton.showPing ? 1 : 0
             visible: opacity > 0
             anchors {
                 bottom: parent.bottom

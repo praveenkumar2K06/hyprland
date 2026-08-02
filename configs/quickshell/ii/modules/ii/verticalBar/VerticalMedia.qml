@@ -8,8 +8,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Services.Mpris
 
-import qs.modules.ii.bar as Bar
-import qs.modules.ii.bar.mid as BarMid
+import qs.modules.ii.bar.music_player as Bar
 
 MouseArea {
     id: root
@@ -17,7 +16,7 @@ MouseArea {
     readonly property string cleanedTitle: StringUtils.cleanMusicTitle(activePlayer?.trackTitle) || "No media"
 
     Layout.fillHeight: true
-    implicitHeight: mediaCircProg.implicitHeight
+    implicitHeight: mediaCircProg.implicitHeight + 10 // +10 for padding it looks so small if we dont add it
     implicitWidth: Appearance.sizes.verticalBarWidth
 
     Timer {
@@ -27,6 +26,7 @@ MouseArea {
         onTriggered: activePlayer.positionChanged()
     }
 
+    cursorShape: Qt.PointingHandCursor
     acceptedButtons: Qt.MiddleButton | Qt.BackButton | Qt.ForwardButton | Qt.RightButton | Qt.LeftButton
     hoverEnabled: !Config.options.bar.tooltips.clickToShow
     onPressed: (event) => {
@@ -37,7 +37,9 @@ MouseArea {
         } else if (event.button === Qt.ForwardButton || event.button === Qt.RightButton) {
             activePlayer.next();
         } else if (event.button === Qt.LeftButton) {
-            GlobalStates.mediaControlsOpen = !GlobalStates.mediaControlsOpen
+            var globalPos = root.mapToItem(null, 0, 0);
+            Persistent.states.media.popupRect = Qt.rect(globalPos.x, globalPos.y, root.width, root.height);
+            GlobalStates.mediaControlsOpen = !GlobalStates.mediaControlsOpen;
         }
     }
 
@@ -66,24 +68,8 @@ MouseArea {
         }
     }
 
-    Bar.StyledPopup {
+    Bar.MediaPopup {
         hoverTarget: root
         active: GlobalStates.mediaControlsOpen ? false : root.containsMouse
-
-        Column {
-            anchors.centerIn: parent
-            spacing: 4
-
-            BarMid.StyledPopupHeaderRow {
-                icon: "music_note"
-                label: "Media"
-            }
-
-            StyledText {
-                color: Appearance.colors.colOnSurfaceVariant
-                text: `${cleanedTitle}${activePlayer?.trackArtist ? '\n' + activePlayer.trackArtist : ''}`
-            }
-        }
     }
-
 }

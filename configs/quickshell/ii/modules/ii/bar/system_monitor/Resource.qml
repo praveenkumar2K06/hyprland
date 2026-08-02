@@ -9,6 +9,7 @@ Item {
     required property double percentage
     property int warningThreshold: 100
     property bool shown: true
+    clip: true
     visible: width > 0 && height > 0
     implicitWidth: resourceRowLayout.x < 0 ? 0 : resourceRowLayout.implicitWidth
     implicitHeight: Appearance.sizes.barHeight
