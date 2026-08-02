@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.expressive
 import qs.services
 import qs.modules.ii.sidebarRight.calendar
 import qs.modules.ii.sidebarRight.todo

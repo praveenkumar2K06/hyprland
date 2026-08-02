@@ -14,7 +14,9 @@ import Quickshell
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.expressive
 import qs.modules.common.functions as CF
+import qs.modules.settings
 
 ApplicationWindow {
     id: root
@@ -22,6 +24,10 @@ ApplicationWindow {
     property string firstRunFileContent: "This file is just here to confirm you've been greeted :>"
     property real contentPadding: 8
     property bool showNextTime: false
+
+    property int currentPage: 0
+    property real scrollPos: 0
+
     property var pages: [
         {
             name: "Quick",
@@ -46,8 +52,18 @@ ApplicationWindow {
         },
         {
             name: "Services",
-            icon: "settings",
+            icon: "api",
             component: "modules/settings/ServicesConfig.qml"
+        },
+        // {
+        //     name: "Extensions",
+        //     icon: "extension",
+        //     component: "modules/settings/ExtensionsConfig.qml"
+        // },
+        {
+            name: "Advanced",
+            icon: "construction",
+            component: "modules/settings/AdvancedConfig.qml"
         },
         {
             name: "About",
@@ -55,15 +71,11 @@ ApplicationWindow {
             component: "modules/settings/About.qml"
         }
     ]
-    property int currentPage: 0
+    
 
     visible: true
     onClosing: Qt.quit()
     title: "illogical-impulse Settings"
-
-    Component.onCompleted: {
-        Config.readWriteDelay = 0 // Settings app always only sets one var at a time so delay isn't needed
-    }
 
     minimumWidth: 750
     minimumHeight: 500
@@ -98,42 +110,39 @@ ApplicationWindow {
             }
         }
 
-        Item { // Titlebar
-            visible: Config.options?.windows.showTitlebar
+        RowLayout {
+            Layout.alignment: Qt.AlignCenter
             Layout.fillWidth: true
             Layout.fillHeight: false
-            implicitHeight: Math.max(titleText.implicitHeight, windowControlsRow.implicitHeight)
+
+
             StyledText {
                 id: titleText
-                anchors {
-                    left: Config.options.windows.centerTitle ? undefined : parent.left
-                    horizontalCenter: Config.options.windows.centerTitle ? parent.horizontalCenter : undefined
-                    verticalCenter: parent.verticalCenter
-                    leftMargin: 12
-                }
                 color: Appearance.colors.colOnLayer0
                 text: "Settings"
+                Layout.leftMargin: 20
                 font {
                     family: Appearance.font.family.title
                     pixelSize: Appearance.font.pixelSize.title
                     variableAxes: Appearance.font.variableAxes.title
                 }
             }
-            RowLayout { // Window controls row
-                id: windowControlsRow
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                RippleButton {
-                    buttonRadius: Appearance.rounding.full
-                    implicitWidth: 35
-                    implicitHeight: 35
-                    onClicked: root.close()
-                    contentItem: MaterialSymbol {
-                        anchors.centerIn: parent
-                        horizontalAlignment: Text.AlignHCenter
-                        text: "close"
-                        iconSize: 20
-                    }
+
+            Item {
+                Layout.fillWidth: true
+            }
+
+            RippleButton {
+                buttonRadius: Appearance.rounding.full
+                implicitWidth: 35
+                implicitHeight: 35
+                onClicked: root.close()
+                Layout.rightMargin: 10
+                contentItem: MaterialSymbol {
+                    anchors.centerIn: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    text: "close"
+                    iconSize: 20
                 }
             }
         }
@@ -237,6 +246,19 @@ ApplicationWindow {
                         function onCurrentPageChanged() {
                             switchAnim.complete();
                             switchAnim.start();
+                        }
+                        function onScrollPosChanged() {
+                            if (root.scrollPos == -1) return
+                            scrollTimer.start()
+                        }
+                    }
+
+                    Timer {
+                        id: scrollTimer
+                        interval: 250
+                        onTriggered: {
+                            pageLoader.item.contentY = root.scrollPos
+                            root.scrollPos = -1
                         }
                     }
 

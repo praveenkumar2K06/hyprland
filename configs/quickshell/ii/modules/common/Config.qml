@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs.services
 import qs.modules.common.functions
 
 Singleton {
@@ -10,7 +11,7 @@ Singleton {
     property string filePath: Directories.shellConfigPath
     property alias options: configOptionsJsonAdapter
     property bool ready: false
-    property int readWriteDelay: 50 // milliseconds
+    property int readWriteDelay: 75 // milliseconds
     property bool blockWrites: false
 
     function setNestedValue(nestedKey, value) {
@@ -48,7 +49,7 @@ Singleton {
         interval: root.readWriteDelay
         repeat: false
         onTriggered: {
-            configFileView.reload()
+            configFileView.reload();
         }
     }
 
@@ -57,7 +58,7 @@ Singleton {
         interval: root.readWriteDelay
         repeat: false
         onTriggered: {
-            configFileView.writeAdapter()
+            configFileView.writeAdapter();
         }
     }
 
@@ -80,15 +81,24 @@ Singleton {
 
             property string panelFamily: "ii" // "ii", "waffle"
 
+            property JsonObject extensions: JsonObject {
+                property bool enable: true
+            }
+
             property JsonObject appearance: JsonObject {
                 property bool extraBackgroundTint: true
-                property int fakeScreenRounding: 2 // 0: None | 1: Always | 2: When not fullscreen
+                property int fakeScreenRounding: 2 // 0: None | 1: Always | 2: When not fullscreen | 3: Wrapped
+                property int wrappedFrameThickness: 10
+                property bool sharpMode: false
+                property int defaultBorderRadius: 18
+                property bool toggleWindowRounding: true // Changes Hyprland window rounding to 0 if sharpMode is true
                 property JsonObject fonts: JsonObject {
+                    property bool enableCustom: false
                     property string main: "Google Sans Flex"
                     property string numbers: "Google Sans Flex"
                     property string title: "Google Sans Flex"
-                    property string iconNerd: "FiraCode Nerd Font Mono"
-                    property string monospace: "FiraCode Nerd Font Mono"
+                    property string iconNerd: "JetBrains Mono NF"
+                    property string monospace: "JetBrains Mono NF"
                     property string reading: "Readex Pro"
                     property string expressive: "Space Grotesk"
                 }
@@ -102,6 +112,7 @@ Singleton {
                     property string type: "auto" // Allowed: auto, scheme-content, scheme-expressive, scheme-fidelity, scheme-fruit-salad, scheme-monochrome, scheme-neutral, scheme-rainbow, scheme-tonal-spot
                     property string accentColor: ""
                 }
+                property list<string> customColorSchemes: []
             }
 
             property JsonObject audio: JsonObject {
@@ -132,6 +143,10 @@ Singleton {
             }
 
             property JsonObject bar: JsonObject {
+                property JsonObject activeWindow: JsonObject {
+                    property bool fixedSize: false
+                }
+
                 property JsonObject autoHide: JsonObject {
                     property bool enable: false
                     property int hoverRegionWidth: 2
@@ -144,15 +159,40 @@ Singleton {
                 property bool bottom: false // Instead of top
                 property int cornerStyle: 0 // 0: Hug | 1: Float | 2: Plain rectangle
                 property bool floatStyleShadow: true // Show shadow behind bar when cornerStyle == 1 (Float)
+                property int barGroupStyle: 0 // 0: Pills | 1: Island (opaque) | 2: Transparent (or maybe line-separated in the future)
                 property string topLeftIcon: "spark" // Options: "distro" or any icon name in ~/.config/quickshell/ii/assets/icons
-                property bool showBackground: true
+                property int barBackgroundStyle: 1 // 0: Transparent | 1: Visible | 2: Adaptive
                 property bool verbose: true
                 property bool vertical: false
+
+                property JsonObject mediaPlayer: JsonObject {
+                    property bool useFixedSize: false
+                    property int customSize: 250
+                    property int maxSize: 400
+                    property JsonObject artwork: JsonObject {
+                        property bool enable: false
+                    }
+                }
+
+                property JsonObject resources: JsonObject {
+                    property int memoryWarningThreshold: 95
+                    property int swapWarningThreshold: 85
+                    property int cpuWarningThreshold: 90
+                }
                 property list<string> screenList: [] // List of names, like "eDP-1", find out with 'hyprctl monitors' command
+
+                property JsonObject timers: JsonObject {
+                    property bool showPomodoro: true
+                    property bool showStopwatch: true
+                }
                 property JsonObject utilButtons: JsonObject {
+                    property bool showScreenSnip: true
                     property bool showColorPicker: false
                     property bool showMicToggle: false
+                    property bool showKeyboardToggle: true
+                    property bool showDarkModeToggle: true
                     property bool showPerformanceProfileToggle: false
+                    property bool showScreenRecord: false
                 }
                 property JsonObject workspaces: JsonObject {
                     property bool monochromeIcons: true
@@ -160,16 +200,86 @@ Singleton {
                     property bool showAppIcons: true
                     property bool alwaysShowNumbers: false
                     property int showNumberDelay: 300 // milliseconds
-                    property list<string> numberMap: [] // Characters to show instead of numbers on workspace indicator
+                    property list<string> numberMap: ["1", "2"] // Characters to show instead of numbers on workspace indicator
+                    property bool useWorkspaceMap: true
+                    property list<var> workspaceMap: [0, 10]
+                    property int maxWindowCount: 1 // Maximum windows to show in one workspace
                     property bool useNerdFont: false
+                    property int activeIndicatorOpacity: 100 // 0-100
+                    property bool dynamicWorkspaces: false
+                }
+                property JsonObject weather: JsonObject {
+                    property bool enable: false
+                    property bool enableGPS: true // gps based location
+                    property string city: "" // When 'enableGPS' is false
+                    property bool useUSCS: false // Instead of metric (SI) units
+                    property int fetchInterval: 10 // minutes
                 }
                 property JsonObject indicators: JsonObject {
                     property JsonObject notifications: JsonObject {
                         property bool showUnreadCount: false
                     }
+                    property JsonObject record: JsonObject {
+                        property bool minimal: false
+                    }
+                }
+                property JsonObject layouts: JsonObject {
+                    // Only storing id and layout-specific flags (visible, centered)
+                    // Component display info (icon, title) comes from BarComponentRegistry
+                    property list<var> left: [
+                        {
+                            id: "logo"
+                        },
+                        {
+                            id: "active_window"
+                        }
+                    ]
+                    property list<var> center: [
+                        {
+                            id: "music_player",
+                        },
+                        {
+                            id: "workspaces",
+                            centered: true
+                        },
+                        {
+                            id: "system_monitor"
+                        }
+                    ]
+                    property list<var> right: [
+                        {
+                            id: "screen_share_indicator"
+                        },
+                        {
+                            id: "record_indicator"
+                        },
+                        {
+                            id: "clock"
+                        },
+                        {
+                            id: "system_tray"
+                        },
+                        {
+                            id: "dashboard_panel_button"
+                        }
+                    ]
                 }
                 property JsonObject tooltips: JsonObject {
                     property bool clickToShow: false
+                    property bool compactPopups: false
+                    property bool showSwap: false
+                }
+                property JsonObject sizes: JsonObject {
+                    property int height: 40 // horizontal mode
+                    property int width: 46 // vertical mode
+                }
+
+                property JsonObject networkSpeed: JsonObject {
+                    property int displayMode: 0 // 0: total, 1: download, 2: upload, 3: both, 4: icon
+                    property bool showIcons: true
+                    property int iconPosition: 0 // 0: Left, 1: Right
+                    property int updateInterval: 1000 // ms
+                    property bool autoHide: true
                 }
             }
 
@@ -230,6 +340,10 @@ Singleton {
             property JsonObject media: JsonObject {
                 // Attempt to remove dupes (the aggregator playerctl one and browsers' native ones when there's plasma browser integration)
                 property bool filterDuplicatePlayers: true
+
+                // Automatically sets the active player to a newly detected player if its identifier matches the value specified in the priorityPlayer property like "spotify" or "google-chrome"
+                // This comparison uses the desktopEntry property of MprisPlayer (which is the name of the app casting the media)
+                property string priorityPlayer: ""
             }
 
             property JsonObject networking: JsonObject {
@@ -251,11 +365,22 @@ Singleton {
             property JsonObject overview: JsonObject {
                 property bool enable: true
                 property real scale: 0.18 // Relative to screen size
-                property real rows: 2
-                property real columns: 5
+                property real rows: 3
+                property real columns: 1
                 property bool orderRightLeft: false
                 property bool orderBottomUp: false
+                property bool showIcons: true
                 property bool centerIcons: true
+                property bool useWorkspaceMap: true
+                property list<var> workspaceMap: [0, 10]
+                property bool showOpeningAnimation: true
+
+                property JsonObject scrollingStyle: JsonObject {
+
+                    property int dimPercentage: 50 // 0-75
+                    property string backgroundStyle: "blur" // Options: transparent, blur, dim
+                    property string zoomStyle: "in"         // Options: in, out
+                }
             }
 
             property JsonObject resources: JsonObject {
@@ -267,7 +392,7 @@ Singleton {
                 property bool monochromeIcons: true
                 property bool showItemId: false
                 property bool invertPinnedItems: true // Makes the below a whitelist for the tray and blacklist for the pinned area
-                property list<var> pinnedItems: [ "Fcitx" ]
+                property list<var> pinnedItems: ["Fcitx"]
                 property bool filterPassive: true
             }
 
@@ -275,12 +400,15 @@ Singleton {
                 property int nonAppResultDelay: 30 // This prevents lagging when typing
                 property string engineBaseUrl: "https://www.google.com/search?q="
                 property list<string> excludedSites: ["quora.com", "facebook.com"]
+                property string fileSearchDirectory: "/home"
+                property bool blurFileSearchResultPreviews: false
                 property bool sloppy: false // Uses levenshtein distance based scoring instead of fuzzy sort. Very weird.
                 property JsonObject prefix: JsonObject {
                     property bool showDefaultActionsWithoutPrefix: true
                     property string action: "/"
                     property string app: ">"
                     property string clipboard: ";"
+                    property string fileSearch: ","
                     property string emojis: ":"
                     property string math: "="
                     property string shellCommand: "$"
@@ -293,9 +421,10 @@ Singleton {
             }
 
             property JsonObject sidebar: JsonObject {
+                property string position: "default"
                 property bool keepRightSidebarLoaded: true
                 property JsonObject cornerOpen: JsonObject {
-                    property bool enable: true
+                    property bool enable: false
                     property bool bottom: false
                     property bool valueScroll: true
                     property bool clickless: false
@@ -322,15 +451,16 @@ Singleton {
                 }
 
                 property JsonObject quickSliders: JsonObject {
-                    property bool enable: false
-                    property bool showMic: false
+                    property bool enable: true
+                    property bool showMic: true
+                    property bool showGamma: true
                     property bool showVolume: true
-                    property bool showBrightness: true
+                    property bool showBrightness: false // gamma setting also works for brightness
                 }
             }
 
             property JsonObject screenRecord: JsonObject {
-                property string savePath: Directories.videos.replace("file://","") // strip "file://"
+                property string savePath: Directories.videos.replace("file://", "") // strip "file://"
             }
 
             property JsonObject screenSnip: JsonObject {
@@ -347,8 +477,11 @@ Singleton {
                 // https://doc.qt.io/qt-6/qtime.html#toString
                 property string format: "hh:mm"
                 property string shortDateFormat: "dd/MM"
+                property string longDateFormat: "dd/MM/yyyy"
                 property string dateWithYearFormat: "dd/MM/yyyy"
                 property string dateFormat: "ddd, dd/MM"
+                property int firstDayOfWeek: 0 // 0: Monday, 1: Tuesday, 2: Wednesday, 3: Thursday, 4: Friday, 5: Saturday, 6: Sunday
+
                 property JsonObject pomodoro: JsonObject {
                     property int breakTime: 300
                     property int cyclesBeforeLongBreak: 4
@@ -357,11 +490,25 @@ Singleton {
                 }
                 property bool secondPrecision: false
             }
-            
+
+            property JsonObject updates: JsonObject {
+                property bool enableCheck: true
+                property int checkInterval: 120 // minutes
+                property int adviseUpdateThreshold: 75 // packages
+                property int stronglyAdviseUpdateThreshold: 200 // packages
+            }
+
             property JsonObject wallpaperSelector: JsonObject {
                 property bool useSystemFileDialog: false
+                property list<var> directories: [
+                    {
+                        "icon": "wallpaper",
+                        "name": "Wallpapers",
+                        "path": `${Directories.pictures}/wallpapers`
+                    }
+                ]
             }
-            
+
             property JsonObject windows: JsonObject {
                 property bool showTitlebar: true // Client-side decoration for shell apps
                 property bool centerTitle: true

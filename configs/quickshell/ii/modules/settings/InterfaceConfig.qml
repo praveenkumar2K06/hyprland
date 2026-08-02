@@ -1,10 +1,17 @@
 import QtQuick
 import QtQuick.Layouts
+import qs
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.settings
+import Quickshell
+import Quickshell.Io
 
 ContentPage {
+    id: page
+    readonly property int index: 4
+    property bool register: parent.register ?? false
     forceWidth: true
 
     ContentSection {
@@ -20,31 +27,6 @@ ContentPage {
             stepSize: 1000
             onValueChanged: {
                 Config.options.notifications.timeout = value;
-            }
-        }
-
-        ConfigSwitch {
-            buttonIcon: "monitor"
-            text: "Force specific monitor"
-            checked: Config.options.notifications.forceMonitor.enable
-            onCheckedChanged: {
-                Config.options.notifications.forceMonitor.enable = checked;
-            }
-            StyledToolTip {
-                text: "If you have multiple monitors and want notifications to only show on one of them, enable this and enter the monitor name below (e.g., eDP-1)"
-            }
-        }
-
-        ConfigRow {
-            enabled: Config.options.notifications.forceMonitor.enable
-            MaterialTextArea {
-                Layout.fillWidth: true
-                placeholderText: "Monitor name to show notifications on (e.g., eDP-1)"
-                text: Config.options.notifications.forceMonitor.name
-                wrapMode: TextEdit.Wrap
-                onTextChanged: {
-                    Config.options.notifications.forceMonitor.name = text;
-                }
             }
         }
     }
@@ -65,10 +47,46 @@ ContentPage {
             }
         }
 
+        ConfigRow {
+            ContentSubsection {
+                title: "Sidebar position"
+
+                ConfigSelectionArray {
+                    currentValue: Config.options.sidebar.position
+                    onSelected: newValue => {
+                        Config.options.sidebar.position = newValue;
+                    }
+                    options: [
+                        {
+                            displayName: "Default",
+                            icon: "side_navigation",
+                            value: "default"
+                        },
+                        {
+                            displayName: "Inverted",
+                            icon: "swap_horiz",
+                            value: "inverted"
+                        },
+                        {
+                            displayName: "Left",
+                            icon: "align_horizontal_left",
+                            value: "left"
+                        },
+                        {
+                            displayName: "Right",
+                            icon: "align_horizontal_right",
+                            value: "right"
+                        }
+                    ]
+                }
+            }
+        }
+
         ContentSubsection {
             title: "Quick toggles"
 
             ConfigSpinBox {
+                enabled: Config.options.sidebar.quickToggles.style === "android"
                 icon: "splitscreen_left"
                 text: "Columns"
                 value: Config.options.sidebar.quickToggles.android.columns
@@ -100,6 +118,16 @@ ContentPage {
                 checked: Config.options.sidebar.quickSliders.showBrightness
                 onCheckedChanged: {
                     Config.options.sidebar.quickSliders.showBrightness = checked;
+                }
+            }
+
+            ConfigSwitch {
+                buttonIcon: "backlight_low"
+                text: "Gamma"
+                enabled: Config.options.sidebar.quickSliders.enable
+                checked: Config.options.sidebar.quickSliders.showGamma
+                onCheckedChanged: {
+                    Config.options.sidebar.quickSliders.showGamma = checked;
                 }
             }
 
@@ -172,16 +200,6 @@ ContentPage {
                     stepSize: 1
                     onValueChanged: {
                         Config.options.sidebar.cornerOpen.clicklessCornerVerticalOffset = value;
-                    }
-                    MouseArea {
-                        id: mouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        acceptedButtons: Qt.NoButton
-                        StyledToolTip {
-                            extraVisibleCondition: mouseArea.containsMouse
-                            text: "Why this is cool:\nFor non-0 values, it won't trigger when you reach the\nscreen corner along the horizontal edge, but it will when\nyou do along the vertical edge"
-                        }
                     }
                 }
             }
@@ -269,22 +287,50 @@ ContentPage {
         icon: "overview_key"
         title: "Overview"
 
-        ConfigSwitch {
-            buttonIcon: "check"
-            text: "Enable"
-            checked: Config.options.overview.enable
-            onCheckedChanged: {
-                Config.options.overview.enable = checked;
+        ConfigRow {
+            ConfigSwitch {
+                buttonIcon: "check"
+                text: "Enable"
+                checked: Config.options.overview.enable
+                onCheckedChanged: {
+                    Config.options.overview.enable = checked;
+                }
             }
         }
-        ConfigSwitch {
-            buttonIcon: "center_focus_strong"
-            text: "Center icons"
-            checked: Config.options.overview.centerIcons
-            onCheckedChanged: {
-                Config.options.overview.centerIcons = checked;
+        
+        ConfigRow {
+            uniform: true
+            ConfigSwitch {
+                buttonIcon: "visibility"
+                text: "Show icons"
+                checked: Config.options.overview.showIcons
+                onCheckedChanged: {
+                    Config.options.overview.showIcons = checked;
+                }
+            }
+            ConfigSwitch {
+                enabled: Config.options.overview.showIcons
+                buttonIcon: "center_focus_strong"
+                text: "Center icons"
+                checked: Config.options.overview.centerIcons
+                onCheckedChanged: {
+                    Config.options.overview.centerIcons = checked;
+                }
             }
         }
+        
+        ConfigSwitch {
+            buttonIcon: "grid_3x3"
+            text: "Use workspace map"
+            checked: Config.options.overview.useWorkspaceMap
+            onCheckedChanged: {
+                Config.options.overview.useWorkspaceMap = checked;
+            }
+            StyledToolTip {
+                text: "Only for multi-monitor setups, you must edit the workspace map manually in config.json\n Refer to the repo wiki for more information"
+            }
+        }
+
         ConfigSpinBox {
             icon: "loupe"
             text: "Scale (%)"
@@ -296,66 +342,150 @@ ContentPage {
                 Config.options.overview.scale = value / 100;
             }
         }
+
         ConfigRow {
-            uniform: true
-            ConfigSpinBox {
-                icon: "splitscreen_bottom"
-                text: "Rows"
-                value: Config.options.overview.rows
-                from: 1
-                to: 20
-                stepSize: 1
-                onValueChanged: {
-                    Config.options.overview.rows = value;
+            ConfigSwitch {
+                buttonIcon: "high_density"
+                text: "Enable zoom animation"
+                checked: Config.options.overview.showOpeningAnimation
+                onCheckedChanged: {
+                    Config.options.overview.showOpeningAnimation = checked;
+                }
+                StyledToolTip {
+                    text: "Using zoom-in style zoomes the wallpaper in default state, may look pixelated on crisp wallpapers"
                 }
             }
-            ConfigSpinBox {
-                icon: "splitscreen_right"
-                text: "Columns"
-                value: Config.options.overview.columns
-                from: 1
-                to: 20
-                stepSize: 1
-                onValueChanged: {
-                    Config.options.overview.columns = value;
-                }
+            Item {
+                Layout.fillWidth: true
             }
-        }
-        ConfigRow {
-            uniform: true
             ConfigSelectionArray {
-                currentValue: Config.options.overview.orderRightLeft
+                Layout.fillWidth: false
+                enabled: Config.options.overview.showOpeningAnimation
+                currentValue: Config.options.overview.scrollingStyle.zoomStyle
                 onSelected: newValue => {
-                    Config.options.overview.orderRightLeft = newValue
+                    Config.options.overview.scrollingStyle.zoomStyle = newValue
                 }
                 options: [
                     {
-                        displayName: "Left to right",
-                        icon: "arrow_forward",
-                        value: 0
+                        displayName: "In",
+                        icon: "zoom_in_map",
+                        value: "in"
                     },
                     {
-                        displayName: "Right to left",
-                        icon: "arrow_back",
-                        value: 1
+                        displayName: "Out",
+                        icon: "zoom_out_map",
+                        value: "out"
                     }
                 ]
             }
+        }
+        
+        ContentSubsection {
+            title: "Classic overview style"
+            ConfigRow {
+                uniform: true
+                ConfigSpinBox {
+                    icon: "splitscreen_bottom"
+                    text: "Rows"
+                    value: Config.options.overview.rows
+                    from: 1
+                    to: 20
+                    stepSize: 1
+                    onValueChanged: {
+                        Config.options.overview.rows = value;
+                    }
+                }
+                ConfigSpinBox {
+                    icon: "splitscreen_right"
+                    text: "Columns"
+                    value: Config.options.overview.columns
+                    from: 1
+                    to: 20
+                    stepSize: 1
+                    onValueChanged: {
+                        Config.options.overview.columns = value;
+                    }
+                }
+            }
+
+            ConfigRow {
+                uniform: true
+                ConfigSelectionArray {
+                    currentValue: Config.options.overview.orderRightLeft
+                    onSelected: newValue => {
+                        Config.options.overview.orderRightLeft = newValue
+                    }
+                    options: [
+                        {
+                            displayName: "Left to right",
+                            icon: "arrow_forward",
+                            value: 0
+                        },
+                        {
+                            displayName: "Right to left",
+                            icon: "arrow_back",
+                            value: 1
+                        }
+                    ]
+                }
+                ConfigSelectionArray {
+                    Layout.leftMargin: 50
+                    currentValue: Config.options.overview.orderBottomUp
+                    onSelected: newValue => {
+                        Config.options.overview.orderBottomUp = newValue
+                    }
+                    options: [
+                        {
+                            displayName: "Top-down",
+                            icon: "arrow_downward",
+                            value: 0
+                        },
+                        {
+                            displayName: "Bottom-up",
+                            icon: "arrow_upward",
+                            value: 1
+                        }
+                    ]
+                }
+            }
+        }
+
+        ConfigSpinBox {
+            enabled: Config.options.overview.scrollingStyle.backgroundStyle === "dim"
+            icon: "backlight_low"
+            text: "Dim percentage"
+            value: Config.options.overview.scrollingStyle.dimPercentage
+            from: 0
+            to: 75
+            stepSize: 5
+            onValueChanged: {
+                Config.options.overview.scrollingStyle.dimPercentage = value;
+            }
+        }
+
+
+        ContentSubsection {
+            title: "Scrolling overview style"
             ConfigSelectionArray {
-                currentValue: Config.options.overview.orderBottomUp
+                currentValue: Config.options.overview.scrollingStyle.backgroundStyle
                 onSelected: newValue => {
-                    Config.options.overview.orderBottomUp = newValue
+                    Config.options.overview.scrollingStyle.backgroundStyle = newValue
                 }
                 options: [
                     {
-                        displayName: "Top-down",
-                        icon: "arrow_downward",
-                        value: 0
+                        displayName: "Blur",
+                        icon: "blur_on",
+                        value: "blur"
                     },
                     {
-                        displayName: "Bottom-up",
-                        icon: "arrow_upward",
-                        value: 1
+                        displayName: "Dim",
+                        icon: "ev_shadow",
+                        value: "dim"
+                    },
+                    {
+                        displayName: "Transparent",
+                        icon: "opacity",
+                        value: "transparent"
                     }
                 ]
             }
@@ -375,115 +505,4 @@ ContentPage {
             }
         }
     }
-
-    ContentSection {
-        icon: "text_format"
-        title: "Fonts"
-
-        ContentSubsection {
-            title: "Main font"
-            tooltip: "Used for general UI text"
-
-            MaterialTextArea {
-                Layout.fillWidth: true
-                placeholderText: "Font family name (e.g., Google Sans Flex)"
-                text: Config.options.appearance.fonts.main
-                wrapMode: TextEdit.NoWrap
-                onTextChanged: {
-                    Config.options.appearance.fonts.main = text;
-                }
-            }
-        }
-
-        ContentSubsection {
-            title: "Numbers font"
-            tooltip: "Used for displaying numbers"
-
-            MaterialTextArea {
-                Layout.fillWidth: true
-                placeholderText: "Font family name"
-                text: Config.options.appearance.fonts.numbers
-                wrapMode: TextEdit.NoWrap
-                onTextChanged: {
-                    Config.options.appearance.fonts.numbers = text;
-                }
-            }
-        }
-
-        ContentSubsection {
-            title: "Title font"
-            tooltip: "Used for headings and titles"
-
-            MaterialTextArea {
-                Layout.fillWidth: true
-                placeholderText: "Font family name"
-                text: Config.options.appearance.fonts.title
-                wrapMode: TextEdit.NoWrap
-                onTextChanged: {
-                    Config.options.appearance.fonts.title = text;
-                }
-            }
-        }
-
-        ContentSubsection {
-            title: "Monospace font"
-            tooltip: "Used for code and terminal"
-
-            MaterialTextArea {
-                Layout.fillWidth: true
-                placeholderText: "Font family name (e.g., JetBrains Mono NF)"
-                text: Config.options.appearance.fonts.monospace
-                wrapMode: TextEdit.NoWrap
-                onTextChanged: {
-                    Config.options.appearance.fonts.monospace = text;
-                }
-            }
-        }
-
-        ContentSubsection {
-            title: "Nerd font icons"
-            tooltip: "Font used for Nerd Font icons"
-
-            MaterialTextArea {
-                Layout.fillWidth: true
-                placeholderText: "Font family name (e.g., JetBrains Mono NF)"
-                text: Config.options.appearance.fonts.iconNerd
-                wrapMode: TextEdit.NoWrap
-                onTextChanged: {
-                    Config.options.appearance.fonts.iconNerd = text;
-                }
-            }
-        }
-
-        ContentSubsection {
-            title: "Reading font"
-            tooltip: "Used for reading large blocks of text"
-
-            MaterialTextArea {
-                Layout.fillWidth: true
-                placeholderText: "Font family name (e.g., Readex Pro)"
-                text: Config.options.appearance.fonts.reading
-                wrapMode: TextEdit.NoWrap
-                onTextChanged: {
-                    Config.options.appearance.fonts.reading = text;
-                }
-            }
-        }
-
-        ContentSubsection {
-            title: "Expressive font"
-            tooltip: "Used for decorative/expressive text"
-
-            MaterialTextArea {
-                Layout.fillWidth: true
-                placeholderText: "Font family name (e.g., Space Grotesk)"
-                text: Config.options.appearance.fonts.expressive
-                wrapMode: TextEdit.NoWrap
-                onTextChanged: {
-                    Config.options.appearance.fonts.expressive = text;
-                }
-            }
-        }
-    }
-
 }

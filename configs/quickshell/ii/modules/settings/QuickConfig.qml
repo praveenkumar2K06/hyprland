@@ -1,16 +1,20 @@
-import Qt5Compat.GraphicalEffects
 import QtQuick
 import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 import Quickshell
 import Quickshell.Io
-import Quickshell.Hyprland
-import qs.modules.common
-import qs.modules.common.functions
-import qs.modules.common.widgets
 import qs.services
+import qs.modules.common
+import qs.modules.common.widgets
+import qs.modules.common.widgets.settings
+import qs.modules.common.functions
 
 ContentPage {
+    id: page
+    readonly property int index: 0
+    property bool register: parent.register ?? false
     forceWidth: true
+    interactive: false
 
     // Wallpaper selection
     ContentSection {
@@ -173,119 +177,224 @@ ContentPage {
     ContentSection {
         icon: "screenshot_monitor"
         title: "Bar & screen"
+        Layout.topMargin: -25
 
         ConfigRow {
             ContentSubsection {
                 title: "Bar position"
-
+                Layout.fillWidth: true
                 ConfigSelectionArray {
-                    // bottom: false, vertical: false
-                    // bottom: false, vertical: true
-                    // bottom: true, vertical: false
-                    // bottom: true, vertical: true
-
                     currentValue: (Config.options.bar.bottom ? 1 : 0) | (Config.options.bar.vertical ? 2 : 0)
-                    onSelected: (newValue) => {
+                    onSelected: newValue => {
                         Config.options.bar.bottom = (newValue & 1) !== 0;
                         Config.options.bar.vertical = (newValue & 2) !== 0;
                     }
-                    options: [{
-                        "displayName": "Top",
-                        "icon": "arrow_upward",
-                        "value": 0
-                    }, {
-                        "displayName": "Left",
-                        "icon": "arrow_back",
-                        "value": 2
-                    }, {
-                        "displayName": "Bottom",
-                        "icon": "arrow_downward",
-                        "value": 1
-                    }, {
-                        "displayName": "Right",
-                        "icon": "arrow_forward",
-                        "value": 3
-                    }]
+                    options: [
+                        {
+                            displayName: "Top",
+                            icon: "arrow_upward",
+                            value: 0 // bottom: false, vertical: false
+                        },
+                        {
+                            displayName: "Left",
+                            icon: "arrow_back",
+                            value: 2 // bottom: false, vertical: true
+                        },
+                        {
+                            displayName: "Bottom",
+                            icon: "arrow_downward",
+                            value: 1 // bottom: true, vertical: false
+                        },
+                        {
+                            displayName: "Right",
+                            icon: "arrow_forward",
+                            value: 3 // bottom: true, vertical: true
+                        }
+                    ]
                 }
-
             }
-
             ContentSubsection {
                 title: "Bar style"
+                Layout.fillWidth: false
 
                 ConfigSelectionArray {
                     currentValue: Config.options.bar.cornerStyle
-                    onSelected: (newValue) => {
+                    onSelected: newValue => {
                         Config.options.bar.cornerStyle = newValue; // Update local copy
                     }
-                    options: [{
-                        "displayName": "Hug",
-                        "icon": "line_curve",
-                        "value": 0
-                    }, {
-                        "displayName": "Float",
-                        "icon": "page_header",
-                        "value": 1
-                    }, {
-                        "displayName": "Rect",
-                        "icon": "toolbar",
-                        "value": 2
-                    }]
+                    options: [
+                        {
+                            displayName: "Hug",
+                            icon: "line_curve",
+                            value: 0
+                        },
+                        {
+                            displayName: "Float",
+                            icon: "page_header",
+                            value: 1
+                        },
+                        {
+                            displayName: "Rect",
+                            icon: "toolbar",
+                            value: 2
+                        }
+                    ]
                 }
-
             }
-
         }
 
         ConfigRow {
             ContentSubsection {
                 title: "Screen round corner"
+                Layout.fillWidth: true
 
                 ConfigSelectionArray {
                     currentValue: Config.options.appearance.fakeScreenRounding
-                    onSelected: (newValue) => {
+                    onSelected: newValue => {
                         Config.options.appearance.fakeScreenRounding = newValue;
                     }
-                    options: [{
-                        "displayName": "No",
-                        "icon": "close",
-                        "value": 0
-                    }, {
-                        "displayName": "Yes",
-                        "icon": "check",
-                        "value": 1
-                    }, {
-                        "displayName": "When not fullscreen",
-                        "icon": "fullscreen_exit",
-                        "value": 2
-                    }]
+                    options: [
+                        {
+                            displayName: "No",
+                            icon: "close",
+                            value: 0
+                        },
+                        {
+                            displayName: "Yes",
+                            icon: "check",
+                            value: 1
+                        },
+                        {
+                            displayName: "Not fullscreen",
+                            icon: "fullscreen_exit",
+                            value: 2
+                        },
+                        {
+                            displayName: "Wrapped",
+                            icon: "capture",
+                            value: 3
+                        }
+                    ]
                 }
-
             }
 
+            ContentSubsection {
+                title: "Rounding style"
+                Layout.fillWidth: false
+
+                ConfigSelectionArray {
+                    currentValue: Config.options.appearance.sharpMode
+                    onSelected: newValue => {
+                        Config.options.appearance.sharpMode = newValue;
+                        HyprlandSettings.setRounding(newValue ? 0 : Config.options.appearance.defaultBorderRadius);
+                    }
+                    options: [ 
+                        {
+                            displayName: "Default",
+                            icon: "rounded_corner",
+                            value: false
+                        }, 
+                        {
+                            displayName: "Sharp",
+                            icon: "square",
+                            value: true
+                        }
+                    ]
+                }
+            } 
         }
 
-    }
+        ConfigSpinBox {
+            visible: Config.options.appearance.fakeScreenRounding === 3
+            icon: "line_weight"
+            text: "Wrapped frame thickness"
+            value: Config.options.appearance.wrappedFrameThickness
+            from: 5
+            to: 25
+            stepSize: 1
+            onValueChanged: {
+                Config.options.appearance.wrappedFrameThickness = value;
+            }
+        }
+
+        ConfigRow {
+            ContentSubsection {
+                title: "Bar background style"
+                Layout.fillWidth: true
+
+                ConfigSelectionArray {
+                    currentValue: Config.options.bar.barBackgroundStyle
+                    onSelected: newValue => {
+                        Config.options.bar.barBackgroundStyle = newValue;
+                    }
+                    options: [ 
+                        {
+                            displayName: "Visible",
+                            icon: "visibility",
+                            value: 1
+                        }, 
+                        {
+                            displayName: "Adaptive",
+                            icon: "masked_transitions",
+                            value: 2
+                        },        
+                        {
+                            displayName: "Transparent",
+                            icon: "opacity",
+                            value: 0
+                        }
+                    ]
+                }
+            }
+            
+            ContentSubsection {
+                title: "Hyprland layout"
+                Layout.fillWidth: false
+
+                ConfigSelectionArray {
+                    currentValue: {
+                        if (Persistent.states.hyprland.layout !== "scrolling") return "default"
+                        else return "scrolling"
+                    }
+                    onSelected: newValue => {
+                        console.log(newValue)
+                        if (newValue === "scrolling") {
+                            HyprlandSettings.setLayout("scrolling")
+                        } else {
+                            const defaultLayout = Config.options.hyprland.defaultHyprlandLayout
+                            HyprlandSettings.setLayout(defaultLayout)
+                        }
+                    }
+                    options: [ 
+                        {
+                            displayName: "Default",
+                            icon: "mobile_layout",
+                            value: "default"
+                        }, 
+                        {
+                            displayName: "Scrolling",
+                            icon: "view_carousel",
+                            value: "scrolling"
+                        }
+                    ]
+                }
+            }                          
+        }
+    }    
 
     NoticeBox {
         Layout.fillWidth: true
-        text: 'Not all options are available in this app. You should also check the config file by hitting the "Config file" button on the topleft corner or opening %1 manually.'.arg(Directories.shellConfigPath)
-
-        Item {
-            Layout.fillWidth: true
-        }
+        Layout.topMargin: -20
+        text: 'Not all options are available in this app. You should also check the config file by hitting the "Config file" button on the topleft corner or opening ~/.config/illogical-impulse/config.json manually.'
 
         RippleButtonWithIcon {
             id: copyPathButton
-
             property bool justCopied: false
-
-            Layout.fillWidth: false
             buttonRadius: Appearance.rounding.small
             materialIcon: justCopied ? "check" : "content_copy"
             mainText: justCopied ? "Path copied" : "Copy path"
             onClicked: {
-                copyPathButton.justCopied = true;
+                copyPathButton.justCopied = true
                 Quickshell.clipboardText = FileUtils.trimFileProtocol(`${Directories.config}/illogical-impulse/config.json`);
                 revertTextTimer.restart();
             }
@@ -295,15 +404,12 @@ ContentPage {
 
             Timer {
                 id: revertTextTimer
-
                 interval: 1500
                 onTriggered: {
-                    copyPathButton.justCopied = false;
+                    copyPathButton.justCopied = false
                 }
             }
-
         }
-
     }
 
     component SmallLightDarkPreferenceButton: RippleButton {
@@ -346,5 +452,4 @@ ContentPage {
         }
 
     }
-
 }

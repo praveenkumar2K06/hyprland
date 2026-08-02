@@ -63,25 +63,22 @@ MaterialShape { // App icon
         anchors.fill: parent
         sourceComponent: Item {
             anchors.fill: parent
-            anchors.margins: 5
             StyledImage {
                 id: notifImage
-
-                width: parent.width
-                height: parent.height
-                anchors.centerIn: parent
+                anchors.fill: parent
+                readonly property int size: parent.width
 
                 source: root.image
-
                 fillMode: Image.PreserveAspectCrop
                 cache: false
                 antialiasing: true
+                asynchronous: true
 
                 layer.enabled: true
                 layer.effect: OpacityMask {
                     maskSource: Rectangle {
-                        width: notifImage.width
-                        height: notifImage.height
+                        width: notifImage.size
+                        height: notifImage.size
                         radius: Appearance.rounding.full
                     }
                 }

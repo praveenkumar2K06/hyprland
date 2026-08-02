@@ -78,8 +78,6 @@ Item {
             placeholderText: PolkitService.cleanPrompt
             echoMode: root.usePasswordChars ? TextInput.Password : TextInput.Normal
             onAccepted: root.submit();
-            borderWidth: PolkitService.isError ? 2 : 0
-            borderColor: Appearance.colors.colError
 
             Keys.onPressed: event => { // Esc to close
                 if (event.key === Qt.Key_Escape) {

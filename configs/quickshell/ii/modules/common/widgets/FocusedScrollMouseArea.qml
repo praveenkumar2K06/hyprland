@@ -13,22 +13,8 @@ MouseArea {
     property bool trackingScroll: false
     property real moveThreshold: 20
 
-    // throttle
-    property bool wheelReady: true
-    property int throttleInterval: 80
-
     acceptedButtons: Qt.LeftButton
     hoverEnabled: true
-
-    Timer {
-        id: wheelThrottle
-        interval: root.throttleInterval
-        repeat: false
-
-        onTriggered: {
-            root.wheelReady = true;
-        }
-    }
 
     onEntered: {
         root.hovered = true;
@@ -40,18 +26,10 @@ MouseArea {
     }
 
     onWheel: event => {
-        // THROTTLE
-        if (!root.wheelReady)
-            return;
-
-        root.wheelReady = false;
-        wheelThrottle.start();
-
         if (event.angleDelta.y < 0)
             root.scrollUp(event.angleDelta.y);
         else if (event.angleDelta.y > 0)
             root.scrollDown(event.angleDelta.y);
-
         root.lastScrollX = event.x;
         root.lastScrollY = event.y;
         root.trackingScroll = true;
@@ -61,7 +39,6 @@ MouseArea {
         if (root.trackingScroll) {
             const dx = mouse.x - root.lastScrollX;
             const dy = mouse.y - root.lastScrollY;
-
             if (Math.sqrt(dx * dx + dy * dy) > root.moveThreshold) {
                 root.movedAway();
                 root.trackingScroll = false;

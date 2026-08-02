@@ -1,5 +1,6 @@
 import qs.modules.common
 import QtQuick
+import QtQuick.Controls.Material
 import QtQuick.Controls
 
 /**
@@ -9,14 +10,12 @@ import QtQuick.Controls
  */
 TextField {
     id: root
-    property int borderWidth: 0
-    property color borderColor: "transparent"
-    // Material.theme: Material.System
-    // Material.accent: Appearance.m3colors.m3primary
-    // Material.primary: Appearance.m3colors.m3primary
-    // Material.background: Appearance.m3colors.m3surface
-    // Material.foreground: Appearance.m3colors.m3onSurface
-    // Material.containerStyle: Material.Outlined
+    Material.theme: Material.System
+    Material.accent: Appearance.m3colors.m3primary
+    Material.primary: Appearance.m3colors.m3primary
+    Material.background: Appearance.m3colors.m3surface
+    Material.foreground: Appearance.m3colors.m3onSurface
+    Material.containerStyle: Material.Outlined
     renderType: Text.QtRendering
 
     selectedTextColor: Appearance.m3colors.m3onSecondaryContainer
@@ -31,14 +30,6 @@ TextField {
         variableAxes: Appearance.font.variableAxes.main
     }
     wrapMode: TextEdit.Wrap
-
-    background: Rectangle {
-        implicitHeight: 50
-        color: Appearance.m3colors.m3surfaceContainerHighest
-        border.width: root.borderWidth
-        border.color: root.borderColor
-        radius: 10
-    }
 
     MouseArea {
         anchors.fill: parent

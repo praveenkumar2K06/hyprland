@@ -5,6 +5,7 @@ import Quickshell.Widgets
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.settings
 
 ContentPage {
     forceWidth: true
@@ -77,5 +78,139 @@ ContentPage {
             
         }
 
+    }
+    ContentSection {
+        icon: "folder_managed"
+        title: "Parent-Dots"
+
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter
+            spacing: 20
+            Layout.topMargin: 10
+            Layout.bottomMargin: 10
+            IconImage {
+                implicitSize: 80
+                source: Quickshell.iconPath("illogical-impulse")
+            }
+            ColumnLayout {
+                Layout.alignment: Qt.AlignVCenter
+                // spacing: 10
+                StyledText {
+                    text: "illogical-impulse"
+                    font.pixelSize: Appearance.font.pixelSize.title
+                }
+                StyledText {
+                    text: "https://github.com/end-4/dots-hyprland"
+                    font.pixelSize: Appearance.font.pixelSize.normal
+                    textFormat: Text.MarkdownText
+                    onLinkActivated: (link) => {
+                        Qt.openUrlExternally(link)
+                    }
+                    PointingHandLinkHover {}
+                }
+            }
+        }
+
+        Flow {
+            Layout.fillWidth: true
+            spacing: 5
+
+            RippleButtonWithIcon {
+                materialIcon: "auto_stories"
+                mainText: "Documentation"
+                onClicked: {
+                    Qt.openUrlExternally("https://end-4.github.io/dots-hyprland-wiki/en/ii-qs/02usage/")
+                }
+            }
+            RippleButtonWithIcon {
+                materialIcon: "adjust"
+                materialIconFill: false
+                mainText: "Issues"
+                onClicked: {
+                    Qt.openUrlExternally("https://github.com/end-4/dots-hyprland/issues")
+                }
+            }
+            RippleButtonWithIcon {
+                materialIcon: "forum"
+                mainText: "Discussions"
+                onClicked: {
+                    Qt.openUrlExternally("https://github.com/end-4/dots-hyprland/discussions")
+                }
+            }
+            RippleButtonWithIcon {
+                materialIcon: "favorite"
+                mainText: "Donate"
+                onClicked: {
+                    Qt.openUrlExternally("https://github.com/sponsors/end-4")
+                }
+            }
+
+            
+        }
+    }
+
+    ContentSection {
+        icon: "folder_data"
+        title: "Dotfiles"
+
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter
+            spacing: 20
+            Layout.topMargin: 10
+            Layout.bottomMargin: 10
+            CustomIcon {
+                width: 80
+                height: 80
+                source: "ii-vynx"
+            }
+            ColumnLayout {
+                Layout.alignment: Qt.AlignVCenter
+                // spacing: 10
+                StyledText {
+                    text: "ii-vynx"
+                    font.pixelSize: Appearance.font.pixelSize.title
+                }
+                StyledText {
+                    text: "https://github.com/vaguesyntax/ii-vynx"
+                    font.pixelSize: Appearance.font.pixelSize.normal
+                    textFormat: Text.MarkdownText
+                    onLinkActivated: (link) => {
+                        Qt.openUrlExternally(link)
+                    }
+                    PointingHandLinkHover {}
+                }
+            }
+        }
+
+        Flow {
+            Layout.fillWidth: true
+            spacing: 5
+
+            RippleButtonWithIcon {
+                materialIcon: "adjust"
+                materialIconFill: false
+                mainText: "Issues"
+                onClicked: {
+                    Qt.openUrlExternally("https://github.com/vaguesyntax/ii-vynx/issues")
+                }
+            }
+            RippleButtonWithIcon {
+                materialIcon: "auto_stories"
+                mainText: "Documentation"
+                onClicked: {
+                    Qt.openUrlExternally("https://github.com/vaguesyntax/ii-vynx/wiki")
+                }
+            }
+            RippleButtonWithIcon {
+                materialIcon: "bug_report"
+                mainText: "Known Issues"
+                onClicked: {
+                    Qt.openUrlExternally("https://github.com/vaguesyntax/ii-vynx/wiki/Known-Issues-and-Limitations")
+                }
+            }
+            
+
+            
+        }
     }
 }

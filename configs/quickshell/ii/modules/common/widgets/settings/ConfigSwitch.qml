@@ -1,5 +1,8 @@
 import qs.modules.common.widgets
+import qs.modules.common.widgets.settings
 import qs.modules.common
+import qs.services
+import qs.modules.common.functions
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -15,6 +18,18 @@ RippleButton {
     
     onClicked: checked = !checked
 
+    property color normalColor: ColorUtils.transparentize(Appearance?.colors.colLayer1Hover, 1) 
+    property color highlightColor: Appearance.colors.colSecondaryContainer
+
+    colBackground: normalColor
+
+    HighlightOverlay {
+        id: highlightOverlay
+        anchors.fill: parent
+        radius: root.buttonEffectiveRadius
+        color: root.highlightColor
+    }
+
     contentItem: RowLayout {
         spacing: 10
         OptionalMaterialSymbol {
@@ -27,7 +42,7 @@ RippleButton {
             id: labelWidget
             Layout.fillWidth: true
             text: root.text
-            font: root.font
+            font.pixelSize: root.font.pixelSize
             color: Appearance.colors.colOnSecondaryContainer
             opacity: root.enabled ? 1 : 0.4
         }
@@ -40,4 +55,3 @@ RippleButton {
         }
     }
 }
-

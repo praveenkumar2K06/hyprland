@@ -15,6 +15,7 @@ import Quickshell.Io
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.settings
 import qs.modules.common.functions
 
 ApplicationWindow {

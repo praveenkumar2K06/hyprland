@@ -8,11 +8,13 @@ GroupButton {
     property string buttonIcon: ""
     property string buttonText: ""
 
+    property int extraWidth: 46
     baseHeight: 36
-    baseWidth: content.implicitWidth + 46
+    baseWidth: content.implicitWidth + extraWidth
     clickedWidth: baseWidth + 6
 
-    buttonRadius: baseHeight / 2
+    readonly property int fullRadius: Config.options.appearance.sharpMode ? Appearance.rounding.full : baseHeight / 2
+    buttonRadius: fullRadius
     buttonRadiusPressed: Appearance.rounding.small
     colBackground: Appearance.colors.colLayer2
     colBackgroundHover: Appearance.colors.colLayer2Hover
