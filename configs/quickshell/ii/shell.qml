@@ -26,7 +26,7 @@ ShellRoot {
         // Hyprsunset.load()
         FirstRunExperience.load()
         // ConflictKiller.load()
-        // Cliphist.refresh(
+        Cliphist.refresh()
     }
 
 
