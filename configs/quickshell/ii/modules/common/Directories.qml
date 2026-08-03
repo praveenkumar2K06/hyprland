@@ -31,6 +31,8 @@ Singleton {
 	property string todoPath: FileUtils.trimFileProtocol(`${Directories.state}/user/todo.json`)
 	property string notesPath: FileUtils.trimFileProtocol(`${Directories.state}/user/notes.txt`)
     property string notificationsPath: FileUtils.trimFileProtocol(`${Directories.cache}/notifications/notifications.json`)
+    property string screenshareStateScript: FileUtils.trimFileProtocol(`${Directories.scriptPath}/screenShare/screensharestate.sh`)
+    property string screenshareStatePath: FileUtils.trimFileProtocol(`${Directories.state}/user/generated/screenshare/apps.txt`)
     property string cliphistDecode: FileUtils.trimFileProtocol(`/tmp/quickshell/media/cliphist`)
     property string gameModeTogglePath: FileUtils.trimFileProtocol(`${Directories.scriptPath}/gamemode.sh`)
     property string wallpaperSwitchScriptPathv2: FileUtils.trimFileProtocol(`${Directories.scriptPath}/colors/switchwallv2.sh`)
