@@ -18,6 +18,7 @@ import qs.modules.ii.bar.system_monitor
 import qs.modules.ii.bar.timer
 import qs.modules.ii.bar.tray
 import qs.modules.ii.bar.utility_buttons
+import qs.modules.ii.bar.weather
 import qs.modules.ii.bar.workspaces
 
 import qs.modules.ii.verticalBar as Vertical
@@ -48,22 +49,22 @@ Item {
     }
 
     property var compMap: ({ // [horizontal, vertical]
-        "workspaces": [workspaceComp,workspaceComp],
-        "music_player": [musicPlayerComp, musicPlayerCompVert],
-        "system_monitor": [systemMonitorComp, systemMonitorCompVert],
-        "clock": [clockComp, clockCompVert],
-        "battery": [batteryComp, batteryCompVert],
-        "utility_buttons": [utilityButtonsComp, utilityButtonsComp],
-        "system_tray": [systemTrayComp, systemTrayComp],
         "active_window": [activeWindowComp, activeWindowComp],
+        "battery": [batteryComp, batteryCompVert],
+        "clock": [clockComp, clockCompVert],
+        "dashboard_panel_button": [dashboardPanelButton, dashboardPanelButtonVert],
         "date": [dateCompVert, dateCompVert],
+        "logo": [logoComp, logoComp],
+        "music_player": [musicPlayerComp, musicPlayerCompVert],
+        "network_speed": [networkSpeedComp, networkSpeedComp],
         "record_indicator": [recordIndicatorComp, recordIndicatorComp],
         "screen_share_indicator": [screenshareIndicatorComp, screenshareIndicatorComp],
+        "system_monitor": [systemMonitorComp, systemMonitorCompVert],
+        "system_tray": [systemTrayComp, systemTrayComp],
         "timer": [timerComp, timerCompVert],
-        // "weather": [weatherComp, weatherComp],
-        "logo": [logoComp, logoComp],
-        "dashboard_panel_button": [dashboardPanelButton, dashboardPanelButtonVert],
-        "network_speed": [networkSpeedComp, networkSpeedComp],
+        "utility_buttons": [utilityButtonsComp, utilityButtonsComp],
+        "weather": [weatherComp, weatherComp],
+        "workspaces": [workspaceComp, workspaceComp],
     })
 
     property real startRadius: {
@@ -116,31 +117,14 @@ Item {
         colBackground: rootItem.highlighted ? rootItem.colBackgroundHighlight : rootItem.colBackground
 
         readonly property var _currentComp: {
-            BarComponentRegistry._extensionCompVersion
             let builtin = compMap[modelData.id]
-            if (builtin) return builtin[vertical ? 1 : 0]
-            return BarComponentRegistry.getComponentForId(modelData.id, vertical)
+            return builtin[vertical ? 1 : 0]
         }
 
         Loader {
             id: itemLoader
             active: true
             sourceComponent: wrapper._currentComp
-            onLoaded: {
-                let extId = BarComponentRegistry.getExtensionIdForComponent(modelData.id)
-                if (extId && item) {
-                    if ("extensionId" in item) {
-                        item.extensionId = extId
-                    } else {
-                        Object.defineProperty(item, "extensionId", {
-                            value: extId,
-                            writable: true,
-                            configurable: true,
-                            enumerable: true
-                        })
-                    }
-                }
-            }
         }
     }
 
@@ -179,4 +163,6 @@ Item {
     Component { id: dashboardPanelButtonVert; VerticalDashboardPanelButton {} }
     
     Component { id: networkSpeedComp; NetworkSpeed { vertical: rootItem.vertical } }
+
+    Component { id: weatherComp; WeatherBar { vertical: rootItem.vertical } }
 }
