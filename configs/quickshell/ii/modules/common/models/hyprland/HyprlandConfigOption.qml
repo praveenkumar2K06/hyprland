@@ -1,10 +1,9 @@
 pragma ComponentBehavior: Bound
 import QtQml
 import QtQuick
-import Quickshell.Hyprland
 import Quickshell.Io
 import qs.services
-import "../"
+import qs.modules.common.models
 
 NestableObject {
     id: root
@@ -17,7 +16,7 @@ NestableObject {
     Component.onCompleted: fetch()
 
     Connections {
-        target: HyprlandConfig
+        target: HyprlandSettings
         function onReloaded() {
             root.fetch();
         }
@@ -26,6 +25,14 @@ NestableObject {
     function fetch() {
         fetchProc.command = fetchProc.baseCommand.concat([root.key]);
         fetchProc.running = true;
+    }
+
+    function setValue(newValue) {
+        HyprlandSettings.changeKey(root.key, newValue)
+    }
+
+    function reset() {
+        HyprlandSettings.reset(root.key)
     }
 
     Process {

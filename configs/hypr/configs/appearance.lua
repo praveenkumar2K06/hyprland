@@ -19,11 +19,9 @@ hl.config({
         },
 
         resize_on_border = true,
-        layout           = "dwindle",
     },
 
     decoration = {
-        rounding         = 10,
         rounding_power   = 2,
 
         active_opacity   = 1.0,
