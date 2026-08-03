@@ -37,6 +37,13 @@ Singleton {
     property string gameModeTogglePath: FileUtils.trimFileProtocol(`${Directories.scriptPath}/gamemode.sh`)
     property string wallpaperSwitchScriptPathv2: FileUtils.trimFileProtocol(`${Directories.scriptPath}/colors/switchwallv2.sh`)
     property string userActions: FileUtils.trimFileProtocol(`${Directories.shellConfig}/actions`)
+    
+    property string generalConfigPath: Quickshell.shellPath("modules/settings/GeneralConfig.qml")
+    property string barConfigPath: Quickshell.shellPath("modules/settings/BarConfig.qml")
+    property string backgroundConfigPath: Quickshell.shellPath("modules/settings/QuickConfig.qml")
+    property string interfaceConfigPath: Quickshell.shellPath("modules/settings/InterfaceConfig.qml")
+    property string servicesConfigPath: Quickshell.shellPath("modules/settings/ServicesConfig.qml")
+    property string advancedConfigPath: Quickshell.shellPath("modules/settings/AdvancedConfig.qml")
     // Cleanup on init
     Component.onCompleted: {
         Quickshell.execDetached(["mkdir", "-p", `${shellConfig}`])

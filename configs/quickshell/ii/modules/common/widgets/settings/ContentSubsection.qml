@@ -15,6 +15,10 @@ ColumnLayout {
     Layout.topMargin: 4
     spacing: 2
 
+    SearchHandler {
+        searchString: root.title
+    }
+
     RowLayout {
         ContentSubsectionLabel {
             opacity: 1 - highlightOverlay.opacity

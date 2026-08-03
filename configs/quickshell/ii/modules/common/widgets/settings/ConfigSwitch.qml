@@ -23,6 +23,10 @@ RippleButton {
 
     colBackground: normalColor
 
+    SearchHandler {
+        searchString: root.text
+    }
+
     HighlightOverlay {
         id: highlightOverlay
         anchors.fill: parent
