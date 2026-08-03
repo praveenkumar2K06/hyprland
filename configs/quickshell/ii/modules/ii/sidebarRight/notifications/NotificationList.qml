@@ -1,5 +1,6 @@
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.widgets.notifications
 import qs.services
 import Qt5Compat.GraphicalEffects
 import QtQuick

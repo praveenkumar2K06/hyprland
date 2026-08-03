@@ -4,6 +4,7 @@ import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
 import qs.modules.common.widgets.expressive
+import qs.modules.common.widgets.window_dialog
 import QtQuick
 import QtQuick.Layouts
 import Quickshell

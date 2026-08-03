@@ -19,7 +19,7 @@ Rectangle {
     implicitWidth: mainLayout.implicitWidth + padding * 2
     implicitHeight: mainLayout.implicitHeight + padding * 2
     color: Appearance.colors.colLayer2
-
+    
     function focusBreadcrumb() {
         root.showBreadcrumb = false;
         addressInput.forceActiveFocus();

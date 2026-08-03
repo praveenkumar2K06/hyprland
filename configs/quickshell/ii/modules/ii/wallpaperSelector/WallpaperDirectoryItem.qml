@@ -3,6 +3,7 @@ import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
 import qs.modules.common.functions
+import qs.modules.ii.wallpaperSelector.components
 import QtQuick
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects

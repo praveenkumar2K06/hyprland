@@ -5,6 +5,7 @@ import qs.modules.common.widgets
 import qs.modules.common.widgets.expressive
 import qs.modules.common.widgets.settings
 import qs.modules.common.functions
+import qs.modules.ii.wallpaperSelector.components
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -18,8 +19,6 @@ MouseArea {
     property int columns: 4
     property real previewCellAspectRatio: 4 / 3
     property bool useDarkMode: Appearance.m3colors.darkmode
-
-    property string filterText: extraOptions.text
 
     function updateThumbnails() {
         const totalImageMargin = (Appearance.sizes.wallpaperSelectorItemMargins + Appearance.sizes.wallpaperSelectorItemPadding) * 2;
@@ -49,7 +48,7 @@ MouseArea {
     function selectWallpaperPath(filePath) {
         if (filePath && filePath.length > 0) {
             Wallpapers.select(filePath, wallpaperSelectorContent.useDarkMode);
-            filterText = "";
+            filterField.text = "";
         }
     }
 
@@ -93,8 +92,8 @@ MouseArea {
             grid.activateCurrent();
             event.accepted = true;
         } else if (event.key === Qt.Key_Backspace) {
-            if (filterText.length > 0) {
-                filterText = filterText.substring(0, filterText.length - 1);
+            if (filterField.text.length > 0) {
+                filterField.text = filterField.text.substring(0, filterField.text.length - 1);
             }
             filterField.forceActiveFocus();
             event.accepted = true;
@@ -106,8 +105,8 @@ MouseArea {
             event.accepted = true;
         } else {
             if (event.text.length > 0) {
-                filterText += event.text;
-                filterField.cursorPosition = filterText.length;
+                filterField.text += event.text;
+                filterField.cursorPosition = filterField.text.length;
                 filterField.forceActiveFocus();
             }
             event.accepted = true;

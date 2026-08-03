@@ -2,8 +2,9 @@ pragma ComponentBehavior: Bound
 import qs.modules.common
 import qs.modules.common.models
 import qs.modules.common.widgets
-import qs.services
 import qs.modules.common.functions
+import qs.modules.ii.mediaControls.components
+import qs.services
 import Qt5Compat.GraphicalEffects
 import QtQuick
 import QtQuick.Effects

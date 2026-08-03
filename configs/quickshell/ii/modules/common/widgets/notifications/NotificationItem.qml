@@ -1,7 +1,8 @@
 import qs
 import qs.modules.common
-import qs.services
 import qs.modules.common.functions
+import qs.modules.common.widgets
+import qs.services
 import QtQuick
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects

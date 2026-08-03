@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import qs.modules.common
 import qs.modules.common.functions
+import qs.modules.common.widgets
 
 // From https://github.com/caelestia-dots/shell with modifications.
 // License: GPLv3

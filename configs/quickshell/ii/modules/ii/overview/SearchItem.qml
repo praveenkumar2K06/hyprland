@@ -5,6 +5,7 @@ import qs.modules.common
 import qs.modules.common.models
 import qs.modules.common.widgets
 import qs.modules.common.functions
+import qs.modules.ii.overview.components
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
