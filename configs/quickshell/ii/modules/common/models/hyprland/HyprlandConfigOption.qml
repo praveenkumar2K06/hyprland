@@ -17,7 +17,7 @@ NestableObject {
     Component.onCompleted: fetch()
 
     Connections {
-        target: Hyprland
+        target: HyprlandConfig
         function onReloaded() {
             root.fetch();
         }
