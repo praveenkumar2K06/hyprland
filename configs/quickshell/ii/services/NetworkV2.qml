@@ -41,6 +41,7 @@ Singleton {
         return b.signalStrength - a.signalStrength;
     }) ?? []
     readonly property WifiNetwork activeWifi: networks.find(n => n.connected) ?? null
+    readonly property int networkStrength: activeWifi?.signalStrength ? Math.round(activeWifi.signalStrength * 100) : 0
 
     // Ethernet
     readonly property bool ethernetConnected: wiredDevice?.connected ?? false

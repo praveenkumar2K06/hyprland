@@ -96,7 +96,7 @@ RippleButton { // Right sidebar button
             }
         }
         MaterialSymbol {
-            text: Network.materialSymbol
+            text: NetworkV2.icon
             iconSize: Appearance.font.pixelSize.larger
             color: rightSidebarButton.colText
         }

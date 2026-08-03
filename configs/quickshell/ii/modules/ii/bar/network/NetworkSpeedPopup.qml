@@ -43,16 +43,16 @@ StyledPopup {
 
         HeroCard {
             id: networkHero
-            icon: Network.ethernet ? "lan" : "wifi"
-            title: Network.ethernet ? "Ethernet" : "Wi-Fi"
-            subtitle: Network.networkName || "Connected"
+            icon: NetworkV2.connectionType === "ethernet" ? "lan" : "wifi"
+            title: NetworkV2.connectionType === "ethernet" ? "Ethernet" : "Wi-Fi"
+            subtitle: NetworkV2.networkName || "Connected"
 
             compactMode: true
             adaptiveWidth: true
             
             // Show signal strength in the pill if wifi
-            pillText: !Network.ethernet ? (Network.networkStrength + "%") : ""
-            pillIcon: !Network.ethernet ? "signal_wifi_4_bar" : ""
+            pillText: NetworkV2.connectionType !== "ethernet" ? (NetworkV2.networkStrength + "%") : ""
+            pillIcon: NetworkV2.connectionType !== "ethernet" ? "signal_wifi_4_bar" : ""
         }
 
         ColumnLayout {
