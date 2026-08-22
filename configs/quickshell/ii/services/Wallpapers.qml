@@ -35,7 +35,7 @@ Singleton {
     function load () {} // For forcing initialization
     
     function openFallbackPicker(darkMode = Appearance.m3colors.darkmode) {
-        Quickshell.execDetached([Directories.wallpaperSwitchScriptPathv2, darkMode ? "--dark" : "--light"]);
+        Quickshell.execDetached([Directories.wallpaperSwitchScriptPathv2, darkMode ? "--dark" : "--light", "--pick"]);
     }
 
     function apply(path, darkMode = Appearance.m3colors.darkmode) {

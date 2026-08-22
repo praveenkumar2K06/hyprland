@@ -74,7 +74,6 @@ update_sddm_background() {
     local wall="$1"
 
     local user_bg="$HOME/.local/share/wallpapers/sddm-background.jpg"
-    local sddm_bg="/usr/share/sddm/themes/pixie/assets/background.jpg"
     local sddm_theme="/usr/share/sddm/themes/pixie/theme.conf"
 
     mkdir -p "$(dirname "$user_bg")"
