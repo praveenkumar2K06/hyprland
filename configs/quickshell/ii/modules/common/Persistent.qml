@@ -91,6 +91,10 @@ Singleton {
                 }
             }
 
+            property JsonObject cheatsheet: JsonObject {
+                property int tabIndex: 0
+            }
+
             property JsonObject timer: JsonObject {
                 property JsonObject pomodoro: JsonObject {
                     property bool running: false

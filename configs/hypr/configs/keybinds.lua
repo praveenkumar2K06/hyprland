@@ -16,10 +16,10 @@ local menu        = "wofi --show drun"
 local mainMod = "SUPER"
 
 -- Common actions
-hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
-hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
-hl.bind(mainMod .. " + Q", hl.dsp.window.close())
+hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser), { description = "Programs: Open browser" })
+hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal), { description = "Programs: Open terminal" })
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager), { description = "Programs: Open file manager" })
+hl.bind(mainMod .. " + Q", hl.dsp.window.close(), { description = "Window: Close" })
 
 -- Lock
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
@@ -53,11 +53,11 @@ hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pamixer --decrease 5"), { locke
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd("pamixer --toggle-mute"), { locked = true })
 
 -- Screenshot
--- hl.bind("Print", hl.dsp.exec_cmd("grimshot save full"), { locked = true })
+-- hl.bind("Print", hl.dsp.exec_cmd("grimshot save full"), { locked = true })v
 
-hl.bind("Print", hl.dsp.exec_cmd('grim ~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png'))
-hl.bind("SHIFT + Print", hl.dsp.exec_cmd('grim -g "$(slurp)" ~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png'))
-hl.bind(mainMod .. " + SHIFT + Print", hl.dsp.exec_cmd('grim -g "$(slurp -d)" - | wl-copy'))
+hl.bind("Print", hl.dsp.exec_cmd('grim ~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png'), { description = "Screenshot: Fullscreen" })
+hl.bind("SHIFT + Print", hl.dsp.exec_cmd('grim -g "$(slurp-window)" ~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png'), { description = "Screenshot: Select area" })
+hl.bind(mainMod .. " + SHIFT + Print", hl.dsp.exec_cmd('grim -g "$(slurp -d)" - | wl-copy'), { description = "Screenshot: Copy to clipboard" })
 
 -- Special
 hl.bind(mainMod .. " + ALT + S",
@@ -69,18 +69,22 @@ hl.bind("CTRL + " .. mainMod .. " + S", hl.dsp.workspace.toggle_special("special
 for i = 1, 6 do
     local arrowkey = { "Left", "Right", "Up", "Down", "BracketLeft", "BracketRight" }
     local focusdir = { "l", "r", "u", "d", "l", "r" }
-    hl.bind(mainMod .. " + " .. arrowkey[i], hl.dsp.focus({ direction = focusdir[i] }))
-    hl.bind(mainMod .. " + SHIFT + " .. arrowkey[i], hl.dsp.window.move({ direction = focusdir[i], follow = true }))
+    hl.bind(mainMod .. " + " .. arrowkey[i], hl.dsp.focus({ direction = focusdir[i] }), { description = "Window: Focus " .. focusdir[i] })
+    hl.bind(mainMod .. " + SHIFT + " .. arrowkey[i], hl.dsp.window.move({ direction = focusdir[i], follow = true }), { description = "Window: Move " .. focusdir[i] })
 end
 
 -- Workspaces
 for i = 1, 9 do
-    hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }))
-    hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i, follow = true }))
-    hl.bind(mainMod .. " + CTRL + " .. i, hl.dsp.window.move({ workspace = i, follow = false }))
+    hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }), { description = "Workspace: Focus " .. i })
+end
+for i = 1, 9 do
+    hl.bind(mainMod .. " + CTRL + " .. i, hl.dsp.window.move({ workspace = i, follow = false }), { description = "Window: Move to workspace " .. i .. " (silent)" })
+end
+for i = 1, 9 do
+    hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i, follow = true }), { description = "Window: Move to workspace " .. i })
 end
 
-hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Window: Move" })
+hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Window: Drag" })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Window: Resize" })
 
 -- QuickShell
@@ -90,4 +94,6 @@ hl.bind(mainMod .. " + Space", hl.dsp.global("quickshell:overviewWorkspacesToggl
 { description = "Shell: Toggle overview" })
 hl.bind(mainMod .. " + CTRL + T", hl.dsp.global("quickshell:wallpaperSelectorToggle"),
     { description = "Shell: Change wallpaper" })
+hl.bind(mainMod .. " + C", hl.dsp.global("quickshell:cheatsheetToggle"),
+    { description = "Shell: Toggle Cheatsheet"})
 hl.bind("CTRL + ALT + Delete", hl.dsp.global("quickshell:sessionToggle"), { description = "Shell: Toggle session menu" })

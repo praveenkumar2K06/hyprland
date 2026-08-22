@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import qs.modules.common
 import qs.modules.ii.bar
+import qs.modules.ii.cheatsheet
 import qs.modules.ii.mediaControls
 import qs.modules.ii.notificationPopup
 import qs.modules.ii.onScreenDisplay
@@ -16,6 +17,7 @@ import qs.modules.ii.wrappedFrame
 
 Scope {
     PanelLoader { extraCondition: !Config.options.bar.vertical; component: Bar {} }
+    PanelLoader { component: Cheatsheet {} }
     PanelLoader { component: MediaControls {} }
     PanelLoader { component: NotificationPopup {} }
     PanelLoader { component: OnScreenDisplay {} }
