@@ -1,5 +1,20 @@
 #!/bin/bash
 
+MODE="$1"
+
+if [[ "$MODE" != "dark" && "$MODE" != "light" ]]; then
+    echo "Invalid mode: $MODE"
+    exit 1
+fi
+
+if [[ "$MODE" == "dark" ]]; then
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+    gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
+else
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
+    gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
+fi
+
 COLORS="$HOME/.config/gtk-3.0/colors.css"
 GTK="$HOME/.config/gtk-3.0/gtk.css"
 

@@ -58,13 +58,15 @@ set_gtk_theme() {
     local theme
 
     if [[ "$MODE" == "dark" ]]; then
-        theme="Colloid-Dark-Nord"
+        theme="adw-gtk3-dark"
 
         gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+        gsettings set org.gnome.desktop.interface gtk-theme "$theme"
     else
-        theme="Colloid-Light-Nord"
+        theme="adw-gtk3"
 
         gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
+        gsettings set org.gnome.desktop.interface gtk-theme "$theme"
     fi
 
     gsettings set org.gnome.desktop.interface gtk-theme "$theme"
