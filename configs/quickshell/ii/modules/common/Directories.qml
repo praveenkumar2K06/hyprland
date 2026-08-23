@@ -29,9 +29,9 @@ Singleton {
     property string shellConfigName: "config.json"
     property string shellConfigPath: `${Directories.shellConfig}/${Directories.shellConfigName}`
 	property string todoPath: FileUtils.trimFileProtocol(`${Directories.state}/user/todo.json`)
-	property string notesPath: FileUtils.trimFileProtocol(`${Directories.state}/user/notes.txt`)
     property string notificationsPath: FileUtils.trimFileProtocol(`${Directories.cache}/notifications/notifications.json`)
     property string hyprsetScriptPath: FileUtils.trimFileProtocol(`${Directories.scriptPath}/hyprland/hyprset.sh`)
+    property string monitorsScriptPath: FileUtils.trimFileProtocol(`${Directories.scriptPath}/hyprland/monitors.py`)
     property string screenshareStateScript: FileUtils.trimFileProtocol(`${Directories.scriptPath}/screenShare/screensharestate.sh`)
     property string screenshareStatePath: FileUtils.trimFileProtocol(`${Directories.state}/user/generated/screenshare/apps.txt`)
     property string cliphistDecode: FileUtils.trimFileProtocol(`/tmp/quickshell/media/cliphist`)
@@ -44,6 +44,8 @@ Singleton {
     property string interfaceConfigPath: Quickshell.shellPath("modules/settings/InterfaceConfig.qml")
     property string servicesConfigPath: Quickshell.shellPath("modules/settings/ServicesConfig.qml")
     property string advancedConfigPath: Quickshell.shellPath("modules/settings/AdvancedConfig.qml")
+    property string hyprlandConfigPath: Quickshell.shellPath("modules/settings/HyprlandConfig.qml")
+
     // Cleanup on init
     Component.onCompleted: {
         Quickshell.execDetached(["mkdir", "-p", `${shellConfig}`])

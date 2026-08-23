@@ -59,6 +59,11 @@ ApplicationWindow {
             component: "modules/settings/ServicesConfig.qml"
         },
         {
+            name: "Hyprland",
+            icon: "select_window_2",
+            component: "modules/settings/HyprlandConfig.qml"
+        },
+        {
             name: "Advanced",
             icon: "construction",
             component: "modules/settings/AdvancedConfig.qml"

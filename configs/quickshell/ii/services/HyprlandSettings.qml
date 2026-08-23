@@ -30,6 +30,16 @@ Singleton {
         Quickshell.execDetached([Directories.hyprsetScriptPath, "anim", animName, String(style)])
     }
 
+    function setMonitor(output, mode, position, scale) {
+        const safe = /^[A-Za-z0-9x@._-]+$/
+        if (!safe.test(String(output)) || !safe.test(String(mode)) || !safe.test(String(position)) || !safe.test(String(scale))) {
+            console.error("[HyprlandSettings] Unsafe monitor config rejected:", output, mode, position, scale)
+            return
+        }
+        Quickshell.execDetached([Directories.monitorsScriptPath, String(output), String(mode), String(position), String(scale)])
+        console.log("[HyprlandSettings] Set monitor", output, "to", mode, position, scale)
+    }
+
     function setLayout(layout) {
         if (layout !== "default" && layout !== "scrolling" && layout !== "dwindle" && layout !== "monocle" && layout !== "master") return
         // console.log("[HyprlandSettings] Setting layout to", layout)

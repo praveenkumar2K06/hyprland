@@ -24,6 +24,7 @@ Item {
             Directories.backgroundConfigPath,
             Directories.interfaceConfigPath,
             Directories.servicesConfigPath,
+            Directories.hyprlandConfigPath,
             Directories.advancedConfigPath
         ])
     }
