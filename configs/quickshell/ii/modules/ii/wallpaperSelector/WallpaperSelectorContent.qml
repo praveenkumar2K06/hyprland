@@ -307,8 +307,9 @@ MouseArea {
                         }
 
                         function activateCurrent() {
-                            const item = grid.model.get(currentIndex)
-                            wallpaperSelectorContent.selectWallpaperPath(item.actualPath || item.filePath);
+                            const actualPath = grid.model.get(currentIndex, "actualPath");
+                            const filePath = grid.model.get(currentIndex, "filePath");
+                            wallpaperSelectorContent.selectWallpaperPath(actualPath || filePath);
                         }
 
                         property int loadedCount: 0
