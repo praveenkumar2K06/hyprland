@@ -48,6 +48,14 @@ output_path = '~/.config/starship.toml'
 #output_path = '~/.config/waybar/tokens/generated-colors.css'
 #post_hook = 'pkill -SIGUSR2 waybar'
 
+[templates.vscode-raw]
+input_path = './templates/vscode-colors'
+output_path = '~/.cache/matugen/vscode-colors'
+
+[templates.vscode-json]
+input_path = './templates/vscode-colors.json'
+output_path = '~/.cache/matugen/vscode-colors.json'
+
 [templates.zed]
 input_path = './templates/zed-colors.json'
 output_path = '~/.config/zed/themes/matugen.json'
