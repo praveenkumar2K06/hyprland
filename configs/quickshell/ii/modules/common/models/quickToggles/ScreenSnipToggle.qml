@@ -16,9 +16,9 @@ QuickToggleModel {
         GlobalStates.sidebarRightOpen = false;
         const savePath = Config.options.screenSnip.savePath;
         const command = savePath.length > 0
-            ? `grim -g "$(slurp)" "${savePath}/screenshot_$(date '+%Y-%m-%d_%H.%M.%S').png"`
-            : `grim -g "$(slurp)" - | wl-copy`;
-        Quickshell.execDetached(["bash", "-c", `sleep 0.3; ${command}`]);
+            ? `sleep 0.3; grim -g "$(slurp)" "$1/screenshot_$(date '+%Y-%m-%d_%H.%M.%S').png"`
+            : `sleep 0.3; grim -g "$(slurp)" - | wl-copy`;
+        Quickshell.execDetached(["bash", "-c", command, "screensnip", savePath]);
     }
 
     tooltipText: "Screen snip"

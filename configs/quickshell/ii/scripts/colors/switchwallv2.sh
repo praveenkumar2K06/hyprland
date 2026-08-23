@@ -7,6 +7,7 @@ readonly CONFIG_FILE="$HOME/.config/illogical-impulse/config.json"
 MODE="dark"
 CHANGE_SDDM=false
 PICK_RANDOM=false
+NOSWITCH=false
 
 get_config() {
     jq -r "$1" "$CONFIG_FILE"
@@ -35,6 +36,7 @@ Options:
   --wall PATH         Set wallpaper directly
   --dark              Apply dark theme
   --light             Apply light theme
+  --noswitch          Change theme without switching the wallpaper
   --sddm              Also update SDDM background
   --help              Show help
 EOF
@@ -125,6 +127,27 @@ apply_wallpaper() {
         "$(basename "$wall") [$MODE]"
 }
 
+apply_theme_only() {
+    local wall="$1"
+
+    [[ -f "$wall" ]] || {
+        notify-send "Wallpaper Error" "File not found"
+        exit 1
+    }
+
+    set_gtk_theme
+
+    local effect="${SCHEME:-scheme-tonal-spot}"
+
+    [[ "$effect" == "auto" ]] && effect="scheme-tonal-spot"
+
+    matugen image \
+        "$(realpath "$wall")" \
+        --mode "$MODE" \
+        --type "$effect" \
+        --source-color-index 0
+}
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --pick)
@@ -155,6 +178,11 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
 
+        --noswitch)
+            NOSWITCH=true
+            shift
+            ;;
+
         --help)
             show_help
             exit 0
@@ -176,4 +204,8 @@ if [[ -z "${CURRENT_WALL:-}" ]]; then
     exit 1
 fi
 
-apply_wallpaper "$CURRENT_WALL"
+if [[ "$NOSWITCH" == true ]]; then
+    apply_theme_only "$CURRENT_WALL"
+else
+    apply_wallpaper "$CURRENT_WALL"
+fi

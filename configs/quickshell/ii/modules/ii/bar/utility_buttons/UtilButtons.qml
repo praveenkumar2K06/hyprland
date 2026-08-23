@@ -117,9 +117,9 @@ Item {
                 Layout.alignment: Qt.AlignVCenter
                 onClicked: event => {
                     if (Appearance.m3colors.darkmode) {
-                        Quickshell.execDetached([Directories.wallpaperSwitchScriptPathv2,"--light"]);
+                        Quickshell.execDetached([Directories.wallpaperSwitchScriptPathv2, "--light", "--noswitch"]);
                     } else {
-                        Quickshell.execDetached([Directories.wallpaperSwitchScriptPathv2, "--dark"]);
+                        Quickshell.execDetached([Directories.wallpaperSwitchScriptPathv2, "--dark", "--noswitch"]);
                     }
                 }
                 MaterialSymbol {

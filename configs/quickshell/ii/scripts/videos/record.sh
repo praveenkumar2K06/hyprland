@@ -92,7 +92,7 @@ start_timer() {
     update_seconds 0
 
     (
-        local elapsed=0
+        elapsed=0
 
         while true; do
             sleep 1
@@ -120,7 +120,9 @@ cleanup() {
     stop_timer
 }
 
-trap cleanup EXIT INT TERM
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 
 # --------------------------------------------------
 # Recording directory
@@ -235,11 +237,11 @@ if [[ "$FULLSCREEN_FLAG" -eq 0 ]]; then
 
     if [[ -n "$MANUAL_REGION" ]]; then
 
-        REGION="$MANUAL_REGION"
+        GEOMETRY="$MANUAL_REGION"
 
     else
 
-        if ! REGION="$(slurp 2>/dev/null)"; then
+        if ! GEOMETRY="$(slurp 2>/dev/null)"; then
 
             notify-send \
                 "Recording cancelled" \
@@ -252,13 +254,6 @@ if [[ "$FULLSCREEN_FLAG" -eq 0 ]]; then
 
     fi
 
-    POS="${REGION%% *}"
-    SIZE="${REGION##* }"
-
-    X="${POS%,*}"
-    Y="${POS#*,}"
-
-    GEOMETRY="${X},${Y} ${SIZE}"
 fi
 
 # --------------------------------------------------

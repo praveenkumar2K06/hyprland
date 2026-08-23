@@ -19,11 +19,15 @@ Singleton {
     ColorQuantizer {
         id: wallColorQuant
         property string wallpaperPath: Config.options.background.wallpaperPath
-        source: Qt.resolvedUrl(Config.options.background.wallpaperPath)
+        readonly property bool wallpaperIsVideo: [".mp4", ".webm", ".mkv", ".avi", ".mov", ".m4v", ".ogv"].some(ext => wallpaperPath.toLowerCase().endsWith(ext))
+        source: wallpaperIsVideo ? "" : Qt.resolvedUrl(wallpaperPath)
         depth: 0 // 2^0 = 1 color
         rescaleSize: 10
     }
-    property real wallpaperVibrancy: (wallColorQuant.colors[0]?.hslSaturation + wallColorQuant.colors[0]?.hslLightness) / 2
+    property real wallpaperVibrancy: {
+        const c = wallColorQuant.colors[0];
+        return c ? (c.hslSaturation + c.hslLightness) / 2 : 0;
+    }
     property real autoBackgroundTransparency: { // y = 0.5768x^2 - 0.759x + 0.2896
         let x = wallpaperVibrancy
         let y = 0.5768 * (x * x) - 0.759 * (x) + 0.2896
@@ -228,15 +232,18 @@ Singleton {
         // Custom fonts live in Persistent.states.settings.fonts (edited in AdvancedConfig),
         // Config.options.appearance.fonts only holds the defaults and the enableCustom toggle
         readonly property bool customEnabled: Config.options.appearance.fonts.enableCustom
+        function pick(customValue, defaultValue) {
+            return customEnabled ? customValue : defaultValue;
+        }
         property QtObject family: QtObject {
-            property string main: root.font.customEnabled ? Persistent.states.settings.fonts.main : Config.options.appearance.fonts.main
-            property string numbers: root.font.customEnabled ? Persistent.states.settings.fonts.numbers : Config.options.appearance.fonts.numbers
-            property string title: root.font.customEnabled ? Persistent.states.settings.fonts.title : Config.options.appearance.fonts.title
+            property string main: root.font.pick(Persistent.states.settings.fonts.main, Config.options.appearance.fonts.main)
+            property string numbers: root.font.pick(Persistent.states.settings.fonts.numbers, Config.options.appearance.fonts.numbers)
+            property string title: root.font.pick(Persistent.states.settings.fonts.title, Config.options.appearance.fonts.title)
             property string iconMaterial: "Material Symbols Rounded"
-            property string iconNerd: root.font.customEnabled ? Persistent.states.settings.fonts.iconNerd : Config.options.appearance.fonts.iconNerd
-            property string monospace: root.font.customEnabled ? Persistent.states.settings.fonts.monospace : Config.options.appearance.fonts.monospace
-            property string reading: root.font.customEnabled ? Persistent.states.settings.fonts.reading : Config.options.appearance.fonts.reading
-            property string expressive: root.font.customEnabled ? Persistent.states.settings.fonts.expressive : Config.options.appearance.fonts.expressive
+            property string iconNerd: root.font.pick(Persistent.states.settings.fonts.iconNerd, Config.options.appearance.fonts.iconNerd)
+            property string monospace: root.font.pick(Persistent.states.settings.fonts.monospace, Config.options.appearance.fonts.monospace)
+            property string reading: root.font.pick(Persistent.states.settings.fonts.reading, Config.options.appearance.fonts.reading)
+            property string expressive: root.font.pick(Persistent.states.settings.fonts.expressive, Config.options.appearance.fonts.expressive)
         }
         property QtObject variableAxes: QtObject {
             property var main: ({
