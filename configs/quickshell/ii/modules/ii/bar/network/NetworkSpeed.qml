@@ -22,6 +22,7 @@ Item {
         }
     }
     property bool showWidget: true
+    property var barItem // BarComponent instance, set by the declaration site in BarComponent.qml
 
     visible: autoHide ? showWidget : true
     implicitWidth: visible ? (vertical ? Appearance.sizes.verticalBarWidth : networkLayout.implicitWidth + 6 + (displayMode === 4 ? 16 : 0)) : 0
@@ -39,13 +40,9 @@ Item {
     }
 
     function updateVisibility() {
-        try {
-            if (typeof rootItem !== "undefined") {
-                rootItem.visible = (!autoHide || showWidget);
-            } else {
-                root.visible = (!autoHide || showWidget);
-            }
-        } catch (e) {
+        if (barItem) {
+            barItem.visible = (!autoHide || showWidget);
+        } else {
             root.visible = (!autoHide || showWidget);
         }
     }

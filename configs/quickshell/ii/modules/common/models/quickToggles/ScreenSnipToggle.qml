@@ -14,15 +14,11 @@ QuickToggleModel {
 
     mainAction: () => {
         GlobalStates.sidebarRightOpen = false;
-        delayedActionTimer.start();
-    }
-    Timer {
-        id: delayedActionTimer
-        interval: 300
-        repeat: false
-        onTriggered: {
-            Quickshell.execDetached(["qs", "-p", Quickshell.shellPath(""), "ipc", "call", "region", "screenshot"]);
-        }
+        const savePath = Config.options.screenSnip.savePath;
+        const command = savePath.length > 0
+            ? `grim -g "$(slurp)" "${savePath}/screenshot_$(date '+%Y-%m-%d_%H.%M.%S').png"`
+            : `grim -g "$(slurp)" - | wl-copy`;
+        Quickshell.execDetached(["bash", "-c", `sleep 0.3; ${command}`]);
     }
 
     tooltipText: "Screen snip"

@@ -16,9 +16,10 @@ MouseArea {
     implicitHeight: Appearance.sizes.barHeight
 
     property bool activelyScreenSharing: false
-    
+    property var barItem // BarComponent instance, set by the declaration site in BarComponent.qml
+
     hoverEnabled: true
-    Component.onCompleted: rootItem.toggleHighlight(true)
+    Component.onCompleted: barItem?.toggleHighlight(true)
 
     Process {
         id: screenShareProc
@@ -33,7 +34,7 @@ MouseArea {
         onFileChanged: this.reload()
         onLoaded: {
             indicator.activelyScreenSharing = !stateFile.text().trim().toLowerCase().includes("none")
-            rootItem.toggleVisible(indicator.activelyScreenSharing)
+            barItem?.toggleVisible(indicator.activelyScreenSharing)
         }
     }
 

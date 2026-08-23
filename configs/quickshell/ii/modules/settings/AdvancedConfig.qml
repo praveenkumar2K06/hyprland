@@ -37,23 +37,6 @@ ContentPage {
             checked: Config.options.appearance.fonts.enableCustom
             onCheckedChanged: {
                 Config.options.appearance.fonts.enableCustom = checked;
-                if (checked) {
-                    Config.options.appearance.fonts.main = Persistent.states.settings.fonts.main;
-                    Config.options.appearance.fonts.numbers = Persistent.states.settings.fonts.numbers;
-                    Config.options.appearance.fonts.title = Persistent.states.settings.fonts.title;
-                    Config.options.appearance.fonts.monospace = Persistent.states.settings.fonts.monospace;
-                    Config.options.appearance.fonts.iconNerd = Persistent.states.settings.fonts.iconNerd;
-                    Config.options.appearance.fonts.reading = Persistent.states.settings.fonts.reading;
-                    Config.options.appearance.fonts.expressive = Persistent.states.settings.fonts.expressive;
-                } else {
-                    Config.options.appearance.fonts.main = "Google Sans Flex";
-                    Config.options.appearance.fonts.numbers = "Google Sans Flex";
-                    Config.options.appearance.fonts.title = "Google Sans Flex";
-                    Config.options.appearance.fonts.iconNerd = "JetBrains Mono NF";
-                    Config.options.appearance.fonts.monospace = "JetBrains Mono NF";
-                    Config.options.appearance.fonts.reading = "Readex Pro";
-                    Config.options.appearance.fonts.expressive = "Space Grotesk";
-                }
             }
         }
 
@@ -70,7 +53,6 @@ ContentPage {
                 onTextChanged: {
                     if (!enabled) return
                     Persistent.states.settings.fonts.main = text;
-                    Config.options.appearance.fonts.main = text;
                 }
             }
         }
@@ -88,7 +70,6 @@ ContentPage {
                 onTextChanged: {
                     if (!enabled) return
                     Persistent.states.settings.fonts.numbers = text;
-                    Config.options.appearance.fonts.numbers = text;
                 }
             }
         }
@@ -106,7 +87,6 @@ ContentPage {
                 onTextChanged: {
                     if (!enabled) return
                     Persistent.states.settings.fonts.title = text;
-                    Config.options.appearance.fonts.title = text;
                 }
             }
         }
@@ -124,7 +104,6 @@ ContentPage {
                 onTextChanged: {
                     if (!enabled) return
                     Persistent.states.settings.fonts.monospace = text;
-                    Config.options.appearance.fonts.monospace = text;
                 }
             }
         }
@@ -142,7 +121,6 @@ ContentPage {
                 onTextChanged: {
                     if (!enabled) return
                     Persistent.states.settings.fonts.iconNerd = text;
-                    Config.options.appearance.fonts.iconNerd = text;
                 }
             }
         }
@@ -160,7 +138,6 @@ ContentPage {
                 onTextChanged: {
                     if (!enabled) return
                     Persistent.states.settings.fonts.reading = text;
-                    Config.options.appearance.fonts.reading = text;
                 }
             }
         }
@@ -178,7 +155,6 @@ ContentPage {
                 onTextChanged: {
                     if (!enabled) return
                     Persistent.states.settings.fonts.expressive = text;
-                    Config.options.appearance.fonts.expressive = text;
                 }
             }
         }

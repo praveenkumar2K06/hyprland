@@ -108,8 +108,8 @@ Item {
         id: wrapper
         vertical: rootItem.vertical
         anchors {
-            verticalCenter: root.vertical ? rootItem.verticalCenter : undefined
-            horizontalCenter: root.vertical ? undefined : rootItem.horizontalCenter
+            verticalCenter: rootItem.vertical ? rootItem.verticalCenter : undefined
+            horizontalCenter: rootItem.vertical ? undefined : rootItem.horizontalCenter
         }
         
         startRadius: rootItem.startRadius
@@ -136,33 +136,33 @@ Item {
     Component { id: systemMonitorComp; Resources {} }
     Component { id: systemMonitorCompVert; Vertical.Resources {} }
 
-    Component { id: clockCompVert; Vertical.VerticalClockWidget {} }
-    Component { id: clockComp; ClockWidget {} }
+    Component { id: clockCompVert; Vertical.VerticalClockWidget { barItem: rootItem } }
+    Component { id: clockComp; ClockWidget { barItem: rootItem } }
 
     Component { id: batteryComp; BatteryIndicator {} }
     Component { id: batteryCompVert; Vertical.BatteryIndicator {} }
     
     Component { id: utilityButtonsComp; UtilButtons { vertical: rootItem.vertical } }
 
-    Component { id: systemTrayComp; SysTray { vertical: rootItem.vertical } }
+    Component { id: systemTrayComp; SysTray { barItem: rootItem; vertical: rootItem.vertical } }
 
     Component { id: activeWindowComp; ActiveWindow { vertical: rootItem.vertical } }
 
     Component { id: dateCompVert; Vertical.VerticalDateWidget {} }
     
-    Component { id: recordIndicatorComp; RecordIndicator { vertical: rootItem.vertical } }
+    Component { id: recordIndicatorComp; RecordIndicator { barItem: rootItem; vertical: rootItem.vertical } }
 
-    Component { id: screenshareIndicatorComp; ScreenShareIndicator {} }
+    Component { id: screenshareIndicatorComp; ScreenShareIndicator { barItem: rootItem } }
 
-    Component { id: timerComp; TimerWidget {} }
-    Component { id: timerCompVert; Vertical.VerticalTimerWidget {} }
+    Component { id: timerComp; TimerWidget { barItem: rootItem } }
+    Component { id: timerCompVert; Vertical.VerticalTimerWidget { barItem: rootItem } }
 
     Component { id: logoComp; Logo {} }
     
     Component { id: dashboardPanelButton; DashboardPanelButton {} }
     Component { id: dashboardPanelButtonVert; VerticalDashboardPanelButton {} }
     
-    Component { id: networkSpeedComp; NetworkSpeed { vertical: rootItem.vertical } }
+    Component { id: networkSpeedComp; NetworkSpeed { barItem: rootItem; vertical: rootItem.vertical } }
 
     Component { id: weatherComp; WeatherBar { vertical: rootItem.vertical } }
 }

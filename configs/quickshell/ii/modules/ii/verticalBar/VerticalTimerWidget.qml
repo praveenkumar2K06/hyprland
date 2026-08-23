@@ -21,9 +21,10 @@ Item {
     implicitHeight: columnLayout.implicitHeight + columnLayout.spacing * 4
 
     property bool compVisible: ((hasStop || sRunning) && root.showStopwatch) || ((pRunning || hasPomo) && root.showPomodoro)
+    property var barItem // BarComponent instance, set by the declaration site in BarComponent.qml
 
-    onCompVisibleChanged: rootItem.toggleVisible(compVisible)
-    Component.onCompleted: rootItem.toggleVisible(compVisible)
+    onCompVisibleChanged: barItem?.toggleVisible(compVisible)
+    Component.onCompleted: barItem?.toggleVisible(compVisible)
 
     Behavior on implicitWidth {
         animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)

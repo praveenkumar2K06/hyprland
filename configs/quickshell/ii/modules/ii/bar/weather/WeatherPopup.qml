@@ -55,8 +55,10 @@ StyledPopup {
         forecastLoading = true;
         let city = Config.options.bar.weather.city || "auto";
         //console.log(`[WeatherPopup] Fetching forecast for city: ${city}`);
-        city = city.trim().split(/\s+/).join('+');
-        forecastFetcher.command[2] = `curl -s "wttr.in/${city}?format=j1" | jq '{daily: [.weather[] | {date: .date, maxC: .maxtempC, minC: .mintempC, maxF: .maxtempF, minF: .mintempF, code: .hourly[4].weatherCode}], hourly: [.weather[0].hourly[], .weather[1].hourly[] | {time: .time, tempC: .tempC, tempF: .tempF, code: .weatherCode}]}'`;
+        // Percent-encode so the value can never break out of the single quotes below
+        city = city.trim().split(/\s+/).map(encodeURIComponent).join('+').replace(/'/g, "%27");
+        const url = `wttr.in/${city}?format=j1`;
+        forecastFetcher.command[2] = `curl -s '${url}' | jq '{daily: [.weather[] | {date: .date, maxC: .maxtempC, minC: .mintempC, maxF: .maxtempF, minF: .mintempF, code: .hourly[4].weatherCode}], hourly: [.weather[0].hourly[], .weather[1].hourly[] | {time: .time, tempC: .tempC, tempF: .tempF, code: .weatherCode}]}'`;
         forecastFetcher.running = true;
     }
 

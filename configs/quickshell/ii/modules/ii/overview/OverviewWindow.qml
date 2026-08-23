@@ -118,7 +118,10 @@ Item { // Window
         id: windowPreview
         anchors.fill: parent
         captureSource: root.toplevel
-        live: true
+        // Delegates only exist while the overview is open (loaders gate on window visibility),
+        // so this stops capture streams immediately on close without ever toggling live
+        // back on for an existing view, which does not restart capture sessions reliably
+        live: GlobalStates.overviewOpen
         z: 1
 
         // Color overlay for interactions

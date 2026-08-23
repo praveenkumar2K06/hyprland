@@ -35,43 +35,43 @@ ApplicationWindow {
         {
             name: "Quick",
             icon: "instant_mix",
-            component: "modules/settings/QuickConfig.qml"
+            component: Qt.resolvedUrl(Directories.backgroundConfigPath)
         },
         {
             name: "General",
             icon: "browse",
-            component: "modules/settings/GeneralConfig.qml"
+            component: Qt.resolvedUrl(Directories.generalConfigPath)
         },
         {
             name: "Bar",
             icon: "toast",
             iconRotation: 180,
-            component: "modules/settings/BarConfig.qml"
+            component: Qt.resolvedUrl(Directories.barConfigPath)
         },
         {
             name: "Interface",
             icon: "bottom_app_bar",
-            component: "modules/settings/InterfaceConfig.qml"
+            component: Qt.resolvedUrl(Directories.interfaceConfigPath)
         },
         {
             name: "Services",
             icon: "api",
-            component: "modules/settings/ServicesConfig.qml"
+            component: Qt.resolvedUrl(Directories.servicesConfigPath)
         },
         {
             name: "Hyprland",
             icon: "select_window_2",
-            component: "modules/settings/HyprlandConfig.qml"
+            component: Qt.resolvedUrl(Directories.hyprlandConfigPath)
         },
         {
             name: "Advanced",
             icon: "construction",
-            component: "modules/settings/AdvancedConfig.qml"
+            component: Qt.resolvedUrl(Directories.advancedConfigPath)
         },
         {
             name: "About",
             icon: "info",
-            component: "modules/settings/About.qml"
+            component: Qt.resolvedUrl(Directories.aboutConfigPath)
         }
     ]
     

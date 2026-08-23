@@ -18,6 +18,11 @@ local HOME = os.getenv("HOME")
 local OVERRIDES_DIR = HOME .. "/.config/hypr/hyprland/shellOverrides"
 local OVERRIDES_PATH = OVERRIDES_DIR .. "/main.lua"
 
+-- Single-quote a string for safe use in shell commands
+local function shquote(s)
+    return "'" .. tostring(s):gsub("'", "'\\''") .. "'"
+end
+
 local function read_lines(path)
     local f = io.open(path, "r")
     if not f then return {} end
@@ -28,7 +33,7 @@ local function read_lines(path)
 end
 
 local function write_lines(path, lines)
-    os.execute("mkdir -p " .. OVERRIDES_DIR)
+    os.execute("mkdir -p " .. shquote(OVERRIDES_DIR))
     local tmp = path .. ".tmp"
     local f = io.open(tmp, "w")
     if not f then
@@ -198,7 +203,7 @@ end
 
 -- Fetch current Hyprland value for a config key via hyprctl
 local function get_hyprctl_value(key)
-    local cmd = 'hyprctl getoption -j "' .. key .. '" 2>/dev/null'
+    local cmd = "hyprctl getoption -j " .. shquote(key) .. " 2>/dev/null"
     local f = io.popen(cmd)
     if not f then return nil end
     local output = f:read("*a")

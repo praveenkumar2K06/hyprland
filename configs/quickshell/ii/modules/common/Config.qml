@@ -14,36 +14,6 @@ Singleton {
     property int readWriteDelay: 75 // milliseconds
     property bool blockWrites: false
 
-    function setNestedValue(nestedKey, value) {
-        let keys = nestedKey.split(".");
-        let obj = root.options;
-        let parents = [obj];
-
-        // Traverse and collect parent objects
-        for (let i = 0; i < keys.length - 1; ++i) {
-            if (!obj[keys[i]] || typeof obj[keys[i]] !== "object") {
-                obj[keys[i]] = {};
-            }
-            obj = obj[keys[i]];
-            parents.push(obj);
-        }
-
-        // Convert value to correct type using JSON.parse when safe
-        let convertedValue = value;
-        if (typeof value === "string") {
-            let trimmed = value.trim();
-            if (trimmed === "true" || trimmed === "false" || !isNaN(Number(trimmed))) {
-                try {
-                    convertedValue = JSON.parse(trimmed);
-                } catch (e) {
-                    convertedValue = value;
-                }
-            }
-        }
-
-        obj[keys[keys.length - 1]] = convertedValue;
-    }
-
     Timer {
         id: fileReloadTimer
         interval: root.readWriteDelay
@@ -475,6 +445,14 @@ Singleton {
                             {
                                 "size": 2,
                                 "type": "nightLight"
+                            },
+                            {
+                                "size": 1,
+                                "type": "screenSnip"
+                            },
+                            {
+                                "size": 1,
+                                "type": "screenRecord"
                             }
                         ]
                     }

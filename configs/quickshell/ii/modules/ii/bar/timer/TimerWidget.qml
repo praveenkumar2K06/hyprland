@@ -19,11 +19,12 @@ Item {
     implicitHeight: Appearance.sizes.barHeight
 
     property bool compVisible: ((hasStop || sRunning) && root.showStopwatch) || ((pRunning || hasPomo) && root.showPomodoro)
+    property var barItem // BarComponent instance, set by the declaration site in BarComponent.qml
 
-    onCompVisibleChanged: rootItem.toggleVisible(compVisible)
+    onCompVisibleChanged: barItem?.toggleVisible(compVisible)
     Component.onCompleted: {
-        rootItem.toggleHighlight(true)
-        rootItem.toggleVisible(compVisible)
+        barItem?.toggleHighlight(true)
+        barItem?.toggleVisible(compVisible)
     }
 
     Behavior on implicitWidth {

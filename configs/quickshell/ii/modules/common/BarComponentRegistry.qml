@@ -24,23 +24,10 @@ Singleton {
         { id: "workspaces", icon: "workspaces", title: "Workspaces" },
     ]
 
-    property var extensionComponents: []
     property var allComponents: root.builtinComponents
-
-    // function getComponentForId(id, vertical) {
-    //     let cache = root._extensionCompCache[id]
-    //     return cache ? cache[vertical ? 1 : 0] : null
-    // }
 
     function getComponent(id) {
         return root.allComponents.find(c => c.id === id) || null
-    }
-
-    function getExtensionIdForComponent(id) {
-        for (let i = 0; i < root.extensionComponents.length; i++) {
-            if (root.extensionComponents[i].id === id) return root.extensionComponents[i].extensionId
-        }
-        return ""
     }
 
     function getAvailableComponents(usedIds) {

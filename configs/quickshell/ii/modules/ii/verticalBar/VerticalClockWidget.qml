@@ -10,21 +10,22 @@ Item {
     id: root
     implicitHeight: clockColumn.implicitHeight + 10
     implicitWidth: Appearance.sizes.verticalBarWidth
+    property var barItem // BarComponent instance, set by the declaration site in BarComponent.qml
 
     Connections {
         target: LocalSend
         onCurrentTransferChanged: {
             if (LocalSend.currentTransfer) {
-                rootItem.toggleHighlight(true)
+                barItem?.toggleHighlight(true)
             } else {
-                rootItem.toggleHighlight(false)
+                barItem?.toggleHighlight(false)
             }
         }
         onDroppedFilesChanged: {
             if (LocalSend.droppedFiles.length > 0) {
-                rootItem.toggleHighlight(true)
+                barItem?.toggleHighlight(true)
             } else {
-                rootItem.toggleHighlight(false)
+                barItem?.toggleHighlight(false)
             }
         }
     }
@@ -42,7 +43,7 @@ Item {
                 font.pixelSize: modelData.match(/am|pm/i) ? 
                     Appearance.font.pixelSize.smaller // Smaller "am"/"pm" text
                     : Appearance.font.pixelSize.large
-                color: dropArea.containsDrag ? Appearance.colors.colPrimary : rootItem.highlighted ? Appearance.colors.colOnPrimary : Appearance.colors.colOnSurface
+                color: dropArea.containsDrag ? Appearance.colors.colPrimary : root.barItem?.highlighted ? Appearance.colors.colOnPrimary : Appearance.colors.colOnSurface
                 text: modelData.padStart(2, "0")
             }
         }

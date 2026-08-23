@@ -27,7 +27,7 @@ Singleton {
     }
 
     function handleFirstRun() {
-        Quickshell.execDetached([Directories.wallpaperSwitchScriptPathv2, " --wall ",root.defaultWallpaperPath])
+        Quickshell.execDetached([Directories.wallpaperSwitchScriptPathv2, "--wall", root.defaultWallpaperPath])
         Quickshell.execDetached(["bash", "-c", `qs -p '${root.welcomeQmlPath}'`])
     }
 

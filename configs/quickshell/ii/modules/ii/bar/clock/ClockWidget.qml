@@ -9,7 +9,8 @@ Item {
     property bool showDate: Config.options.bar.verbose
     implicitWidth: rowLayout.implicitWidth + rowLayout.spacing * 10
     implicitHeight: Appearance.sizes.barHeight
-    property color colText: rootItem.highlighted ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer1
+    property var barItem // BarComponent instance, set by the declaration site in BarComponent.qml
+    property color colText: barItem?.highlighted ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer1
 
     RowLayout {
         id: rowLayout

@@ -18,6 +18,7 @@ Item {
     property bool showSeparator: true
     property bool showOverflowMenu: true
     property var activeMenu: null
+    property var barItem // BarComponent instance, set by the declaration site in BarComponent.qml
 
     property list<var> pinnedItems: TrayService.pinnedItems
     property list<var> unpinnedItems: TrayService.unpinnedItems
@@ -26,7 +27,7 @@ Item {
 
     function updateVisibility() {
         const hasAnyItems = pinnedItems.length > 0 || unpinnedItems.length > 0;
-        rootItem.toggleVisible(hasAnyItems);
+        barItem?.toggleVisible(hasAnyItems);
 
         if (unpinnedItems.length === 0) {
             root.closeOverflowMenu();

@@ -15,19 +15,20 @@ MouseArea {
     property bool minimal: Config.options.bar.indicators.record.minimal
     property bool activelyRecording: Persistent.states.screenRecord.active
     property color colText: Appearance.colors.colOnPrimary
+    property var barItem // BarComponent instance, set by the declaration site in BarComponent.qml
 
     hoverEnabled: true
     implicitWidth: vertical ? 20 : minimal ? 50 : 80 // NOTE: Why do we have to enter a fixed size to make it dull?
     implicitHeight: vertical ? 50 : 20
 
     Component.onCompleted: {
-        rootItem.toggleHighlight(true)
+        barItem?.toggleHighlight(true)
         updateVisibility()
     }
     onActivelyRecordingChanged: updateVisibility()
 
     function updateVisibility() {
-        rootItem.toggleVisible(activelyRecording)
+        barItem?.toggleVisible(activelyRecording)
     }
 
     function formatTime(totalSeconds) {
@@ -92,7 +93,7 @@ MouseArea {
         active: indicator.vertical
         anchors.centerIn: parent
         sourceComponent: ColumnLayout {
-            id: contentLayout
+            id: verticalContentLayout
             anchors.centerIn: parent
             spacing: 4
 

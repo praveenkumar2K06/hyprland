@@ -46,6 +46,7 @@ Singleton {
     property string servicesConfigPath: Quickshell.shellPath("modules/settings/ServicesConfig.qml")
     property string advancedConfigPath: Quickshell.shellPath("modules/settings/AdvancedConfig.qml")
     property string hyprlandConfigPath: Quickshell.shellPath("modules/settings/HyprlandConfig.qml")
+    property string aboutConfigPath: Quickshell.shellPath("modules/settings/About.qml")
 
     // Cleanup on init
     Component.onCompleted: {

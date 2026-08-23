@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import qs.modules.common.functions
+
 pragma Singleton
 pragma ComponentBehavior: Bound
 
@@ -18,8 +19,7 @@ Singleton {
     ColorQuantizer {
         id: wallColorQuant
         property string wallpaperPath: Config.options.background.wallpaperPath
-        property bool wallpaperIsVideo: wallpaperPath.endsWith(".mp4") || wallpaperPath.endsWith(".webm") || wallpaperPath.endsWith(".mkv") || wallpaperPath.endsWith(".avi") || wallpaperPath.endsWith(".mov")
-        source: Qt.resolvedUrl(wallpaperIsVideo ? Config.options.background.thumbnailPath : Config.options.background.wallpaperPath)
+        source: Qt.resolvedUrl(Config.options.background.wallpaperPath)
         depth: 0 // 2^0 = 1 color
         rescaleSize: 10
     }
@@ -225,15 +225,18 @@ Singleton {
     }
 
     font: QtObject {
+        // Custom fonts live in Persistent.states.settings.fonts (edited in AdvancedConfig),
+        // Config.options.appearance.fonts only holds the defaults and the enableCustom toggle
+        readonly property bool customEnabled: Config.options.appearance.fonts.enableCustom
         property QtObject family: QtObject {
-            property string main: Config.options.appearance.fonts.main
-            property string numbers: Config.options.appearance.fonts.numbers
-            property string title: Config.options.appearance.fonts.title
+            property string main: root.font.customEnabled ? Persistent.states.settings.fonts.main : Config.options.appearance.fonts.main
+            property string numbers: root.font.customEnabled ? Persistent.states.settings.fonts.numbers : Config.options.appearance.fonts.numbers
+            property string title: root.font.customEnabled ? Persistent.states.settings.fonts.title : Config.options.appearance.fonts.title
             property string iconMaterial: "Material Symbols Rounded"
-            property string iconNerd: Config.options.appearance.fonts.iconNerd
-            property string monospace: Config.options.appearance.fonts.monospace
-            property string reading: Config.options.appearance.fonts.reading
-            property string expressive: Config.options.appearance.fonts.expressive
+            property string iconNerd: root.font.customEnabled ? Persistent.states.settings.fonts.iconNerd : Config.options.appearance.fonts.iconNerd
+            property string monospace: root.font.customEnabled ? Persistent.states.settings.fonts.monospace : Config.options.appearance.fonts.monospace
+            property string reading: root.font.customEnabled ? Persistent.states.settings.fonts.reading : Config.options.appearance.fonts.reading
+            property string expressive: root.font.customEnabled ? Persistent.states.settings.fonts.expressive : Config.options.appearance.fonts.expressive
         }
         property QtObject variableAxes: QtObject {
             property var main: ({
