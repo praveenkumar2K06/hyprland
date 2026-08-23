@@ -15,8 +15,8 @@ Item {
     property alias from: valueProgressBar.from
     property alias to: valueProgressBar.to
 
-    property real valueIndicatorVerticalPadding: 0
-    property real valueIndicatorLeftPadding: 10
+    property real valueIndicatorVerticalPadding: 12
+    property real valueIndicatorLeftPadding: 15
     property real valueIndicatorRightPadding: 20 // An icon is circle ish, a column isn't, hence the extra padding
 
     implicitWidth: Appearance.sizes.osdWidth + 2 * Appearance.sizes.elevationMargin
@@ -39,7 +39,6 @@ Item {
 
         RowLayout { // Icon on the left, stuff on the right
             id: valueRow
-            Layout.margins: 10
             anchors.fill: parent
             spacing: 5
 
