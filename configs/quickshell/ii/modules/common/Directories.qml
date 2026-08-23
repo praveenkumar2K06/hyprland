@@ -32,6 +32,7 @@ Singleton {
     property string notificationsPath: FileUtils.trimFileProtocol(`${Directories.cache}/notifications/notifications.json`)
     property string hyprsetScriptPath: FileUtils.trimFileProtocol(`${Directories.scriptPath}/hyprland/hyprset.sh`)
     property string monitorsScriptPath: FileUtils.trimFileProtocol(`${Directories.scriptPath}/hyprland/monitors.py`)
+    property string recordScriptPath: FileUtils.trimFileProtocol(`${Directories.scriptPath}/videos/record.sh`)
     property string screenshareStateScript: FileUtils.trimFileProtocol(`${Directories.scriptPath}/screenShare/screensharestate.sh`)
     property string screenshareStatePath: FileUtils.trimFileProtocol(`${Directories.state}/user/generated/screenshare/apps.txt`)
     property string cliphistDecode: FileUtils.trimFileProtocol(`/tmp/quickshell/media/cliphist`)
