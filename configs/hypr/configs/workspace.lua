@@ -77,7 +77,7 @@ hl.layer_rule({
 })
 
 hl.layer_rule({
-    match        = { namespace = "quickshell:bar" },
+    match        = { namespace = "quickshell:(bar|sidebarRight|verticalBar|popup|cheatsheet|mediaControls|wallpaperSelector)" },
     blur         = true,
     ignore_alpha = 0.5,
 })

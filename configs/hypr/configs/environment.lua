@@ -21,7 +21,7 @@ hl.env("QT_QPA_PLATFORMTHEME", "qt5ct")
 hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
 
 -- hyprland-qt-support
-hl.env("QT_QUICK_CONTROLS_STYLE", "org.hyprland.style")
+-- hl.env("QT_QUICK_CONTROLS_STYLE", "org.hyprland.style")
 
 -- Scale
 hl.env("GDK_SCALE", "1")
