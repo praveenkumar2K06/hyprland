@@ -11,6 +11,8 @@ Singleton {
     property alias flow: polkitAgent.flow
     property bool interactionAvailable: false
     property bool isError: false
+    readonly property string supplementaryMessage: flow?.supplementaryMessage ?? ""
+    readonly property bool supplementaryIsError: flow?.supplementaryIsError ?? false
     property string cleanMessage: {
         if (!root.flow) return "";
         return root.flow.message.endsWith(".")
@@ -25,10 +27,12 @@ Singleton {
     }
 
     function cancel() {
+        root.isError = false;
         root.flow.cancelAuthenticationRequest()
     }
 
     function submit(string) {
+        root.isError = false;
         root.flow.submit(string)
         root.interactionAvailable = false
     }
@@ -45,6 +49,7 @@ Singleton {
         id: polkitAgent
         onAuthenticationRequestStarted: {
             root.interactionAvailable = true;
+            root.isError = false;
         }
     }
 }
