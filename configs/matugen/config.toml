@@ -20,12 +20,20 @@ output_path = '~/.config/kitty/themes/generated-colors.conf'
 [templates.gtk3]
 input_path = './templates/gtk-colors.css'
 output_path = '~/.config/gtk-3.0/colors.css'
-post_hook = 'gsettings set org.gnome.desktop.interface gtk-theme ""; gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3-{{mode}}; ~/.config/matugen/post-hook-scripts/gtk-3.sh'
+post_hook = '~/.config/matugen/post-hook-scripts/gtk-3.sh {{mode}}'
 
 [templates.gtk4]
 input_path = './templates/gtk-colors.css'
 output_path = '~/.config/gtk-4.0/colors.css'
 post_hook = '~/.config/matugen/post-hook-scripts/gtk-4.sh; ~/.config/matugen/post-hook-scripts/gtk-themes-reload.sh'
+
+[templates.kvantum_kvconfig]
+input_path = './templates/KvMatugen.kvconfig'
+output_path = '~/.config/Kvantum/KvMatugen/KvMatugen.kvconfig'
+
+[templates.kvantum_svg]
+input_path = './templates/KvMatugen.svg'
+output_path = '~/.config/Kvantum/KvMatugen/KvMatugen.svg'
 
 [templates.quickshell]
 input_path = "./templates/qs-colors.qml"
@@ -39,3 +47,7 @@ output_path = '~/.config/starship.toml'
 #input_path = './templates/matugen-colors.css'
 #output_path = '~/.config/waybar/tokens/generated-colors.css'
 #post_hook = 'pkill -SIGUSR2 waybar'
+
+[templates.zed]
+input_path = './templates/zed-colors.json'
+output_path = '~/.config/zed/themes/matugen.json'
