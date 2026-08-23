@@ -1,20 +1,47 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -u
 
 STATE_FILE="$HOME/.local/state/quickshell/user/generated/screenshare/apps.txt"
-mkdir -p "$(dirname "$STATE_FILE")"
+STATE_DIR="$(dirname "$STATE_FILE")"
+
+mkdir -p "$STATE_DIR"
 
 LAST_STATE=""
 
+cleanup() {
+    rm -f "${STATE_FILE}.tmp"
+}
+
+trap cleanup EXIT INT TERM
+
 while true; do
+    CURRENT_STATE="$(
+        pw-dump 2>/dev/null |
+            jq -r '
+                .[]
+                | select(
+                    (
+                        .info.props."media.class" == "Stream/Input/Video"
+                        or
+                        .info.props."media.role" == "Screen"
+                    )
+                    and
+                    .info.state == "running"
+                )
+                | .info.props["node.name"]
+            ' 2>/dev/null |
+            paste -sd ', ' -
+    )"
 
-    apps=$(pw-dump | jq -r '.[] | select((.info.props."media.class" == "Stream/Input/Video" or .info.props."media.role" == "Screen") and .info.state == "running") | .info.props["node.name"]' | paste -sd ", " -)
-    
-    CURRENT_STATE="${apps:-NONE}"
+    CURRENT_STATE="${CURRENT_STATE:-NONE}"
 
-    if [ "$CURRENT_STATE" != "$LAST_STATE" ]; then
-        echo "$CURRENT_STATE" > "${STATE_FILE}.tmp"
-        mv "${STATE_FILE}.tmp" "$STATE_FILE"
-        
+    if [[ "$CURRENT_STATE" != "$LAST_STATE" ]]; then
+        TMP_FILE="$(mktemp "${STATE_DIR}/apps.XXXXXX")"
+
+        printf '%s\n' "$CURRENT_STATE" > "$TMP_FILE"
+        mv -f "$TMP_FILE" "$STATE_FILE"
+
         LAST_STATE="$CURRENT_STATE"
     fi
 
