@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import qs.services
+import qs.modules.settings.bar
 import qs.modules.common
 import qs.modules.common.widgets
 import qs.modules.common.widgets.settings
@@ -27,6 +28,14 @@ ContentPage {
     function scrollTo(stringId) {
         const item = componentMap[stringId]
         page.contentY = item.y
+    }
+
+    ContentSection {
+        icon: "touch_app"
+        title: "Interactive Placement"
+        tooltip: "Visually preview and select shell bar positioning"
+
+        BarVisualSelector {}
     }
 
 
