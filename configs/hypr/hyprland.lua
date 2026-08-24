@@ -1,3 +1,5 @@
+require("hyprland.init")
+
 require("configs.animations")
 require("configs.appearance")
 require("configs.autostart")
@@ -10,3 +12,6 @@ require("configs.permissions")
 require("configs.settings")
 require("configs.workspace")
 require("hyprland.shellOverrides.main")
+if is_file_exists(HOME .. "/.config/hypr/custom/keybinds.lua") then
+    require("custom.keybinds")
+end
