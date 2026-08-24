@@ -2,7 +2,6 @@ import qs
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
-import Qt.labs.synchronizer
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -61,9 +60,11 @@ Scope {
 
                 property real effectiveScale: showOpeningAnimation ? zoomedRatio - scaleAnimated + 1 : 1 
 
-                onIsZoomInStyleChanged: isResettingZoom = true
+                onIsZoomInStyleChanged: {
+                    if (showOpeningAnimation) isResettingZoom = true
+                }
                 onScaleAnimatedChanged: {
-                    if (scaleAnimated === defaultRatio) {
+                    if (Math.abs(scaleAnimated - defaultRatio) < 0.0001) {
                         isResettingZoom = false
                     }
                 }
@@ -111,9 +112,13 @@ Scope {
                         if (!GlobalStates.overviewOpen) {
                             searchWidget.disableExpandAnimation();
                             overviewScope.dontAutoCancelSearch = false;
+                            delayedGrabTimer.stop();
+                            grab.active = false;
                         } else {
                             if (!overviewScope.dontAutoCancelSearch) {
                                 searchWidget.cancelSearch();
+                            } else {
+                                searchWidget.enableExpandAnimation();
                             }
                             delayedGrabTimer.start();
                         }
@@ -125,9 +130,9 @@ Scope {
                     interval: Config.options.hacks.arbitraryRaceConditionDelay
                     repeat: false
                     onTriggered: {
-                        if (!grab.canBeActive)
-                            return;
-                        grab.active = GlobalStates.overviewOpen;
+                        if (!GlobalStates.overviewOpen) return;
+                        if (!grab.canBeActive) return;
+                        grab.active = true;
                     }
                 }
 
@@ -147,6 +152,7 @@ Scope {
                 Item {
                     id: contentItem
                     anchors.fill: parent
+                    focus: true
 
                     Keys.onPressed: event => {
                         if (event.key === Qt.Key_Escape) {
@@ -159,17 +165,11 @@ Scope {
                         onClicked: GlobalStates.overviewOpen = false;
                     }
 
-                    Item { // Wrapper for animation 
+                    Item { // Wrapper for animation
                         id: searchWidgetWrapper
                         implicitHeight: searchWidget.implicitHeight
                         implicitWidth: searchWidget.implicitWidth
                         z: 999
-
-                        Keys.onPressed: event => {
-                            if (event.key === Qt.Key_Escape) {
-                                GlobalStates.overviewOpen = false;
-                            }
-                        }
 
                         anchors {
                             horizontalCenter: parent.horizontalCenter
@@ -180,9 +180,11 @@ Scope {
                             id: searchWidget
                             scale: root.effectiveScale
                             anchors.horizontalCenter: parent.horizontalCenter
-                            Synchronizer on searchingText {
-                                property alias source: root.searchingText
-                            }
+                        }
+                        Binding {
+                            target: root
+                            property: "searchingText"
+                            value: searchWidget.searchingText
                         }
                     }
                     
@@ -195,7 +197,7 @@ Scope {
                         active: root.visible && (Config?.options.overview.enable ?? true) && !root.isScrollingLayout
                         sourceComponent: OverviewWidget {
                             panelWindow: root
-                            visible: (root.searchingText == "")
+                            visible: (root.searchingText === "")
                             monitorIndex: root.monitorIndex
                         }
                     }
@@ -206,15 +208,25 @@ Scope {
                         anchors.fill: parent
                         active: root.visible && (Config?.options.overview.enable ?? true) && root.isScrollingLayout
                         sourceComponent: ScrollingOverviewWidget {
-                            anchors.fill: parent
                             panelWindow: root
-                            visible: (root.searchingText == "")
+                            visible: (root.searchingText === "")
                             monitorIndex: root.monitorIndex
                         }
                     }
                 }   
             }   
         }
+    }
+    
+    
+
+    function workspacesToggle() {
+        if (GlobalStates.overviewOpen && overviewScope.dontAutoCancelSearch) {
+            overviewScope.dontAutoCancelSearch = false;
+            overviewScope.setSearchingTextRequested("");
+            return;
+        }
+        GlobalStates.overviewOpen = !GlobalStates.overviewOpen;
     }
 
     function toggleClipboard() {
@@ -244,7 +256,7 @@ Scope {
             GlobalStates.overviewOpen = !GlobalStates.overviewOpen;
         }
         function workspacesToggle() {
-            GlobalStates.overviewOpen = !GlobalStates.overviewOpen;
+            overviewScope.workspacesToggle();
         }
         function close() {
             GlobalStates.overviewOpen = false;
@@ -257,6 +269,9 @@ Scope {
         }
         function clipboardToggle() {
             overviewScope.toggleClipboard();
+        }
+        function emojiToggle() {
+            overviewScope.toggleEmojis();
         }
     }
 
@@ -281,7 +296,7 @@ Scope {
         description: "Toggles overview on press"
 
         onPressed: {
-            GlobalStates.overviewOpen = !GlobalStates.overviewOpen;
+            overviewScope.workspacesToggle();
         }
     }
     GlobalShortcut {
