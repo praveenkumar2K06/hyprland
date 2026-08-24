@@ -42,7 +42,11 @@ MouseArea {
 
     }
 
-    ResourcesPopup {
+    // ResourcesPopup {
+    //     hoverTarget: root
+    // }
+
+    ExpressiveResourcesPopup {
         hoverTarget: root
     }
 }
