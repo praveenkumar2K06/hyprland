@@ -78,10 +78,10 @@ for i = 1, 9 do
     hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }), { description = "Workspace: Focus " .. i })
 end
 for i = 1, 9 do
-    hl.bind(mainMod .. " + CTRL + " .. i, hl.dsp.window.move({ workspace = i, follow = false }), { description = "Window: Move to workspace " .. i .. " (silent)" })
+    hl.bind(mainMod .. " + CTRL + " .. i, hl.dsp.window.move({ workspace = i, follow = false }), { description = "Workspace: Move to workspace " .. i .. " (silent)" })
 end
 for i = 1, 9 do
-    hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i, follow = true }), { description = "Window: Move to workspace " .. i })
+    hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i, follow = true }), { description = "Workspace: Move to workspace " .. i })
 end
 
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Window: Drag" })
