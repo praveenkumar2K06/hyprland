@@ -282,6 +282,10 @@ Singleton {
                 }
             }
 
+            property JsonObject extensions: JsonObject {
+                property bool enable: true
+            }
+
             property JsonObject hyprland: JsonObject {
                 property string defaultHyprlandLayout: "dwindle" // Options: dwindle, monocle, master // It's best to not use scrolling
             }

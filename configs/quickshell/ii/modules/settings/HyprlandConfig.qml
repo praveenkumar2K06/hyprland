@@ -34,8 +34,10 @@ ContentPage {
         readonly property HyprlandConfigOption option: HyprlandConfigOption {
             key: hyprSpinRow.hyprKey
             onValueChanged: {
-                if (hyprSpinRow.value !== hyprSpinRow.option.value)
-                    hyprSpinRow.value = hyprSpinRow.option.value;
+                const intValue = Math.round(Number(hyprSpinRow.option.value));
+                if (Number.isNaN(intValue) || hyprSpinRow.value === intValue)
+                    return;
+                hyprSpinRow.value = intValue;
             }
         }
 

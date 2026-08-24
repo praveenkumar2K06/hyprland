@@ -1,4 +1,5 @@
 import qs.services
+import qs.services.extensions
 import qs.modules.common
 import qs.modules.common.widgets
 import QtQuick
@@ -14,11 +15,23 @@ import Quickshell.Hyprland
 Scope { // Scope
     id: root
 
+    property var extensionCheatsheetTabs: ExtensionManager.ready
+        ? ExtensionManager.getContributionPoint("cheatsheet") : []
+
+    Connections {
+        target: ExtensionManager
+        function onRefreshExtensions() { root.extensionCheatsheetTabs = ExtensionManager.getContributionPoint("cheatsheet") }
+        function onExtensionInstalled() { root.extensionCheatsheetTabs = ExtensionManager.getContributionPoint("cheatsheet") }
+        function onExtensionRemoved() { root.extensionCheatsheetTabs = ExtensionManager.getContributionPoint("cheatsheet") }
+        function onExtensionToggled() { root.extensionCheatsheetTabs = ExtensionManager.getContributionPoint("cheatsheet") }
+    }
+
     property var tabButtonList: [
         {
             "icon": "keyboard",
             "name": "Keybinds"
         },
+        ...root.extensionCheatsheetTabs.map(p => ({icon: p.icon, name: p.title}))
     ]
 
     Loader {
@@ -177,6 +190,36 @@ Scope { // Scope
                         }
 
                         CheatsheetKeybinds {}
+
+                        Component.onCompleted: {
+                            for (const p of root.extensionCheatsheetTabs) {
+                                let loader = Qt.createQmlObject(
+                                    'import QtQuick; Loader { active: true }',
+                                    swipeView
+                                )
+                                swipeView.addItem(loader)
+                                loader.source = "file://" + p.fullPath + "?_t=" + Date.now()
+                                let setExtId = () => {
+                                    if (loader.item) {
+                                        if ("extensionId" in loader.item) {
+                                            loader.item.extensionId = p.extensionId
+                                        } else {
+                                            Object.defineProperty(loader.item, "extensionId", {
+                                                value: p.extensionId,
+                                                writable: true,
+                                                configurable: true,
+                                                enumerable: true
+                                            })
+                                        }
+                                    }
+                                }
+                                if (loader.status === Loader.Ready) {
+                                    setExtId()
+                                } else {
+                                    loader.loaded.connect(setExtId)
+                                }
+                            }
+                        }
                     }
                 }
             }

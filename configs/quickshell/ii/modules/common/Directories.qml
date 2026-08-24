@@ -46,7 +46,13 @@ Singleton {
     property string servicesConfigPath: Quickshell.shellPath("modules/settings/ServicesConfig.qml")
     property string advancedConfigPath: Quickshell.shellPath("modules/settings/AdvancedConfig.qml")
     property string hyprlandConfigPath: Quickshell.shellPath("modules/settings/HyprlandConfig.qml")
+    property string extensionsConfigPath: Quickshell.shellPath("modules/settings/ExtensionsConfig.qml")
     property string aboutConfigPath: Quickshell.shellPath("modules/settings/About.qml")
+
+    property string extensionsPath: FileUtils.trimFileProtocol(`${Directories.shellConfig}/extensions`)
+    property string extensionsCachePath: `${Directories.extensionsPath}/cache`
+    property string extensionsInstalledPath: `${Directories.extensionsPath}/installed`
+    property string pluginsJsonPath: `${Directories.extensionsPath}/plugins.json`
 
     // Cleanup on init
     Component.onCompleted: {
@@ -54,6 +60,8 @@ Singleton {
         Quickshell.execDetached(["mkdir", "-p", `${favicons}`])
         Quickshell.execDetached(["bash", "-c", `rm -rf '${coverArt}'; mkdir -p '${coverArt}'`])
         Quickshell.execDetached(["bash", "-c", `rm -rf '${cliphistDecode}'; mkdir -p '${cliphistDecode}'`])
+        Quickshell.execDetached(["mkdir", "-p", `${Directories.extensionsCachePath}`])
+        Quickshell.execDetached(["mkdir", "-p", `${Directories.extensionsInstalledPath}`])
         Quickshell.execDetached(["mkdir", "-p", `${userActions}`])
     }
 }

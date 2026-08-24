@@ -69,6 +69,11 @@ ApplicationWindow {
             component: Qt.resolvedUrl(Directories.advancedConfigPath)
         },
         {
+            name: "Extensions",
+            icon: "extension",
+            component: Qt.resolvedUrl(Directories.extensionsConfigPath)
+        },
+        {
             name: "About",
             icon: "info",
             component: Qt.resolvedUrl(Directories.aboutConfigPath)
