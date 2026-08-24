@@ -32,6 +32,7 @@ Singleton {
             'install': 'deployed_code_update',
             'input': 'keyboard_alt',
             'preedit': 'keyboard_alt',
+            'wallpaper': 'image',
             'startswith:file': 'folder_copy', // Declarative startsWith check
         };
 
