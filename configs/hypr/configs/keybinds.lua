@@ -16,13 +16,13 @@ local menu        = "wofi --show drun"
 local mainMod = "SUPER"
 
 -- Common actions
-hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser), { description = "Programs: Open browser" })
-hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal), { description = "Programs: Open terminal" })
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager), { description = "Programs: Open file manager" })
-hl.bind(mainMod .. " + Q", hl.dsp.window.close(), { description = "Window: Close" })
+hl.bind("SUPER + B", hl.dsp.exec_cmd(browser), { description = "Programs: Open browser" })
+hl.bind("SUPER + Return", hl.dsp.exec_cmd(terminal), { description = "Programs: Open terminal" })
+hl.bind("SUPER + E", hl.dsp.exec_cmd(fileManager), { description = "Programs: Open file manager" })
+hl.bind("SUPER + Q", hl.dsp.window.close(), { description = "Window: Close" })
 
 -- Lock
-hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
+hl.bind("SUPER + L", hl.dsp.exec_cmd("hyprlock"))
 
 -- Zoom
 local function zoomfunction(value)
@@ -35,8 +35,8 @@ local function zoomfunction(value)
         hl.config({ cursor = { zoom_factor = zoomvalue + value } })
     end
 end
-hl.bind(mainMod .. " + Minus", function() zoomfunction(-0.3) end, { repeating = true, description = "Misc: Zoom out" })
-hl.bind(mainMod .. " + Equal", function() zoomfunction(0.3) end, { repeating = true, description = "Misc: Zoom in" })
+hl.bind("SUPER + Minus", function() zoomfunction(-0.3) end, { repeating = true, description = "Misc: Zoom out" })
+hl.bind("SUPER + Equal", function() zoomfunction(0.3) end, { repeating = true, description = "Misc: Zoom in" })
 
 -- Special Keys
 
@@ -57,12 +57,12 @@ hl.bind("XF86AudioMute", hl.dsp.exec_cmd("pamixer --toggle-mute"), { locked = tr
 
 hl.bind("Print", hl.dsp.exec_cmd('grim ~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png'), { description = "Screenshot: Fullscreen" })
 hl.bind("SHIFT + Print", hl.dsp.exec_cmd('grim -g "$(slurp-window)" ~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png'), { description = "Screenshot: Select area" })
-hl.bind(mainMod .. " + SHIFT + Print", hl.dsp.exec_cmd('grim -g "$(slurp -d)" - | wl-copy'), { description = "Screenshot: Copy to clipboard" })
+hl.bind("SUPER + SHIFT + Print", hl.dsp.exec_cmd('grim -g "$(slurp -d)" - | wl-copy'), { description = "Screenshot: Copy to clipboard" })
 
 -- Special
-hl.bind(mainMod .. " + ALT + S",
+hl.bind("SUPER + ALT + S",
     hl.dsp.window.move({ workspace = "special:special", follow = false }), { description = "Window: Send to scratchpad" })
-hl.bind("CTRL + " .. mainMod .. " + S", hl.dsp.workspace.toggle_special("special"))
+hl.bind("CTRL + SUPER + S", hl.dsp.workspace.toggle_special("special"))
 
 
 -- Focus
@@ -84,16 +84,12 @@ for i = 1, 9 do
     hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i, follow = true }), { description = "Workspace: Move to workspace " .. i })
 end
 
-hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Window: Drag" })
-hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Window: Resize" })
+hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Window: Drag" })
+hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Window: Resize" })
 
 -- QuickShell
-hl.bind(mainMod .. " + Tab", hl.dsp.global("quickshell:overviewWorkspacesToggle"),
-    { description = "Shell: Toggle overview" })
-hl.bind(mainMod .. " + Space", hl.dsp.global("quickshell:overviewWorkspacesToggle"),
-{ description = "Shell: Toggle overview" })
-hl.bind(mainMod .. " + CTRL + T", hl.dsp.global("quickshell:wallpaperSelectorToggle"),
-    { description = "Shell: Change wallpaper" })
-hl.bind(mainMod .. " + C", hl.dsp.global("quickshell:cheatsheetToggle"),
-    { description = "Shell: Toggle Cheatsheet"})
+hl.bind("SUPER + Tab", hl.dsp.global("quickshell:overviewWorkspacesToggle"), { description = "Shell: Toggle overview" })
+hl.bind("SUPER + Space", hl.dsp.global("quickshell:overviewWorkspacesToggle"), { description = "Shell: Toggle overview" })
+hl.bind("CTRL + SUPER + T", hl.dsp.global("quickshell:wallpaperSelectorToggle"), { description = "Shell: Change wallpaper" })
+hl.bind("SUPER + C", hl.dsp.global("quickshell:cheatsheetToggle"), { description = "Shell: Toggle Cheatsheet"})
 hl.bind("CTRL + ALT + Delete", hl.dsp.global("quickshell:sessionToggle"), { description = "Shell: Toggle session menu" })
