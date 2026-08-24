@@ -92,13 +92,13 @@ apply_wallpaper() {
     local wall="$1"
 
     [[ -f "$wall" ]] || {
-        notify-send "Wallpaper Error" "File not found"
+        notify-send "Wallpaper Error" "File not found" -a "Shell"
         exit 1
     }
 
     wall="$(realpath "$wall")"
 
-    notify-send "Applying Wallpaper" "$(basename "$wall")"
+    notify-send "Applying Wallpaper" "$(basename "$wall")" -a "Shell"
 
     if [[ "$CHANGE_SDDM" == true ]]; then
         update_sddm_background "$wall"
@@ -124,14 +124,14 @@ apply_wallpaper() {
 
     notify-send \
         "Wallpaper Applied" \
-        "$(basename "$wall") [$MODE]"
+        "$(basename "$wall") [$MODE]" -a "Shell"
 }
 
 apply_theme_only() {
     local wall="$1"
 
     [[ -f "$wall" ]] || {
-        notify-send "Wallpaper Error" "File not found"
+        notify-send "Wallpaper Error" "File not found" -a "Shell"
         exit 1
     }
 
