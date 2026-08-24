@@ -58,6 +58,14 @@ Scope { // Scope
             WlrLayershell.namespace: "quickshell:cheatsheet"
             // Setting this value makes it take its sweet time to open, so we use a timer to force it
             // WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
+            WlrLayershell.keyboardFocus: {
+                if (!_focusReady) return WlrKeyboardFocus.None;
+                const icon = root.tabButtonList[swipeView.currentIndex]?.icon;
+                // Keybinds tab also needs OnDemand so the search field can take text input.
+                return (icon === "terminal" || icon === "keyboard")
+                    ? WlrKeyboardFocus.OnDemand
+                    : WlrKeyboardFocus.None;
+            }
             color: "transparent"
 
             Timer {
