@@ -8,56 +8,234 @@ import qs.modules.common.functions
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Quickshell.Io
 import Quickshell.Bluetooth
 import Quickshell
-import Quickshell.Wayland
-import Quickshell.Hyprland
 
 WindowDialog {
     id: root
     backgroundHeight: 600
 
-    WindowDialogTitle {
-        text: "Bluetooth devices"
+    readonly property bool btEnabled: Bluetooth.defaultAdapter?.enabled ?? false
+    readonly property bool btDiscovering: Bluetooth.defaultAdapter?.discovering ?? false
+    readonly property var connectedOrPaired: [...BluetoothStatus.connectedDevices, ...BluetoothStatus.pairedButNotConnectedDevices]
+    readonly property var availableDevices: BluetoothStatus.unpairedDevices
+
+    RowLayout {
+        Layout.fillWidth: true
+        spacing: 12
+
+        MaterialShapeWrappedMaterialSymbol {
+            Layout.alignment: Qt.AlignVCenter
+            text: root.btEnabled
+                ? (BluetoothStatus.connected ? "bluetooth_connected" : "bluetooth")
+                : "bluetooth_disabled"
+            iconSize: 18
+            padding: 7
+            shape: MaterialShape.Shape.Cookie7Sided
+            color: root.btEnabled ? Appearance.colors.colPrimaryContainer : Appearance.colors.colSurfaceContainerHighest
+            colSymbol: root.btEnabled ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnSurfaceVariant
+        }
+
+        ColumnLayout {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignVCenter
+            spacing: 0
+
+            StyledText {
+                Layout.fillWidth: true
+                text: "Bluetooth"
+                color: Appearance.colors.colOnSurface
+                elide: Text.ElideRight
+                font {
+                    family: Appearance.font.family.title
+                    pixelSize: Appearance.font.pixelSize.title
+                    variableAxes: Appearance.font.variableAxes.title
+                }
+            }
+
+            StyledText {
+                Layout.fillWidth: true
+                text: {
+                    if (!root.btEnabled) return "Off";
+                    if (root.btDiscovering) return "Scanning…";
+                    if (BluetoothStatus.activeDeviceCount > 0) {
+                        const name = BluetoothStatus.firstActiveDevice?.name ?? "";
+                        if (BluetoothStatus.activeDeviceCount === 1 && name.length > 0)
+                            return "Connected" + " • " + name;
+                        return "Connected" + " • " + BluetoothStatus.activeDeviceCount;
+                    }
+                    return "Not connected";
+                }
+                color: Appearance.colors.colSubtext
+                font.pixelSize: Appearance.font.pixelSize.smaller
+                elide: Text.ElideRight
+                animateChange: true
+            }
+        }
+
+        StyledSwitch {
+            Layout.alignment: Qt.AlignVCenter
+            enabled: BluetoothStatus.available
+            checked: root.btEnabled
+            onToggled: {
+                if (Bluetooth.defaultAdapter) Bluetooth.defaultAdapter.enabled = checked;
+            }
+        }
     }
+
     WindowDialogSeparator {
-        visible: !(Bluetooth.defaultAdapter?.discovering ?? false)
+        visible: !root.btDiscovering
     }
     StyledIndeterminateProgressBar {
-        visible: Bluetooth.defaultAdapter?.discovering ?? false
+        visible: root.btDiscovering
         Layout.fillWidth: true
         Layout.topMargin: -8
         Layout.bottomMargin: -8
         Layout.leftMargin: -Appearance.rounding.large
         Layout.rightMargin: -Appearance.rounding.large
     }
-    StyledListView {
+
+    Item {
         Layout.fillHeight: true
         Layout.fillWidth: true
-        Layout.topMargin: -10
-        Layout.bottomMargin: -10
+        Layout.topMargin: -15
+        Layout.bottomMargin: -16
         Layout.leftMargin: -Appearance.rounding.normal
         Layout.rightMargin: -Appearance.rounding.normal
 
-        clip: true
-        spacing: 5
-        animateAppearance: true
+        StyledFlickable {
+            id: bodyFlick
+            anchors.fill: parent
+            clip: true
+            contentHeight: bodyColumn.implicitHeight
+            visible: root.btEnabled && (root.connectedOrPaired.length > 0 || root.availableDevices.length > 0)
 
-        model: ScriptModel {
-            values: BluetoothStatus.friendlyDeviceList
-        }
-        delegate: BluetoothDeviceItem {
-            required property BluetoothDevice modelData
-            device: modelData
-            anchors {
-                left: parent?.left
-                right: parent?.right
+            ColumnLayout {
+                id: bodyColumn
+                width: bodyFlick.width
+                spacing: 0
+
+                // Connected / paired section
+                component SectionHeader: RowLayout {
+                    property string label
+                    property int count: 0
+                    Layout.fillWidth: true
+                    Layout.topMargin: 12
+                    Layout.bottomMargin: 4
+                    Layout.leftMargin: Appearance.rounding.large
+                    Layout.rightMargin: Appearance.rounding.large
+                    spacing: 8
+
+                    StyledText {
+                        text: label
+                        color: Appearance.colors.colPrimary
+                        font.pixelSize: Appearance.font.pixelSize.smaller
+                        font.variableAxes: ({ "wght": 600 })
+                    }
+                    Item { Layout.fillWidth: true }
+                    StyledText {
+                        visible: count > 0
+                        text: count
+                        color: Appearance.colors.colSubtext
+                        font.pixelSize: Appearance.font.pixelSize.smaller
+                    }
+                }
+
+                SectionHeader {
+                    label: "My devices"
+                    count: root.connectedOrPaired.length
+                    visible: root.connectedOrPaired.length > 0
+                }
+
+                Repeater {
+                    model: ScriptModel {
+                        values: root.connectedOrPaired
+                    }
+                    delegate: BluetoothDeviceItem {
+                        required property BluetoothDevice modelData
+                        device: modelData
+                        Layout.fillWidth: true
+                    }
+                }
+
+                SectionHeader {
+                    label: "Available"
+                    count: root.availableDevices.length
+                    visible: root.availableDevices.length > 0
+                }
+
+                // StyledListView {
+                //     Layout.topMargin: -10
+                //     Layout.bottomMargin: -10
+                //     Layout.leftMargin: -Appearance.rounding.normal
+                //     Layout.rightMargin: -Appearance.rounding.normal
+
+                //     clip: true
+                //     spacing: 5
+                //     animateAppearance: true
+
+                //     model: ScriptModel {
+                //         values: root.availableDevices
+                //     }
+                //     delegate: BluetoothDeviceItem {
+                //         required property BluetoothDevice modelData
+                //         device: modelData
+                //         anchors {
+                //             left: parent?.left
+                //             right: parent?.right
+                //         }
+                //     }
+                // }
+
+                Repeater {
+                    model: ScriptModel {
+                        values: root.availableDevices
+                    }
+                    delegate: BluetoothDeviceItem {
+                        required property BluetoothDevice modelData
+                        device: modelData
+                        Layout.fillWidth: true
+                    }
+                }
+
+                Item { Layout.preferredHeight: 12 }
             }
         }
+
+        PagePlaceholder {
+            icon: "bluetooth_disabled"
+            title: "Bluetooth is off"
+            description: "Turn on Bluetooth to see nearby devices"
+            descriptionHorizontalAlignment: Text.AlignHCenter
+            shape: MaterialShape.Shape.Cookie7Sided
+            shown: !root.btEnabled
+        }
+
+        PagePlaceholder {
+            icon: "bluetooth_searching"
+            title: root.btDiscovering ? "Searching…" : "No devices found"
+            description: root.btDiscovering
+                ? "Make sure the device is in pairing mode"
+                : "Tap Scan to search for nearby devices"
+            descriptionHorizontalAlignment: Text.AlignHCenter
+            shape: MaterialShape.Shape.Cookie7Sided
+            shown: root.btEnabled && root.connectedOrPaired.length === 0 && root.availableDevices.length === 0
+        }
     }
+
     WindowDialogSeparator {}
+    
     WindowDialogButtonRow {
+        MaterialButtonE {
+            type: MaterialButtonE.ButtonType.Text
+            buttonText: root.btDiscovering ? "Stop" : "Scan"
+            enabled: root.btEnabled
+            onClicked: {
+                if (!Bluetooth.defaultAdapter) return;
+                Bluetooth.defaultAdapter.discovering = !root.btDiscovering;
+            }
+        }
+
         MaterialButtonE {
             type: MaterialButtonE.ButtonType.Text
             buttonText: "Details"
