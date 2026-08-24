@@ -101,18 +101,28 @@ Scope { // Scope
                     if (event.key === Qt.Key_Escape) {
                         cheatsheetRoot.hide();
                     }
-                    if (event.modifiers === Qt.ControlModifier) {
+                    if (event.modifiers === Qt.ControlModifier &&
+                        root.tabButtonList.length > 0) {
+
                         if (event.key === Qt.Key_PageDown) {
                             tabBar.incrementCurrentIndex();
                             event.accepted = true;
+
                         } else if (event.key === Qt.Key_PageUp) {
                             tabBar.decrementCurrentIndex();
                             event.accepted = true;
+
                         } else if (event.key === Qt.Key_Tab) {
-                            tabBar.setCurrentIndex((tabBar.currentIndex + 1) % root.tabButtonList.length);
+                            tabBar.setCurrentIndex(
+                                (tabBar.currentIndex + 1) % root.tabButtonList.length
+                            );
                             event.accepted = true;
+
                         } else if (event.key === Qt.Key_Backtab) {
-                            tabBar.setCurrentIndex((tabBar.currentIndex - 1 + root.tabButtonList.length) % root.tabButtonList.length);
+                            tabBar.setCurrentIndex(
+                                (tabBar.currentIndex - 1 + root.tabButtonList.length) %
+                                root.tabButtonList.length
+                            );
                             event.accepted = true;
                         }
                     }
@@ -149,8 +159,10 @@ Scope { // Scope
                     spacing: 10
 
                     Toolbar {
+                        visible: root.tabButtonList.length > 0
                         Layout.alignment: Qt.AlignHCenter
                         enableShadow: false
+
                         ToolbarTabBar {
                             id: tabBar
                             tabButtonList: root.tabButtonList
@@ -161,6 +173,43 @@ Scope { // Scope
                         }
                     }
 
+                    // Empty state
+                    ColumnLayout {
+                        visible: root.extensionCheatsheetTabs.length === 0
+                        Layout.alignment: Qt.AlignHCenter
+                        Layout.preferredWidth: 420
+                        Layout.preferredHeight: 220
+                        spacing: 14
+
+                        MaterialSymbol {
+                            Layout.alignment: Qt.AlignHCenter
+                            text: "menu_book"
+                            font.pixelSize: 52
+                            color: Appearance.colors.colSubtext
+                        }
+
+                        StyledText {
+                            Layout.alignment: Qt.AlignHCenter
+                            text: "No cheatsheets available"
+                            font.pixelSize: Appearance.font.pixelSize.title
+                            font.weight: Font.Medium
+                            color: Appearance.colors.colOnLayer0
+                        }
+
+                        StyledText {
+                            Layout.alignment: Qt.AlignHCenter
+                            Layout.maximumWidth: 340
+
+                            text: "Install or enable an extension that provides a cheatsheet to see its contents here."
+                            horizontalAlignment: Text.AlignHCenter
+                            wrapMode: Text.WordWrap
+
+                            font.pixelSize: Appearance.font.pixelSize.normal
+                            color: Appearance.colors.colSubtext
+                        }
+                    }
+
+
                     SwipeView { // Content pages
                         id: swipeView
                         Layout.topMargin: 5
@@ -168,6 +217,7 @@ Scope { // Scope
                         Layout.fillHeight: true
                         spacing: 10
                         currentIndex: Persistent.states.cheatsheet.tabIndex
+                        visible: root.extensionCheatsheetTabs.length > 0
                         onCurrentIndexChanged: {
                             Persistent.states.cheatsheet.tabIndex = currentIndex;
                         }
