@@ -17,7 +17,7 @@ Button {
         Error
     }
 
-    property int type: root.ButtonType.Tonal
+    property int type: root.ButtonType.Text
     property int iconSize: Appearance.font.pixelSize.normal
     property real iconFilled: 0
     property string materialIcon: ""
