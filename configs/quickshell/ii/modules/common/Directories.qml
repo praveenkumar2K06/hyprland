@@ -38,6 +38,8 @@ Singleton {
     property string cliphistDecode: FileUtils.trimFileProtocol(`/tmp/quickshell/media/cliphist`)
     property string wallpaperSwitchScriptPathv2: FileUtils.trimFileProtocol(`${Directories.scriptPath}/colors/switchwallv2.sh`)
     property string userActions: FileUtils.trimFileProtocol(`${Directories.shellConfig}/actions`)
+    property string latexOutput: FileUtils.trimFileProtocol(`${Directories.cache}/latex`)
+    property string aiChats: FileUtils.trimFileProtocol(`${Directories.state}/user/ai/chats`)
     
     property string generalConfigPath: Quickshell.shellPath("modules/settings/GeneralConfig.qml")
     property string barConfigPath: Quickshell.shellPath("modules/settings/BarConfig.qml")
@@ -63,5 +65,7 @@ Singleton {
         Quickshell.execDetached(["mkdir", "-p", `${Directories.extensionsCachePath}`])
         Quickshell.execDetached(["mkdir", "-p", `${Directories.extensionsInstalledPath}`])
         Quickshell.execDetached(["mkdir", "-p", `${userActions}`])
+        Quickshell.execDetached(["mkdir", "-p", `${latexOutput}`])
+        Quickshell.execDetached(["mkdir", "-p", `${aiChats}`])
     }
 }

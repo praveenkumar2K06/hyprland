@@ -51,6 +51,26 @@ Singleton {
 
             property string panelFamily: "ii" // "ii", "waffle"
 
+            property JsonObject ai: JsonObject {
+                property string systemPrompt: "## Style\n- Use casual tone, don't be formal!\n- Always be brief and to the point, unless asked otherwise\n- Don't repeat the user's question\n- Be approachable: Avoid using overly complicated, domain-specific terms and provide analogies when asked to explain a concept\n\n## Context (ignore when irrelevant)\n- You are a helpful and inspiring sidebar assistant on a {DISTRO} Linux system\n- Desktop environment: {DE}\n- Current date & time: {DATETIME}\n- Focused app: {WINDOWCLASS}\n\n## Presentation\n- Use Markdown features in your response: \n  - **Bold** text to **highlight keywords** in your response\n  - **Split long information into small sections** with h2 headers and a relevant emoji at the start of it (for example `## 🐧 Linux`). Bullet points are preferred over long paragraphs, unless you're offering writing support or instructed otherwise by the user.\n- Asked to compare different options? You should firstly use a table to compare the main aspects, then elaborate or include relevant comments from online forums *after* the table. Make sure to provide a final recommendation for the user's use case!\n- Use LaTeX formatting for mathematical and scientific notations whenever appropriate. Enclose all LaTeX '$$' delimiters. NEVER generate LaTeX code in a latex block unless the user explicitly asks for it. DO NOT use LaTeX for regular documents (resumes, letters, essays, CVs, etc.).\n\nThanks!\n"
+                property string tool: "functions" // search, functions, or none
+                property list<var> models: [
+                    // Needed entries in the object: title, value, modelProvider (only for openrouter)
+                    {
+                        "openrouter": [
+                            {
+                                title: "Gemini 3.7 Flash",
+                                value: "gemini-3.7-flash",
+                                modelProvider: "google"
+                            },
+                        ]
+                    },
+                    {
+                        "google": []
+                    }
+                ]
+            }
+
             property JsonObject appearance: JsonObject {
                 property bool extraBackgroundTint: true
                 property int fakeScreenRounding: 2 // 0: None | 1: Always | 2: When not fullscreen | 3: Wrapped
@@ -79,6 +99,14 @@ Singleton {
                     property string accentColor: ""
                 }
             }
+            property JsonObject appearanceCustom: JsonObject {
+                property bool overrideFonts: false
+                property string customFont: ""
+                property bool overrideColors: false
+                property string customAccent: ""
+                property int customBackgroundAlpha: 11
+                property int customContentAlpha: 57
+            }
 
             property JsonObject audio: JsonObject {
                 // Values in %
@@ -94,7 +122,6 @@ Singleton {
                 property string bluetooth: "kitty --app-id tui bluetui"
                 property string changePassword: "kitty -1 --hold=yes fish -i -c 'passwd'"
                 property string network: "kitty --app-id tui wifitui"
-                property string manageUser: "kcmshell6 kcm_users"
                 property string networkEthernet: "kitty --app-id tui wifitui"
                 property string taskManager: "plasma-systemmonitor --page-name Processes"
                 property string terminal: "kitty -1" // This is only for shell actions
@@ -257,10 +284,6 @@ Singleton {
                 property int suspend: 3
             }
 
-            property JsonObject calendar: JsonObject {
-                property string locale: "en-GB"
-            }
-
             property JsonObject conflictKiller: JsonObject {
                 property bool autoKillNotificationDaemons: false
                 property bool autoKillTrays: false
@@ -299,15 +322,6 @@ Singleton {
                 }
                 property JsonObject deadPixelWorkaround: JsonObject { // Hyprland leaves out 1 pixel on the right for interactions
                     property bool enable: false
-                }
-            }
-
-            property JsonObject language: JsonObject {
-                property string ui: "auto" // UI language. "auto" for system locale, or specific language code like "zh_CN", "en_US"
-                property JsonObject translator: JsonObject {
-                    property string engine: "auto" // Run `trans -list-engines` for available engines. auto should use google
-                    property string targetLanguage: "auto" // Run `trans -list-all` for available languages
-                    property string sourceLanguage: "auto"
                 }
             }
 
@@ -409,6 +423,10 @@ Singleton {
             property JsonObject sidebar: JsonObject {
                 property string position: "default"
                 property bool keepRightSidebarLoaded: false
+                property JsonObject ai: JsonObject {
+                    property bool textFadeIn: false
+                    property bool showProviderAndModelButtons: true
+                }
                 property JsonObject cornerOpen: JsonObject {
                     property bool enable: false
                     property bool bottom: false
@@ -528,18 +546,6 @@ Singleton {
 
             property JsonObject hacks: JsonObject {
                 property int arbitraryRaceConditionDelay: 20 // milliseconds
-            }
-
-            property JsonObject workSafety: JsonObject {
-                property JsonObject enable: JsonObject {
-                    property bool wallpaper: false
-                    property bool clipboard: false
-                }
-                property JsonObject triggerCondition: JsonObject {
-                    property list<string> networkNameKeywords: ["airport", "cafe", "college", "company", "eduroam", "free", "guest", "public", "school", "university"]
-                    property list<string> fileKeywords: ["anime", "booru", "ecchi", "hentai", "yande.re", "konachan", "breast", "nipples", "pussy", "nsfw", "spoiler", "girl"]
-                    property list<string> linkKeywords: ["hentai", "porn", "sukebei", "hitomi.la", "rule34", "gelbooru", "fanbox", "dlsite"]
-                }
             }
         }
     }

@@ -87,4 +87,5 @@ hl.layer_rule({ match = { namespace = "quickshell:notificationPopup" }, animatio
 hl.layer_rule({ match = { namespace = "quickshell:overview" }, animation = "popin 80%"})
 hl.layer_rule({ match = { namespace = "quickshell:screenCorners" }, animation = "popin 120%"})
 hl.layer_rule({ match = { namespace = "quickshell:sidebarRight" }, animation = "slide right" })
+hl.layer_rule({ match = { namespace = "quickshell:sidebarLeft" }, animation = "slide left"})
 hl.layer_rule({ match = { namespace = "quickshell:wallpaperSelector" }, animation = "slide top"})

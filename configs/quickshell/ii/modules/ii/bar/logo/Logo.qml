@@ -18,6 +18,11 @@ RippleButton {
     colBackgroundToggled: Appearance.colors.colSecondaryContainer
     colBackgroundToggledHover: Appearance.colors.colSecondaryContainerHover
     colRippleToggled: Appearance.colors.colSecondaryContainerActive
+    toggled: GlobalStates.sidebarLeftOpen
+
+    onPressed: {
+        GlobalStates.sidebarLeftOpen = !GlobalStates.sidebarLeftOpen;
+    }
 
     CustomIcon {
         id: distroIcon

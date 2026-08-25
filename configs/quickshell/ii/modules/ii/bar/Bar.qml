@@ -28,7 +28,7 @@ Scope {
         model: variantModel
         LazyLoader {
             id: barLoader
-            active: GlobalStates.barOpen && !GlobalStates.screenLocked
+            active: GlobalStates.barOpen
             required property ShellScreen modelData
             property int monitorIndex: barVariant.variantModel.indexOf(modelData)
             component: PanelWindow { // Bar window

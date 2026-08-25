@@ -171,11 +171,7 @@ Item {
 
     function extractProperty(block, prop) {
         let m
-
-        // Translation.tr("") or Translation.tr('')
-        m = block.match(new RegExp(prop + "\\s*:\\s*Translation\\.tr\\(\\s*[\"']([^\"']+)[\"']\\s*\\)"))
-        if (m) return m[1]
-
+        
         // ""
         m = block.match(new RegExp(prop + "\\s*:\\s*\"([^\"]+)\""))
         if (m) return m[1]

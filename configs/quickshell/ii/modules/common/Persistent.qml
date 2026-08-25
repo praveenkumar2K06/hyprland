@@ -56,9 +56,18 @@ Singleton {
         adapter: JsonAdapter {
             id: persistentStatesJsonAdapter
 
+            property JsonObject ai: JsonObject {
+                property string provider: "google" // AI providers such as google, open router
+                property string model: "gemini-2.5-flash" // The model of the ai such as 2.5-flash
+                property real temperature: 0.5
+            }
+
             property string hyprlandInstanceSignature: ""
 
             property JsonObject sidebar: JsonObject {
+                property JsonObject policies: JsonObject {
+                    property int tab: 0
+                }
                 property JsonObject bottomGroup: JsonObject {
                     property bool collapsed: false
                     property int tab: 0

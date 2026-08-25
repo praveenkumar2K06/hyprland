@@ -27,7 +27,7 @@ Flow {
             "displayName": "Option 2",
             "icon": "close",
             "shape": "Circle",
-            "symbol": "mistral-symbolic",
+            "symbol": "openrouter-symbolic",
             "color": "blue",
             "value": 2
         },

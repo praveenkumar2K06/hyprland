@@ -23,15 +23,6 @@ Scope {
                 SessionWarnings.refresh();
         }
 
-        Connections {
-            target: GlobalStates
-            function onScreenLockedChanged() {
-                if (GlobalStates.screenLocked) {
-                    GlobalStates.sessionOpen = false;
-                }
-            }
-        }
-
         sourceComponent: PanelWindow { // Session menu
             id: sessionRoot
             visible: sessionLoader.active

@@ -62,10 +62,13 @@ Singleton {
 
     HyprlandFocusGrab {
         id: grab
-        windows: root.dismissable.every(w => !w?.focusable) || root.dismissable.some(w => hasActive(w?.contentItem)) ? [...root.dismissable, ...root.persistent] : [...root.dismissable]
+        // NOTE: Keep this binding free of focus-dependent values (e.g. activeFocus).
+        // Recreating the window list while the grab is active makes Hyprland clear
+        // the grab, which would instantly dismiss freshly opened sidebars/popups.
+        windows: [...root.dismissable, ...root.persistent]
         active: root.dismissable.length > 0
         onCleared: () => {
-            root.dismiss();
+            root.dismiss()
         }
     }
 
