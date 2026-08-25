@@ -224,11 +224,6 @@ Queue: checkAllUpdates() populates _updateCheckQueue, processes one at a time
 | Contribution Point | Consumer | How It Renders |
 |---|---|---|
 | `services` | `ExtensionManager` → `ExtensionServices` | `Qt.createComponent()` → `createObject(null)` |
-| `barComponents` | `BarComponentRegistry` → `BarComponent` | Cached by ID, loaded via `loadExtensionQmlComponent()` |
-| `sidebarLeftPages` | `SidebarPoliciesContent` | Tab buttons + `Loader` per page |
-| `sidebarRightBottom` | `BottomWidgetGroup` | Nav buttons + `Loader` per tab |
-| `backgroundWidgets` | `Background` → `widgetCanvas` | `loadExtensionQmlComponent()` + position from config |
-| `overlayWidgets` | `OverlayContext` → `ExtensionOverlayWidgetLoader` | `loadExtensionQmlComponent()` + geometry from config |
 | `cheatsheet` | `Cheatsheet` (`Cheatsheet.qml`) | Tab buttons + `Loader` per page in SwipeView |
 
 ### QML Component Loading
@@ -327,8 +322,7 @@ ExtensionManager.refreshExtensions()
   ├── ExtensionManager.extensionOverlayConfigsChanged
   └── ExtensionManager.extensionConfigsChanged
        ↓
-  Consumers re-evaluate contribution points (SidebarPoliciesContent,
-  BottomWidgetGroup, OverlayContext, Background, BarComponentRegistry)
+  Consumers re-evaluate contribution points (CheetSheet)
 ```
 
 ```

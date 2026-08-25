@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Bluetooth
 
+import qs.modules.ii.sidebarRight.quickToggles
 import qs.modules.ii.sidebarRight.quickToggles.androidStyle
 
 AbstractQuickPanel {
@@ -29,9 +30,9 @@ AbstractQuickPanel {
     readonly property real baseCellHeight: 56
 
     // Toggles
-    readonly property list<string> availableToggleTypes: ["network", "bluetooth", "idleInhibitor", "nightLight", "darkMode", "cloudflareWarp", "gameMode", "colorPicker", "mic", "audio", "notifications", "powerProfile", "antiFlashbang", "screenSnip", "screenRecord"]
+    readonly property list<string> availableToggleTypes: ToggleRegistry.types
     readonly property int columns: Config.options.sidebar.quickToggles.android.columns
-    readonly property list<var> toggles: Config.ready ? Config.options.sidebar.quickToggles.android.toggles : []
+    readonly property list<var> toggles: Config.ready ? Config.options.sidebar.quickToggles.android.toggles.filter(toggle => toggle && ToggleRegistry.toggles[toggle.type] !== undefined) : []
     readonly property list<var> toggleRows: toggleRowsForList(toggles)
     readonly property list<var> unusedToggles: {
         const types = availableToggleTypes.filter(type => !toggles.some(toggle => (toggle && toggle.type === type)))
@@ -57,6 +58,26 @@ AbstractQuickPanel {
             rows.push(row);
         }
         return rows;
+    }
+
+    function openMappedDialog(name: string): void {
+        switch (name) {
+        case "wifi":
+            root.openWifiDialog();
+            break;
+        case "bluetooth":
+            root.openBluetoothDialog();
+            break;
+        case "nightLight":
+            root.openNightLightDialog();
+            break;
+        case "audioOutput":
+            root.openAudioOutputDialog();
+            break;
+        case "audioInput":
+            root.openAudioInputDialog();
+            break;
+        }
     }
 
     Column {
@@ -95,17 +116,18 @@ AbstractQuickPanel {
                             values: toggleRow?.modelData ?? []
                             objectProp: "type"
                         }
-                        delegate: AndroidToggleDelegateChooser {
-                            startingIndex: toggleRow.startingIndex
+                        delegate: AndroidGenericToggle {
+                            required property int index
+                            required property var modelData
+                            buttonIndex: toggleRow.startingIndex + index
+                            buttonData: modelData
                             editMode: root.editMode
+                            expandedSize: modelData.size > 1
                             baseCellWidth: root.baseCellWidth
                             baseCellHeight: root.baseCellHeight
-                            spacing: root.spacing
-                            onOpenAudioOutputDialog: root.openAudioOutputDialog()
-                            onOpenAudioInputDialog: root.openAudioInputDialog()
-                            onOpenBluetoothDialog: root.openBluetoothDialog()
-                            onOpenNightLightDialog: root.openNightLightDialog()
-                            onOpenWifiDialog: root.openWifiDialog()
+                            cellSpacing: root.spacing
+                            cellSize: modelData.size
+                            onOpenDialog: name => root.openMappedDialog(name)
                         }
                     }
                 }
@@ -147,12 +169,18 @@ AbstractQuickPanel {
                                 values: unusedToggleRow?.modelData ?? []
                                 objectProp: "type"
                             }
-                            delegate: AndroidToggleDelegateChooser {
-                                startingIndex: -1
+                            delegate: AndroidGenericToggle {
+                                required property int index
+                                required property var modelData
+                                buttonIndex: -1
+                                buttonData: modelData
                                 editMode: root.editMode
+                                expandedSize: false
                                 baseCellWidth: root.baseCellWidth
                                 baseCellHeight: root.baseCellHeight
-                                spacing: root.spacing
+                                cellSpacing: root.spacing
+                                cellSize: modelData.size
+                                onOpenDialog: name => root.openMappedDialog(name)
                             }
                         }
                     }
