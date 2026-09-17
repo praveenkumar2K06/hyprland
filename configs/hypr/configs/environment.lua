@@ -23,6 +23,8 @@ hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
 -- hyprland-qt-support
 -- hl.env("QT_QUICK_CONTROLS_STYLE", "org.hyprland.style")
 
+hl.env("EDITOR", "nvim")
+
 -- Scale
 hl.env("GDK_SCALE", "1")
 hl.env("QT_SCALE_FACTOR", "1")
