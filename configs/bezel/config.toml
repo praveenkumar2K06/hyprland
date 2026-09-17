@@ -1,0 +1,58 @@
+# vim: filetype=toml
+
+# Bezel Configuration Template
+# Place this file in: ~/.config/bezel/config.toml
+
+# Customize how thick the edge zones are (0.08 means 8% of the trackpad)
+[zones]
+left_width = 0.08
+right_width = 0.08
+top_height = 0.08
+bottom_height = 0.08
+
+# ---- Left Zone Gestures ----
+[gestures.left.up]
+action = "command"
+cmd = "noctalia msg volume-up"
+
+[gestures.left.down]
+action = "command"
+cmd = "noctalia msg volume-down"
+
+# ---- Right Zone Gestures ----
+[gestures.right.up]
+action = "command"
+cmd = "noctalia msg brightness-up"
+
+[gestures.right.down]
+action = "command"
+cmd = "noctalia msg brightness-down"
+
+# ---- Top Zone Gestures ----
+[gestures.top.left]
+action = "command"
+cmd = "playerctl previous"
+
+[gestures.top.right]
+action = "command"
+cmd = "playerctl next"
+
+# ---- Bottom Zone Gestures ----
+[gestures.bottom.left]
+action = "command"
+cmd = "playerctl previous"
+
+[gestures.bottom.right]
+action = "command"
+cmd = "playerctl next"
+
+[gestures.bottom.tap]
+action = "command"
+cmd = "playerctl play-pause"
+
+# ---- OSD Configuration ----
+[osd]
+enabled = false
+backend = "notify-send" # options: "notify-send", "swayosd", "pipe"
+#canonical_hints = false # set to true if using mako or notify-osd
+# pipe_path = "/tmp/bezel-osd" # only if backend is "pipe"

@@ -19,9 +19,16 @@ hl.config({
         },
 
         resize_on_border = true,
+        layout           = "dwindle",
+
+        snap             = {
+            enabled      = true,
+            respect_gaps = true,
+        },
     },
 
     decoration = {
+        rounding         = 10,
         rounding_power   = 2,
 
         active_opacity   = 1.0,
@@ -31,17 +38,15 @@ hl.config({
         dim_strength     = 0.2,
         dim_special      = 0.8,
 
-        shadow           = {
-            enabled      = true,
-            range        = 2,
-            render_power = 1,
+        blur             = {
+            xray    = true,
+            special = true,
+            passes  = 2,
+            popups  = true
         },
 
-        blur = {
-            xray = true,
-            special = true,
-            passes = 2,
-            popups = true
+        motion_blur      = {
+            enabled = true
         },
     },
 

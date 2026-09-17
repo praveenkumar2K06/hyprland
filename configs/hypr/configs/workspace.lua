@@ -36,15 +36,38 @@ hl.window_rule({
 hl.window_rule({
     name = "Float popups and dialogue",
     match = {
-        title = "^(Authentication Required|Add Folder to Workspace|Save As)$",
+        title = "^(Add Folder to Workspace|Save As|Open Folder)$",
     },
     float = true,
     center = true,
+    size = "(monitor_w*0.7) (monitor_h*0.6)",
 })
 
 hl.window_rule({
     name = "Float Open Files",
     match = { initial_title = "(Open Files)" },
+    float = true,
+    size = "(monitor_w*0.7) (monitor_h*0.6)",
+    center = true,
+})
+
+
+hl.window_rule({
+    name = "Upload File",
+    match = { 
+        class = "xdg-desktop-portal-gtk",
+    },
+    float = true,
+    size = "(monitor_w*0.7) (monitor_h*0.6)",
+    center = true,
+})
+
+hl.window_rule({
+    name = "Upload File",
+    match = { 
+        class = "zen" ,
+        title = "^(Library.*)$"
+    },
     float = true,
     size = "(monitor_w*0.7) (monitor_h*0.6)",
     center = true,
@@ -70,22 +93,20 @@ hl.window_rule({
     opacity = "0.9 0.9",
 })
 
-hl.layer_rule({
-    match        = { namespace = "quickshell" },
-    blur         = true,
-    ignore_alpha = 0.5,
+hl.window_rule({
+    match = { class = "dev.noctalia.Noctalia" },
+    float = true,
+    no_screen_share = true,
+    size = { 1080, 920 },
 })
 
 hl.layer_rule({
-    match        = { namespace = "quickshell:(bar|overview|sidebarRight|verticalBar|popup|cheatsheet|mediaControls|wallpaperSelector)" },
-    blur         = true,
-    ignore_alpha = 0.5,
+  name = "noctalia",
+  match = {
+    namespace = "^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd|window-switcher)$",
+  },
+  no_anim = true,
+  ignore_alpha = 0.5,
+  blur = true,
+  blur_popups = true,
 })
-
-hl.layer_rule({ match = { namespace = "quickshell:bar" }, animation = "slide"})
-hl.layer_rule({ match = { namespace = "quickshell:notificationPopup" }, animation = "fadeIn"})
-hl.layer_rule({ match = { namespace = "quickshell:overview" }, animation = "popin 80%"})
-hl.layer_rule({ match = { namespace = "quickshell:screenCorners" }, animation = "popin 120%"})
-hl.layer_rule({ match = { namespace = "quickshell:sidebarRight" }, animation = "slide right" })
-hl.layer_rule({ match = { namespace = "quickshell:sidebarLeft" }, animation = "slide left"})
-hl.layer_rule({ match = { namespace = "quickshell:wallpaperSelector" }, animation = "slide top"})

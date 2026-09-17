@@ -1,28 +1,64 @@
----------------------
----- MY PROGRAMS ----
----------------------
+---------------------------
+---- PROGRAMS & CONFIG ----
+---------------------------
 
-
+local mainMod     = "SUPER"
 local browser     = "zen-browser"
 local terminal    = "kitty"
 local fileManager = "nautilus"
-local menu        = "wofi --show drun"
+local ipc         = "noctalia msg "
 
----------------------
----- KEYBINDINGS ----
----------------------
+---------------------------
+---- WINDOW MANAGEMENT ----
+---------------------------
 
+-- Window manipulation
+hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
-local mainMod = "SUPER"
+-- Change focus
+local arrowKeys = { Left = "l", Right = "r", Up = "u", Down = "d", BracketLeft = "l", BracketRight = "r" }
+for key, direction in pairs(arrowKeys) do
+    hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ direction = direction }))
+    hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ direction = direction, follow = true }))
+end
 
--- Common actions
-hl.bind("SUPER + B", hl.dsp.exec_cmd(browser), { description = "Programs: Open browser" })
-hl.bind("SUPER + Return", hl.dsp.exec_cmd(terminal), { description = "Programs: Open terminal" })
-hl.bind("SUPER + E", hl.dsp.exec_cmd(fileManager), { description = "Programs: Open file manager" })
-hl.bind("SUPER + Q", hl.dsp.window.close(), { description = "Window: Close" })
+-- Move & Resize with mouse
+hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag())
+hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize())
 
--- Lock
-hl.bind("SUPER + L", hl.dsp.exec_cmd("hyprlock"))
+------------------
+---- LAUNCHER ----
+------------------
+
+hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
+hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
+
+hl.bind(mainMod .. " + A", hl.dsp.exec_cmd(ipc .. "panel-toggle control-center notifications"))
+hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd(ipc .. "panel-toggle launcher"))
+hl.bind(mainMod .. " + Period", hl.dsp.exec_cmd(ipc .. "panel-toggle launcher /emo"))
+hl.bind(mainMod .. " + S", hl.dsp.exec_cmd(ipc .. "panel-toggle control-center"))
+hl.bind(mainMod .. " + I", hl.dsp.exec_cmd(ipc .. "settings-toggle"))
+hl.bind(mainMod .. " + ALT + B", hl.dsp.exec_cmd(ipc .. "bar-toggle bar-options"))
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(ipc .. "session lock"))
+hl.bind("ALT + B", hl.dsp.exec_cmd(ipc .. "bar-toggle bar-options"))
+
+---------------------------
+---- HARDWARE CONTROLS ----
+---------------------------
+
+-- Volume
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(ipc .. "volume-up"), { locked = true, repeating = true })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(ipc .. "volume-down"), { locked = true, repeating = true })
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd(ipc .. "volume-mute"), { locked = true })
+
+-- Brightness
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd(ipc .. "brightness-up"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. "brightness-down"), { locked = true, repeating = true })
+
+-------------------
+---- UTILITIES ----
+-------------------
 
 -- Zoom
 local function zoomfunction(value)
@@ -35,62 +71,86 @@ local function zoomfunction(value)
         hl.config({ cursor = { zoom_factor = zoomvalue + value } })
     end
 end
-hl.bind("SUPER + Minus", function() zoomfunction(-0.3) end, { repeating = true, description = "Misc: Zoom out" })
-hl.bind("SUPER + Equal", function() zoomfunction(0.3) end, { repeating = true, description = "Misc: Zoom in" })
 
--- Special Keys
+hl.bind(mainMod .. " + Minus", function() zoomfunction(-0.3) end, { repeating = true })
+hl.bind(mainMod .. " + Equal", function() zoomfunction(0.3) end, { repeating = true })
 
--- Mic
-hl.bind("XF86AudioMicMute", hl.dsp.exec_raw("fish -c micmute"), { locked = true })
+-- Screen Capture
+hl.bind("Print", hl.dsp.exec_cmd(ipc .. "screenshot-fullscreen"))
+hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd(ipc .. "screenshot-region"))
 
--- Brightness
-hl.bind("XF86MonBrightnessUp", hl.dsp.global("quickshell:brightnessIncrease"), { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.global("quickshell:brightnessDecrease"), { locked = true, repeating = true })
+-- Screen Recording
+hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd(ipc .. "plugin noctalia/screen_recorder:service all toggle"))
+hl.bind("ALT + R", hl.dsp.exec_cmd(ipc .. "plugin noctalia/screen_recorder:service all pause-toggle"))
 
--- Volume
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pamixer --increase 5"), { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pamixer --decrease 5"), { locked = true, repeating = true })
-hl.bind("XF86AudioMute", hl.dsp.exec_cmd("pamixer --toggle-mute"), { locked = true })
+-- Clipboard & Wallpaper
+hl.bind(mainMod .. " + V", hl.dsp.exec_cmd(ipc .. "panel-toggle clipboard"))
+hl.bind(mainMod .. " + CONTROL + T", hl.dsp.exec_cmd(ipc .. "panel-toggle wallpaper"))
 
--- Screenshot
--- hl.bind("Print", hl.dsp.exec_cmd("grimshot save full"), { locked = true })v
+-------------------------------
+---- WORKSPACES & MONITORS ----
+-------------------------------
 
-hl.bind("Print", hl.dsp.exec_cmd('grim ~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png'), { description = "Screenshot: Fullscreen" })
-hl.bind("SHIFT + Print", hl.dsp.exec_cmd('grim -g "$(slurp-window)" ~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png'), { description = "Screenshot: Select area" })
-hl.bind("SUPER + SHIFT + Print", hl.dsp.exec_cmd('grim -g "$(slurp -d)" - | wl-copy'), { description = "Screenshot: Copy to clipboard" })
-
--- Special
-hl.bind("SUPER + ALT + S",
-    hl.dsp.window.move({ workspace = "special:special", follow = false }), { description = "Window: Send to scratchpad" })
-hl.bind("CTRL + SUPER + S", hl.dsp.workspace.toggle_special("special"))
-
-
--- Focus
-for i = 1, 6 do
-    local arrowkey = { "Left", "Right", "Up", "Down", "BracketLeft", "BracketRight" }
-    local focusdir = { "l", "r", "u", "d", "l", "r" }
-    hl.bind(mainMod .. " + " .. arrowkey[i], hl.dsp.focus({ direction = focusdir[i] }), { description = "Window: Focus " .. focusdir[i] })
-    hl.bind(mainMod .. " + SHIFT + " .. arrowkey[i], hl.dsp.window.move({ direction = focusdir[i], follow = true }), { description = "Window: Move " .. focusdir[i] })
-end
-
--- Workspaces
+-- Focus on workspace number
 for i = 1, 9 do
-    hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }), { description = "Workspace: Focus " .. i })
-end
-for i = 1, 9 do
-    hl.bind(mainMod .. " + CTRL + " .. i, hl.dsp.window.move({ workspace = i, follow = false }), { description = "Workspace: Move to workspace " .. i .. " (silent)" })
-end
-for i = 1, 9 do
-    hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i, follow = true }), { description = "Workspace: Move to workspace " .. i })
+    hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }))
 end
 
-hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Window: Drag" })
-hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Window: Resize" })
+-- Move active window to workspace
+for i = 1, 9 do
+    hl.bind(mainMod .. " + CONTROL + " .. i, hl.dsp.window.move({ workspace = i, follow = false }))
+end
 
--- QuickShell
-hl.bind("SUPER + Tab", hl.dsp.global("quickshell:overviewWorkspacesToggle"), { description = "Shell: Toggle overview" })
-hl.bind("SUPER + Space", hl.dsp.global("quickshell:overviewWorkspacesToggle"), { description = "Shell: Toggle overview" })
-hl.bind("SUPER + A", hl.dsp.global("quickshell:sidebarLeftToggle"), { description = "Shell: Toggle left sidebar" })
-hl.bind("CTRL + SUPER + T", hl.dsp.global("quickshell:wallpaperSelectorToggle"), { description = "Shell: Change wallpaper" })
-hl.bind("SUPER + C", hl.dsp.global("quickshell:cheatsheetToggle"), { description = "Shell: Toggle Cheatsheet"})
-hl.bind("CTRL + ALT + Delete", hl.dsp.global("quickshell:sessionToggle"), { description = "Shell: Toggle session menu" })
+-- Move active window to workspace and follow
+for i = 1, 9 do
+    hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i, follow = true }))
+end
+
+-- Special workspace
+hl.bind(mainMod .. " + ALT + S", hl.dsp.window.move({ workspace = "special:special", follow = false }))
+hl.bind("CONTROL + " .. mainMod .. " + S", hl.dsp.workspace.toggle_special("special"))
+
+----------------------------
+---- LAYOUT MANAGEMENT ----
+----------------------------
+
+hl.bind(mainMod .. " + SHIFT + Tab", function()
+    local layouts = { "scrolling", "dwindle" }
+    local workspace = hl.get_active_workspace()
+
+    if hl.get_active_special_workspace() then
+        workspace = hl.get_active_special_workspace()
+    end
+
+    if not workspace then
+        return
+    end
+
+    local next_layout = "dwindle"
+
+    for i = 1, #layouts do
+        if layouts[i] == workspace.tiled_layout then
+            next_layout = layouts[(i % #layouts) + 1]
+            break
+        end
+    end
+
+    if workspace.special then
+        hl.workspace_rule({ workspace = tostring(workspace.name), layout = next_layout })
+    else
+        hl.workspace_rule({ workspace = tostring(workspace.id), layout = next_layout })
+    end
+
+    hl.dispatch(hl.dsp.exec_cmd(ipc .. "notification-show 'Layout changed' '" .. next_layout .. "'"))
+end)
+
+-------------------
+---- SESSION ------
+-------------------
+
+hl.bind("CTRL + ALT + DELETE", hl.dsp.exec_cmd(ipc .. "panel-open session"))
+
+-- Window switcher
+hl.bind("ALT + Tab", hl.dsp.exec_cmd(ipc .. "window-switcher"))
+hl.bind(mainMod .. " + Tab", hl.plugin.gloview.toggle)
+hl.bind(mainMod .. " + CONTROL + Tab", hl.plugin.gloview.allworkspaces)
