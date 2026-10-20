@@ -152,5 +152,3 @@ hl.bind("CTRL + ALT + DELETE", hl.dsp.exec_cmd(ipc .. "panel-open session"))
 
 -- Window switcher
 hl.bind("ALT + Tab", hl.dsp.exec_cmd(ipc .. "window-switcher"))
-hl.bind(mainMod .. " + Tab", hl.plugin.gloview.toggle)
-hl.bind(mainMod .. " + CONTROL + Tab", hl.plugin.gloview.allworkspaces)
