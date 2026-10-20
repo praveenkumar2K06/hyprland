@@ -33,24 +33,6 @@ hl.window_rule({
     idle_inhibit = "fullscreen",
 })
 
-hl.window_rule({
-    name = "Float popups and dialogue",
-    match = {
-        title = "^(Add Folder to Workspace|Save As|Open Folder)$",
-    },
-    float = true,
-    center = true,
-    size = "(monitor_w*0.7) (monitor_h*0.6)",
-})
-
-hl.window_rule({
-    name = "Float Open Files",
-    match = { initial_title = "(Open Files)" },
-    float = true,
-    size = "(monitor_w*0.7) (monitor_h*0.6)",
-    center = true,
-})
-
 
 hl.window_rule({
     name = "Upload File",
@@ -63,7 +45,7 @@ hl.window_rule({
 })
 
 hl.window_rule({
-    name = "Upload File",
+    name = "Upload File (Library)",
     match = { 
         class = "zen" ,
         title = "^(Library.*)$"
@@ -96,7 +78,6 @@ hl.window_rule({
 hl.window_rule({
     match = { class = "dev.noctalia.Noctalia" },
     float = true,
-    no_screen_share = true,
     size = { 1080, 920 },
 })
 
